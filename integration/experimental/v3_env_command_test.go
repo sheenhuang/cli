@@ -207,7 +207,7 @@ var _ = Describe("v3-env command", func() {
 				session := helpers.CF("v3-env", appName)
 				Eventually(session).Should(Say("Getting env variables for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 				Eventually(session).Should(Say("System-Provided:"))
-				Eventually(session).Should(Say("VCAP_SERVICES"))
+				Eventually(session).Should(Say("VCAP_SERVICES: {\\s*\n"))
 				Eventually(session).Should(Say("VCAP_APPLICATION"))
 
 				Eventually(session).Should(Say("User-Provided:"))
@@ -229,7 +229,7 @@ var _ = Describe("v3-env command", func() {
 				session = helpers.CF("v3-env", appName)
 				Eventually(session).Should(Say("Getting env variables for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 				Eventually(session).Should(Say("System-Provided:"))
-				Eventually(session).ShouldNot(Say("VCAP_SERVICES"))
+				Eventually(session).Should(Say("VCAP_SERVICES: {}"))
 				Eventually(session).Should(Say("VCAP_APPLICATION"))
 
 				Eventually(session).Should(Say("No user-provided env variables have been set"))
