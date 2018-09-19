@@ -54,12 +54,6 @@ var _ = Describe("env command", func() {
 		})
 	})
 
-	It("displays the experimental warning", func() {
-		session := helpers.CF("env", appName)
-		Eventually(session.Err).Should(Say("This command is in EXPERIMENTAL stage and may change without notice"))
-		Eventually(session).Should(Exit())
-	})
-
 	When("the environment is not setup correctly", func() {
 		When("the v3 api does not exist", func() {
 			var server *Server

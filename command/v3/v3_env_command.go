@@ -52,8 +52,6 @@ func (cmd *V3EnvCommand) Setup(config command.Config, ui command.UI) error {
 }
 
 func (cmd V3EnvCommand) Execute(args []string) error {
-	cmd.UI.DisplayWarning(command.ExperimentalWarning)
-
 	err := command.MinimumCCAPIVersionCheck(cmd.Actor.CloudControllerAPIVersion(), ccversion.MinVersionApplicationFlowV3)
 	if err != nil {
 		return err

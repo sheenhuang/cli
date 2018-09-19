@@ -64,10 +64,6 @@ var _ = Describe("v3-env Command", func() {
 				MinimumVersion: ccversion.MinVersionApplicationFlowV3,
 			}))
 		})
-
-		It("displays the experimental warning", func() {
-			Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
-		})
 	})
 
 	When("checking target fails", func() {
