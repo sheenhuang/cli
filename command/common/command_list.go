@@ -25,7 +25,6 @@ type commandList struct {
 	V3CreatePackage      v3.V3CreatePackageCommand      `command:"v3-create-package" description:"Uploads a V3 Package"`
 	V3DeleteApp          v3.V3DeleteCommand             `command:"v3-delete" description:"Delete a V3 App"`
 	V3Droplets           v3.V3DropletsCommand           `command:"v3-droplets" description:"List droplets of an app"`
-	V3Env                v3.V3EnvCommand                `command:"v3-env" description:"Show all env variables for an app"`
 	V3GetHealthCheck     v3.V3GetHealthCheckCommand     `command:"v3-get-health-check" description:"Show the type of health check performed on an app"`
 	V3Packages           v3.V3PackagesCommand           `command:"v3-packages" description:"List packages of an app"`
 	V3Push               v3.V3PushCommand               `command:"v3-push" description:"Push a new app or sync changes to an existing app"`
@@ -101,7 +100,7 @@ type commandList struct {
 	EnableOrgIsolation                 v3.EnableOrgIsolationCommand                 `command:"enable-org-isolation" description:"Entitle an organization to an isolation segment"`
 	EnableServiceAccess                v2.EnableServiceAccessCommand                `command:"enable-service-access" description:"Enable access to a service or service plan for one or all orgs"`
 	EnableSSH                          v2.EnableSSHCommand                          `command:"enable-ssh" description:"Enable ssh for the application"`
-	Env                                v2.EnvCommand                                `command:"env" alias:"e" description:"Show all env variables for an app"`
+	Env                                v3.V3EnvCommand                              `command:"env" alias:"e" description:"Show all env variables for an app"`
 	Events                             v2.EventsCommand                             `command:"events" description:"Show recent app events"`
 	FeatureFlags                       v2.FeatureFlagsCommand                       `command:"feature-flags" description:"Retrieve list of feature flags with status"`
 	FeatureFlag                        v2.FeatureFlagCommand                        `command:"feature-flag" description:"Retrieve an individual feature flag with status"`
