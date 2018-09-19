@@ -83,20 +83,7 @@ var _ = Describe("Applications", func() {
 						GUID:      "some-app-guid",
 						SpaceGUID: "some-space-guid",
 					},
-					Stack: v2action.Stack{
-						Name:        "some-stack-name",
-						GUID:        "some-stack-guid",
-						Description: "some-stack-description",
-					},
 				},
-				CurrentApplication: Application{
-					Application: v2action.Application{
-						Name:      "some-app-name",
-						GUID:      "some-app-guid",
-						SpaceGUID: "some-space-guid",
-					},
-				},
-				Path: "some-path",
 			}
 		})
 
@@ -158,9 +145,7 @@ var _ = Describe("Applications", func() {
 
 					Expect(fakeV2Actor.UpdateApplicationCallCount()).To(Equal(1))
 					Expect(fakeV2Actor.UpdateApplicationArgsForCall(0)).To(MatchFields(IgnoreExtras, Fields{
-						"Name":      Equal("some-app-name"),
-						"GUID":      Equal("some-app-guid"),
-						"SpaceGUID": Equal("some-space-guid"),
+						"State": BeEmpty(),
 					}))
 				})
 			})
@@ -178,9 +163,7 @@ var _ = Describe("Applications", func() {
 
 					Expect(fakeV2Actor.UpdateApplicationCallCount()).To(Equal(1))
 					Expect(fakeV2Actor.UpdateApplicationArgsForCall(0)).To(MatchFields(IgnoreExtras, Fields{
-						"Name":      Equal("some-app-name"),
-						"GUID":      Equal("some-app-guid"),
-						"SpaceGUID": Equal("some-space-guid"),
+						"StackGUID": BeEmpty(),
 					}))
 				})
 			})
@@ -191,11 +174,6 @@ var _ = Describe("Applications", func() {
 				buildpack  types.FilteredString
 				buildpacks []string
 			)
-
-			BeforeEach(func() {
-				buildpack = types.FilteredString{}
-				buildpacks = nil
-			})
 
 			When("buildpack is set", func() {
 				BeforeEach(func() {
@@ -242,9 +220,9 @@ var _ = Describe("Applications", func() {
 				})
 			})
 
-			When("buildpacks is set with one buildpack", func() {
+			When("buildpacks contains default/null", func() {
 				BeforeEach(func() {
-					buildpacks = []string{"ruby"}
+					buildpacks = []string{"default"}
 					config.DesiredApplication.Buildpacks = buildpacks
 
 					updatedApplication = v2action.Application{Buildpack: types.FilteredString{
@@ -254,35 +232,128 @@ var _ = Describe("Applications", func() {
 					fakeV2Actor.UpdateApplicationReturns(updatedApplication, v2action.Warnings{"update-warning"}, nil)
 				})
 
-				It("sets buildpack to the only provided buildpack in buildpacks", func() {
+				It("sets buildpack with the empty string", func() {
+					Expect(executeErr).ToNot(HaveOccurred())
+					Expect(warnings).To(ConsistOf(v2action.Warnings{"update-warning"}))
+
 					Expect(fakeV2Actor.UpdateApplicationCallCount()).To(Equal(1))
 					submitApp := fakeV2Actor.UpdateApplicationArgsForCall(0)
 					Expect(submitApp).To(MatchFields(IgnoreExtras, Fields{
-						"Buildpack": Equal(types.FilteredString{Value: buildpacks[0], IsSet: true}),
+						"Buildpack": Equal(types.FilteredString{IsSet: true}),
 					}))
+				})
+			})
 
-					Expect(fakeV3Actor.UpdateApplicationCallCount()).To(Equal(0))
-					Expect(returnedConfig.DesiredApplication.Application).To(Equal(updatedApplication))
+			When("buildpacks is set with one buildpack", func() {
+				BeforeEach(func() {
+					config.DesiredApplication.Buildpacks = []string{"ruby"}
 				})
 
-				When("that buildpack is default/null", func() {
+				When("a stack is specified in DesiredApplication (-s option or manifest)", func() {
 					BeforeEach(func() {
-						buildpacks = []string{"default"}
-						config.DesiredApplication.Buildpacks = buildpacks
-
-						updatedApplication = v2action.Application{Buildpack: types.FilteredString{
-							Value: buildpacks[0],
-							IsSet: true,
-						}}
-						fakeV2Actor.UpdateApplicationReturns(updatedApplication, v2action.Warnings{"update-warning"}, nil)
+						config.DesiredApplication.Stack.Name = "some-stack-name"
 					})
 
-					It("sets buildpack with the empty string", func() {
-						Expect(fakeV2Actor.UpdateApplicationCallCount()).To(Equal(1))
-						submitApp := fakeV2Actor.UpdateApplicationArgsForCall(0)
-						Expect(submitApp).To(MatchFields(IgnoreExtras, Fields{
-							"Buildpack": Equal(types.FilteredString{IsSet: true}),
-						}))
+					When("finding the buildpack succeeds", func() {
+						BeforeEach(func() {
+							fakeV2Actor.GetBuildpackByNameAndStackReturns(
+								v2action.Buildpack{Name: "ruby", Stack: "some-stack-name"},
+								v2action.Warnings{"v2-get-buildpack-warnings"},
+								nil,
+							)
+						})
+
+						It("sets buildpack to the only provided buildpack in buildpacks", func() {
+							Expect(executeErr).ToNot(HaveOccurred())
+							Expect(warnings).To(ConsistOf(v2action.Warnings{"v2-get-buildpack-warnings"}))
+
+							Expect(fakeV2Actor.GetBuildpackByNameAndStackCallCount()).To(Equal(1))
+							buildpackName, stackName := fakeV2Actor.GetBuildpackByNameAndStackArgsForCall(0)
+							Expect(buildpackName).To(Equal("ruby"))
+							Expect(stackName).To(Equal("some-stack-name"))
+
+							Expect(fakeV2Actor.UpdateApplicationCallCount()).To(Equal(1))
+							submitApp := fakeV2Actor.UpdateApplicationArgsForCall(0)
+							Expect(submitApp).To(MatchFields(IgnoreExtras, Fields{
+								"Buildpack": Equal(types.FilteredString{Value: "ruby", IsSet: true}),
+							}))
+
+							Expect(fakeV3Actor.UpdateApplicationCallCount()).To(Equal(0))
+						})
+					})
+
+					When("the buildpack does not exist for the user-specified stack", func() {
+						BeforeEach(func() {
+							fakeV2Actor.GetBuildpackByNameAndStackReturns(
+								v2action.Buildpack{},
+								v2action.Warnings{"v2-get-buildpack-warnings"},
+								actionerror.BuildpackNotFoundError{BuildpackName: "ruby", StackName: "some-stack-name"},
+							)
+						})
+
+						It("returns an error", func() {
+							Expect(executeErr).To(MatchError(actionerror.BuildpacksStackMismatchError{Stack: "some-stack-name"}))
+							Expect(warnings).To(ConsistOf(v2action.Warnings{"v2-get-buildpack-warnings"}))
+
+							Expect(fakeV2Actor.GetBuildpackByNameAndStackCallCount()).To(Equal(1))
+							buildpack, stack := fakeV2Actor.GetBuildpackByNameAndStackArgsForCall(0)
+							Expect(buildpack).To(Equal("ruby"))
+							Expect(stack).To(Equal("some-stack-name"))
+						})
+					})
+				})
+
+				When("a stack is not specified in DesiredApplication (-s option or manifest)", func() {
+					BeforeEach(func() {
+						config.CurrentApplication.Stack.Name = "existing-stack-name"
+					})
+
+					When("finding a buildpack associated with the existing application's stack succeeds", func() {
+						BeforeEach(func() {
+							fakeV2Actor.GetBuildpackByNameAndStackReturns(
+								v2action.Buildpack{Name: "ruby", Stack: "existing-stack-name"},
+								v2action.Warnings{"v2-get-buildpack-warnings"},
+								nil,
+							)
+						})
+
+						It("sets buildpack to the only provided buildpack in buildpacks", func() {
+							Expect(executeErr).ToNot(HaveOccurred())
+							Expect(warnings).To(ConsistOf(v2action.Warnings{"v2-get-buildpack-warnings"}))
+
+							Expect(fakeV2Actor.GetBuildpackByNameAndStackCallCount()).To(Equal(1))
+							buildpackName, stackName := fakeV2Actor.GetBuildpackByNameAndStackArgsForCall(0)
+							Expect(buildpackName).To(Equal("ruby"))
+							Expect(stackName).To(Equal("existing-stack-name"))
+
+							Expect(fakeV2Actor.UpdateApplicationCallCount()).To(Equal(1))
+							submitApp := fakeV2Actor.UpdateApplicationArgsForCall(0)
+							Expect(submitApp).To(MatchFields(IgnoreExtras, Fields{
+								"Buildpack": Equal(types.FilteredString{Value: "ruby", IsSet: true}),
+							}))
+
+							Expect(fakeV3Actor.UpdateApplicationCallCount()).To(Equal(0))
+						})
+					})
+
+					When("the specified buildpack associated with the existing application's stack does not exist", func() {
+						BeforeEach(func() {
+							fakeV2Actor.GetBuildpackByNameAndStackReturns(
+								v2action.Buildpack{},
+								v2action.Warnings{"v2-get-buildpack-warnings"},
+								actionerror.BuildpackNotFoundError{BuildpackName: "ruby", StackName: "existing-stack-name"},
+							)
+
+							It("returns an error", func() {
+								Expect(executeErr).To(MatchError(actionerror.BuildpacksStackMismatchError{Stack: "existing-stack-name"}))
+								Expect(warnings).To(ConsistOf(v2action.Warnings{"v2-get-buildpack-warnings"}))
+
+								Expect(fakeV2Actor.GetBuildpackByNameAndStackCallCount()).To(Equal(1))
+								buildpack, stack := fakeV2Actor.GetBuildpackByNameAndStackArgsForCall(0)
+								Expect(buildpack).To(Equal("ruby"))
+								Expect(stack).To(Equal("existing-stack-name"))
+							})
+						})
 					})
 				})
 			})
@@ -306,46 +377,72 @@ var _ = Describe("Applications", func() {
 					Expect(returnedConfig.DesiredApplication.Application).To(Equal(updatedApplication))
 				})
 
-				When("the v3 update is successful", func() {
-					var submitApp v3action.Application
+				When("a stack is specified in DesiredApplication (-s option or manifest)", func() {
+					When("all the buildpacks are found for the provided stack", func() {
+						BeforeEach(func() {
+							fakeV2Actor.GetBuildpackByNameAndStackReturnsOnCall(
+								0,
+								v2action.Buildpack{Name: "ruby", Stack: "some-stack-name"},
+								v2action.Warnings{"v2-get-buildpack-warnings-1"},
+								nil,
+							)
 
-					BeforeEach(func() {
-						updatedApplication = config.DesiredApplication.Application
-						updatedApplication.GUID = "yay-im-a-guid"
-						submitApp = v3action.Application{
-							Name:                updatedApplication.Name,
-							GUID:                updatedApplication.GUID,
-							StackName:           config.DesiredApplication.Stack.Name,
-							LifecycleBuildpacks: []string{"ruby", "java"},
-							LifecycleType:       constant.AppLifecycleTypeBuildpack,
-						}
+							fakeV2Actor.GetBuildpackByNameAndStackReturnsOnCall(
+								1,
+								v2action.Buildpack{Name: "java", Stack: "some-stack-name"},
+								v2action.Warnings{"v2-get-buildpack-warnings-2"},
+								nil,
+							)
+						})
 
-						fakeV2Actor.UpdateApplicationReturns(updatedApplication, v2action.Warnings{"v2-create-application-warnings"}, nil)
-						fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, nil)
-					})
+						It("includes any warnings but does not return an error", func() {
+							Expect(executeErr).ToNot(HaveOccurred())
+							Expect(warnings).To(ConsistOf(v2action.Warnings{"v2-get-buildpack-warnings-1", "v2-get-buildpack-warnings-2"}))
+						})
 
-					It("updates only the buildpacks in ccv3", func() {
-						Expect(executeErr).ToNot(HaveOccurred())
-						Expect(warnings).To(ConsistOf("v2-create-application-warnings", "v3-update-application-warnings"))
+						When("the v3 update is successful", func() {
+							var submitApp v3action.Application
 
-						Expect(fakeV3Actor.UpdateApplicationCallCount()).To(Equal(1))
-						Expect(fakeV3Actor.UpdateApplicationArgsForCall(0)).To(Equal(submitApp))
+							BeforeEach(func() {
+								config.DesiredApplication.Stack.Name = "some-stack-name"
+								updatedApplication = config.DesiredApplication.Application
+								updatedApplication.GUID = "yay-im-a-guid"
+								submitApp = v3action.Application{
+									Name:                updatedApplication.Name,
+									GUID:                updatedApplication.GUID,
+									StackName:           "some-stack-name",
+									LifecycleBuildpacks: []string{"ruby", "java"},
+									LifecycleType:       constant.AppLifecycleTypeBuildpack,
+								}
 
-						Expect(returnedConfig.DesiredApplication.Application).To(Equal(updatedApplication))
-					})
-				})
+								fakeV2Actor.UpdateApplicationReturns(updatedApplication, v2action.Warnings{"v2-create-application-warnings"}, nil)
+								fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, nil)
+							})
 
-				When("the v3 update fails", func() {
-					BeforeEach(func() {
-						fakeV2Actor.UpdateApplicationReturns(v2action.Application{}, v2action.Warnings{"v2-create-application-warnings"}, nil)
-						fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, errors.New("boom"))
-					})
+							It("updates only the buildpacks in ccv3", func() {
+								Expect(executeErr).ToNot(HaveOccurred())
+								Expect(warnings).To(ConsistOf("v2-create-application-warnings", "v3-update-application-warnings"))
 
-					It("raises an error", func() {
-						Expect(executeErr).To(MatchError("boom"))
-						Expect(warnings).To(ConsistOf("v2-create-application-warnings", "v3-update-application-warnings"))
+								Expect(fakeV3Actor.UpdateApplicationCallCount()).To(Equal(1))
+								Expect(fakeV3Actor.UpdateApplicationArgsForCall(0)).To(Equal(submitApp))
 
-						Expect(fakeV3Actor.UpdateApplicationCallCount()).To(Equal(1))
+								Expect(returnedConfig.DesiredApplication.Application).To(Equal(updatedApplication))
+							})
+						})
+
+						When("the v3 update fails", func() {
+							BeforeEach(func() {
+								fakeV2Actor.UpdateApplicationReturns(v2action.Application{}, v2action.Warnings{"v2-create-application-warnings"}, nil)
+								fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, errors.New("boom"))
+							})
+
+							It("raises an error", func() {
+								Expect(executeErr).To(MatchError("boom"))
+								Expect(warnings).To(ConsistOf("v2-create-application-warnings", "v3-update-application-warnings"))
+
+								Expect(fakeV3Actor.UpdateApplicationCallCount()).To(Equal(1))
+							})
+						})
 					})
 				})
 			})
@@ -496,12 +593,13 @@ var _ = Describe("Applications", func() {
 					var submitApp v3action.Application
 
 					BeforeEach(func() {
+						config.DesiredApplication.Stack.Name = "some-stack-name"
 						createdApplication = config.DesiredApplication.Application
 						createdApplication.GUID = "yay-im-a-guid"
 						submitApp = v3action.Application{
 							Name:                createdApplication.Name,
 							GUID:                createdApplication.GUID,
-							StackName:           config.DesiredApplication.Stack.Name,
+							StackName:           "some-stack-name",
 							LifecycleBuildpacks: []string{"ruby", "java"},
 							LifecycleType:       constant.AppLifecycleTypeBuildpack,
 						}

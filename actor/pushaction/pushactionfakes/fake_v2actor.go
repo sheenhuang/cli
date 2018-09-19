@@ -124,6 +124,22 @@ type FakeV2Actor struct {
 		result2 v2action.Warnings
 		result3 error
 	}
+	GetBuildpackByNameAndStackStub        func(buildpackName string, stackName string) (v2action.Buildpack, v2action.Warnings, error)
+	getBuildpackByNameAndStackMutex       sync.RWMutex
+	getBuildpackByNameAndStackArgsForCall []struct {
+		buildpackName string
+		stackName     string
+	}
+	getBuildpackByNameAndStackReturns struct {
+		result1 v2action.Buildpack
+		result2 v2action.Warnings
+		result3 error
+	}
+	getBuildpackByNameAndStackReturnsOnCall map[int]struct {
+		result1 v2action.Buildpack
+		result2 v2action.Warnings
+		result3 error
+	}
 	GetDomainsByNameAndOrganizationStub        func(domainNames []string, orgGUID string) ([]v2action.Domain, v2action.Warnings, error)
 	getDomainsByNameAndOrganizationMutex       sync.RWMutex
 	getDomainsByNameAndOrganizationArgsForCall []struct {
@@ -725,6 +741,61 @@ func (fake *FakeV2Actor) GetApplicationRoutesReturnsOnCall(i int, result1 v2acti
 	}
 	fake.getApplicationRoutesReturnsOnCall[i] = struct {
 		result1 v2action.Routes
+		result2 v2action.Warnings
+		result3 error
+	}{result1, result2, result3}
+}
+
+func (fake *FakeV2Actor) GetBuildpackByNameAndStack(buildpackName string, stackName string) (v2action.Buildpack, v2action.Warnings, error) {
+	fake.getBuildpackByNameAndStackMutex.Lock()
+	ret, specificReturn := fake.getBuildpackByNameAndStackReturnsOnCall[len(fake.getBuildpackByNameAndStackArgsForCall)]
+	fake.getBuildpackByNameAndStackArgsForCall = append(fake.getBuildpackByNameAndStackArgsForCall, struct {
+		buildpackName string
+		stackName     string
+	}{buildpackName, stackName})
+	fake.recordInvocation("GetBuildpackByNameAndStack", []interface{}{buildpackName, stackName})
+	fake.getBuildpackByNameAndStackMutex.Unlock()
+	if fake.GetBuildpackByNameAndStackStub != nil {
+		return fake.GetBuildpackByNameAndStackStub(buildpackName, stackName)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2, ret.result3
+	}
+	return fake.getBuildpackByNameAndStackReturns.result1, fake.getBuildpackByNameAndStackReturns.result2, fake.getBuildpackByNameAndStackReturns.result3
+}
+
+func (fake *FakeV2Actor) GetBuildpackByNameAndStackCallCount() int {
+	fake.getBuildpackByNameAndStackMutex.RLock()
+	defer fake.getBuildpackByNameAndStackMutex.RUnlock()
+	return len(fake.getBuildpackByNameAndStackArgsForCall)
+}
+
+func (fake *FakeV2Actor) GetBuildpackByNameAndStackArgsForCall(i int) (string, string) {
+	fake.getBuildpackByNameAndStackMutex.RLock()
+	defer fake.getBuildpackByNameAndStackMutex.RUnlock()
+	return fake.getBuildpackByNameAndStackArgsForCall[i].buildpackName, fake.getBuildpackByNameAndStackArgsForCall[i].stackName
+}
+
+func (fake *FakeV2Actor) GetBuildpackByNameAndStackReturns(result1 v2action.Buildpack, result2 v2action.Warnings, result3 error) {
+	fake.GetBuildpackByNameAndStackStub = nil
+	fake.getBuildpackByNameAndStackReturns = struct {
+		result1 v2action.Buildpack
+		result2 v2action.Warnings
+		result3 error
+	}{result1, result2, result3}
+}
+
+func (fake *FakeV2Actor) GetBuildpackByNameAndStackReturnsOnCall(i int, result1 v2action.Buildpack, result2 v2action.Warnings, result3 error) {
+	fake.GetBuildpackByNameAndStackStub = nil
+	if fake.getBuildpackByNameAndStackReturnsOnCall == nil {
+		fake.getBuildpackByNameAndStackReturnsOnCall = make(map[int]struct {
+			result1 v2action.Buildpack
+			result2 v2action.Warnings
+			result3 error
+		})
+	}
+	fake.getBuildpackByNameAndStackReturnsOnCall[i] = struct {
+		result1 v2action.Buildpack
 		result2 v2action.Warnings
 		result3 error
 	}{result1, result2, result3}
@@ -1417,6 +1488,8 @@ func (fake *FakeV2Actor) Invocations() map[string][][]interface{} {
 	defer fake.getApplicationByNameAndSpaceMutex.RUnlock()
 	fake.getApplicationRoutesMutex.RLock()
 	defer fake.getApplicationRoutesMutex.RUnlock()
+	fake.getBuildpackByNameAndStackMutex.RLock()
+	defer fake.getBuildpackByNameAndStackMutex.RUnlock()
 	fake.getDomainsByNameAndOrganizationMutex.RLock()
 	defer fake.getDomainsByNameAndOrganizationMutex.RUnlock()
 	fake.getOrganizationDomainsMutex.RLock()

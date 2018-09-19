@@ -70,6 +70,31 @@ var _ = Describe("push with different buildpack values", func() {
 				helpers.SkipIfVersionLessThan(ccversion.MinVersionManifestBuildpacksV3)
 			})
 
+			FWhen("the user specifies an existing stack with -s that does not match these buildpacks", func(){
+				It("provides a helpful error message", func(){
+					nonMatchingStack := helpers.CreateStack()
+
+
+					helpers.WithProcfileApp(func(dir string) {
+						tempfile := filepath.Join(dir, "index.html")
+						err := ioutil.WriteFile(tempfile, []byte(fmt.Sprintf("hello world %d", rand.Int())), 0666)
+						Expect(err).ToNot(HaveOccurred())
+
+						session := helpers.CustomCF(helpers.CFEnv{WorkingDirectory: dir},
+							PushCommandName, appName,
+							"-b", "staticfile_buildpack", "-b", "ruby_buildpack", "-s", nonMatchingStack, "--no-start",
+						)
+
+
+						Eventually(session.Err).Should(
+							Say(`Buildpack "static_buildpack" and "ruby_buildpack" with stack %s not found.`, nonMatchingStack),
+						)
+						Eventually(session).Should(Exit(1))
+					})
+				})
+			})
+
+
 			When("the buildpacks do not use the default stack", func() {
 				var (
 					buildpacks      []string
@@ -85,7 +110,7 @@ var _ = Describe("push with different buildpack values", func() {
 					}
 				})
 
-				When("a stack is provided", func() {
+				When("the user specifies the stack used by these buildpacks with -s", func() {
 					It("pushes the app successfully with multiple buildpacks using the stack specified", func() {
 						helpers.WithProcfileApp(func(dir string) {
 							tempfile := filepath.Join(dir, "index.html")

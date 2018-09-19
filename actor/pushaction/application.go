@@ -76,8 +76,27 @@ func (actor Actor) UpdateApplication(config ApplicationConfig) (ApplicationConfi
 	v2App = actor.ignoreSameState(config, v2App)
 	v2App = actor.ignoreSameStackGUID(config, v2App)
 
-	log.WithField("application", v2App).Debug("updating application with these settings")
+	var stackForBuildpacks string
+
+	if config.DesiredApplication.Stack.Name != "" {
+		stackForBuildpacks = config.DesiredApplication.Stack.Name
+	} else {
+		stackForBuildpacks = config.CurrentApplication.Stack.Name
+	}
+
 	var warnings Warnings
+	for _, buildpack := range config.DesiredApplication.Buildpacks {
+		_, v2Warnings, err := actor.V2Actor.GetBuildpackByNameAndStack(buildpack, stackForBuildpacks)
+		warnings = append(warnings, v2Warnings...)
+		if _, ok := err.(actionerror.BuildpackNotFoundError); ok {
+			return ApplicationConfig{}, "", warnings, actionerror.BuildpacksStackMismatchError{Stack: stackForBuildpacks}
+		} else if err != nil {
+			return ApplicationConfig{}, "", warnings, err
+		}
+	}
+
+	log.WithField("application", v2App).Debug("updating application with these settings")
+
 	updatedApp, v2Warnings, err := actor.V2Actor.UpdateApplication(v2App)
 	warnings = append(warnings, v2Warnings...)
 	if err != nil {

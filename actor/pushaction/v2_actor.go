@@ -17,6 +17,7 @@ type V2Actor interface {
 	FindRouteBoundToSpaceWithSettings(route v2action.Route) (v2action.Route, v2action.Warnings, error)
 	GetApplicationByNameAndSpace(name string, spaceGUID string) (v2action.Application, v2action.Warnings, error)
 	GetApplicationRoutes(applicationGUID string) (v2action.Routes, v2action.Warnings, error)
+	GetBuildpackByNameAndStack(buildpackName string, stackName string) (v2action.Buildpack, v2action.Warnings, error)
 	GetDomainsByNameAndOrganization(domainNames []string, orgGUID string) ([]v2action.Domain, v2action.Warnings, error)
 	GetOrganizationDomains(orgGUID string) ([]v2action.Domain, v2action.Warnings, error)
 	GetServiceInstanceByNameAndSpace(name string, spaceGUID string) (v2action.ServiceInstance, v2action.Warnings, error)
