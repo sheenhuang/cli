@@ -22,10 +22,9 @@ type V3DeleteActor interface {
 }
 
 type V3DeleteCommand struct {
-	RequiredArgs    flag.AppName `positional-args:"yes"`
-	Force           bool         `short:"f" description:"Force deletion without confirmation"`
-	usage           interface{}  `usage:"CF_NAME delete APP_NAME [-f]"`
-	relatedCommands interface{}  `related_commands:"apps, scale, stop"`
+	RequiredArgs flag.AppName `positional-args:"yes"`
+	Force        bool         `short:"f" description:"Force deletion without confirmation"`
+	usage        interface{}  `usage:"CF_NAME v3-delete APP_NAME [-f]"`
 
 	UI          command.UI
 	Config      command.Config

@@ -23,7 +23,7 @@ type commandList struct {
 	V3ApplyManifest      v3.V3ApplyManifestCommand      `command:"v3-apply-manifest" description:"Applies manifest properties to an application"`
 	V3CreateApp          v3.V3CreateAppCommand          `command:"v3-create-app" description:"Create a V3 App"`
 	V3CreatePackage      v3.V3CreatePackageCommand      `command:"v3-create-package" description:"Uploads a V3 Package"`
-	V3DeleteApp          v3.V3DeleteCommand             `command:"delete" description:"Delete an app"`
+	V3DeleteApp          v3.V3DeleteCommand             `command:"v3-delete" description:"Delete a V3 App"`
 	V3Droplets           v3.V3DropletsCommand           `command:"v3-droplets" description:"List droplets of an app"`
 	V3GetHealthCheck     v3.V3GetHealthCheckCommand     `command:"v3-get-health-check" description:"Show the type of health check performed on an app"`
 	V3Packages           v3.V3PackagesCommand           `command:"v3-packages" description:"List packages of an app"`
@@ -89,6 +89,7 @@ type commandList struct {
 	DeleteSpaceQuota                   v2.DeleteSpaceQuotaCommand                   `command:"delete-space-quota" description:"Delete a space quota definition and unassign the space quota from all spaces"`
 	DeleteSpace                        v2.DeleteSpaceCommand                        `command:"delete-space" description:"Delete a space"`
 	DeleteUser                         v2.DeleteUserCommand                         `command:"delete-user" description:"Delete a user"`
+	Delete                             v2.DeleteCommand                             `command:"delete" alias:"d" description:"Delete an app"`
 	DisableFeatureFlag                 v2.DisableFeatureFlagCommand                 `command:"disable-feature-flag" description:"Prevent use of a feature"`
 	DisableOrgIsolation                v3.DisableOrgIsolationCommand                `command:"disable-org-isolation" description:"Revoke an organization's entitlement to an isolation segment"`
 	DisableServiceAccess               v2.DisableServiceAccessCommand               `command:"disable-service-access" description:"Disable access to a service or service plan for one or all orgs"`
