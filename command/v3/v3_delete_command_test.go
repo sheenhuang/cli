@@ -18,7 +18,7 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 )
 
-var _ = Describe("v3-delete Command", func() {
+var _ = Describe("delete Command", func() {
 	var (
 		cmd             v3.V3DeleteCommand
 		testUI          *ui.UI
