@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("AppInstanceTable", func() {
-	It("can parse app instance table from v3-app", func() {
+	It("can parse app instance table from app", func() {
 		input := `
 Showing health and status for app dora in org wut / space wut as admin...
 

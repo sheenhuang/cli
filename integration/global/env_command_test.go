@@ -38,7 +38,7 @@ var _ = Describe("env command", func() {
 				Eventually(session).Should(Say("USAGE:"))
 				Eventually(session).Should(Say("cf env APP_NAME"))
 				Eventually(session).Should(Say("SEE ALSO:"))
-				Eventually(session).Should(Say("running-environment-variable-group, staging-environment-variable-group, v3-app, v3-apps, set-env, v3-unset-env"))
+				Eventually(session).Should(Say("app, running-environment-variable-group, staging-environment-variable-group, v3-apps, set-env, v3-unset-env"))
 				Eventually(session).Should(Exit(0))
 			})
 		})

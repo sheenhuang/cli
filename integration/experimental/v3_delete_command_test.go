@@ -250,7 +250,7 @@ var _ = Describe("v3-delete command", func() {
 				Eventually(session).Should(Say("OK"))
 				Eventually(session).Should(Exit(0))
 
-				Eventually(helpers.CF("v3-app", appName)).Should(Exit(1))
+				Eventually(helpers.CF("app", appName)).Should(Exit(1))
 			})
 		})
 	})

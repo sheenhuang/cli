@@ -25,7 +25,7 @@ type V3EnvActor interface {
 type V3EnvCommand struct {
 	RequiredArgs    flag.EnvironmentArgs `positional-args:"yes"`
 	usage           interface{}          `usage:"CF_NAME env APP_NAME"`
-	relatedCommands interface{}          `related_commands:"v3-app, v3-apps, set-env, v3-unset-env, running-environment-variable-group, staging-environment-variable-group"`
+	relatedCommands interface{}          `related_commands:"app, v3-apps, set-env, v3-unset-env, running-environment-variable-group, staging-environment-variable-group"`
 
 	UI          command.UI
 	Config      command.Config
