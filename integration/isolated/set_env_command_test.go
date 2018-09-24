@@ -1,10 +1,9 @@
-package experimental
+package isolated
 
 import (
-	"fmt"
-
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/integration/helpers"
+	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -12,7 +11,7 @@ import (
 	. "github.com/onsi/gomega/ghttp"
 )
 
-var _ = Describe("v3-set-env command", func() {
+var _ = Describe("set-env command", func() {
 	var (
 		orgName     string
 		spaceName   string
@@ -32,12 +31,14 @@ var _ = Describe("v3-set-env command", func() {
 	Describe("help", func() {
 		When("--help flag is set", func() {
 			It("displays command usage to output", func() {
-				session := helpers.CF("v3-set-env", "--help")
+				session := helpers.CF("set-env", "--help")
 
 				Eventually(session).Should(Say("NAME:"))
-				Eventually(session).Should(Say("v3-set-env - Set an env variable for an app"))
+				Eventually(session).Should(Say("set-env - Set an env variable for an app"))
 				Eventually(session).Should(Say("USAGE:"))
-				Eventually(session).Should(Say("cf v3-set-env APP_NAME ENV_VAR_NAME ENV_VAR_VALUE"))
+				Eventually(session).Should(Say("cf set-env APP_NAME ENV_VAR_NAME ENV_VAR_VALUE"))
+				Eventually(session).Should(Say("ALIAS:"))
+				Eventually(session).Should(Say("se"))
 				Eventually(session).Should(Say("SEE ALSO:"))
 				Eventually(session).Should(Say("set-running-environment-variable-group, set-staging-environment-variable-group, v3-apps, v3-env, v3-restart, v3-stage, v3-unset-env"))
 				Eventually(session).Should(Exit(0))
@@ -47,7 +48,7 @@ var _ = Describe("v3-set-env command", func() {
 
 	When("the app name is not provided", func() {
 		It("tells the user that the app name is required, prints help text, and exits 1", func() {
-			session := helpers.CF("v3-set-env")
+			session := helpers.CF("set-env")
 
 			Eventually(session.Err).Should(Say("Incorrect Usage: the required arguments `APP_NAME`, `ENV_VAR_NAME` and `ENV_VAR_VALUE` were not provided"))
 			Eventually(session).Should(Say("NAME:"))
@@ -57,7 +58,7 @@ var _ = Describe("v3-set-env command", func() {
 
 	When("ENV_VAR_NAME is not provided", func() {
 		It("tells the user that ENV_VAR_NAME is required, prints help text, and exits 1", func() {
-			session := helpers.CF("v3-set-env", appName)
+			session := helpers.CF("set-env", appName)
 
 			Eventually(session.Err).Should(Say("Incorrect Usage: the required arguments `ENV_VAR_NAME` and `ENV_VAR_VALUE` were not provided"))
 			Eventually(session).Should(Say("NAME:"))
@@ -67,7 +68,7 @@ var _ = Describe("v3-set-env command", func() {
 
 	When("the ENV_VAR_VALUE is not provided", func() {
 		It("tells the user that ENV_VAR_VALUE is required, prints help text, and exits 1", func() {
-			session := helpers.CF("v3-set-env", appName, envVarName)
+			session := helpers.CF("set-env", appName, envVarName)
 
 			Eventually(session.Err).Should(Say("Incorrect Usage: the required argument `ENV_VAR_VALUE` was not provided"))
 			Eventually(session).Should(Say("NAME:"))
@@ -76,7 +77,7 @@ var _ = Describe("v3-set-env command", func() {
 	})
 
 	It("displays the experimental warning", func() {
-		session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+		session := helpers.CF("set-env", appName, envVarName, envVarValue)
 		Eventually(session.Err).Should(Say("This command is in EXPERIMENTAL stage and may change without notice"))
 		Eventually(session).Should(Exit())
 	})
@@ -94,7 +95,7 @@ var _ = Describe("v3-set-env command", func() {
 			})
 
 			It("fails with error message that the minimum version is not met", func() {
-				session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+				session := helpers.CF("set-env", appName, envVarName, envVarValue)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("This command requires CF API version 3\\.27\\.0 or higher\\."))
 				Eventually(session).Should(Exit(1))
@@ -113,7 +114,7 @@ var _ = Describe("v3-set-env command", func() {
 			})
 
 			It("fails with error message that the minimum version is not met", func() {
-				session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+				session := helpers.CF("set-env", appName, envVarName, envVarValue)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("This command requires CF API version 3\\.27\\.0 or higher\\."))
 				Eventually(session).Should(Exit(1))
@@ -126,7 +127,7 @@ var _ = Describe("v3-set-env command", func() {
 			})
 
 			It("fails with no API endpoint set message", func() {
-				session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+				session := helpers.CF("set-env", appName, envVarName, envVarValue)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("No API endpoint set\\. Use 'cf login' or 'cf api' to target an endpoint\\."))
 				Eventually(session).Should(Exit(1))
@@ -139,7 +140,7 @@ var _ = Describe("v3-set-env command", func() {
 			})
 
 			It("fails with not logged in message", func() {
-				session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+				session := helpers.CF("set-env", appName, envVarName, envVarValue)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("Not logged in\\. Use 'cf login' to log in\\."))
 				Eventually(session).Should(Exit(1))
@@ -153,7 +154,7 @@ var _ = Describe("v3-set-env command", func() {
 			})
 
 			It("fails with no org targeted error message", func() {
-				session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+				session := helpers.CF("set-env", appName, envVarName, envVarValue)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("No org targeted, use 'cf target -o ORG' to target an org\\."))
 				Eventually(session).Should(Exit(1))
@@ -168,7 +169,7 @@ var _ = Describe("v3-set-env command", func() {
 			})
 
 			It("fails with no space targeted error message", func() {
-				session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+				session := helpers.CF("set-env", appName, envVarName, envVarValue)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("No space targeted, use 'cf target -s SPACE' to target a space\\."))
 				Eventually(session).Should(Exit(1))
@@ -191,7 +192,7 @@ var _ = Describe("v3-set-env command", func() {
 		When("the app does not exist", func() {
 			It("displays app not found and exits 1", func() {
 				invalidAppName := "invalid-app-name"
-				session := helpers.CF("v3-set-env", invalidAppName, envVarName, envVarValue)
+				session := helpers.CF("set-env", invalidAppName, envVarName, envVarValue)
 
 				Eventually(session).Should(Say("Setting env variable %s for app %s in org %s / space %s as %s\\.\\.\\.", envVarName, invalidAppName, orgName, spaceName, userName))
 				Eventually(session.Err).Should(Say("App %s not found", invalidAppName))
@@ -209,7 +210,7 @@ var _ = Describe("v3-set-env command", func() {
 
 			When("the environment variable has not been previously set", func() {
 				It("sets the environment variable value pair", func() {
-					session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+					session := helpers.CF("set-env", appName, envVarName, envVarValue)
 
 					Eventually(session).Should(Say("Setting env variable %s for app %s in org %s / space %s as %s\\.\\.\\.", envVarName, appName, orgName, spaceName, userName))
 					Eventually(session).Should(Say("OK"))
@@ -228,7 +229,7 @@ var _ = Describe("v3-set-env command", func() {
 					})
 
 					It("sets the environment variable value pair", func() {
-						session := helpers.CF("v3-set-env", appName, envVarName, envVarValue)
+						session := helpers.CF("set-env", appName, envVarName, envVarValue)
 
 						Eventually(session).Should(Say("Setting env variable %s for app %s in org %s / space %s as %s\\.\\.\\.", envVarName, appName, orgName, spaceName, userName))
 						Eventually(session).Should(Say("OK"))
@@ -244,12 +245,12 @@ var _ = Describe("v3-set-env command", func() {
 
 			When("the environment variable has been previously set", func() {
 				BeforeEach(func() {
-					Eventually(helpers.CF("v3-set-env", appName, envVarName, envVarValue)).Should(Exit(0))
+					Eventually(helpers.CF("set-env", appName, envVarName, envVarValue)).Should(Exit(0))
 				})
 
 				It("overrides the value of the existing environment variable", func() {
 					someOtherValue := "some-other-value"
-					session := helpers.CF("v3-set-env", appName, envVarName, someOtherValue)
+					session := helpers.CF("set-env", appName, envVarName, someOtherValue)
 
 					Eventually(session).Should(Say("Setting env variable %s for app %s in org %s / space %s as %s\\.\\.\\.", envVarName, appName, orgName, spaceName, userName))
 					Eventually(session).Should(Say("OK"))

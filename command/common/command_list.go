@@ -32,7 +32,6 @@ type commandList struct {
 	V3RestartAppInstance v3.V3RestartAppInstanceCommand `command:"v3-restart-app-instance" description:"Terminate, then instantiate an app instance"`
 	V3Scale              v3.V3ScaleCommand              `command:"v3-scale" description:"Change or view the instance count, disk space limit, and memory limit for an app"`
 	V3SetDroplet         v3.V3SetDropletCommand         `command:"v3-set-droplet" description:"Set the droplet used to run an app"`
-	V3SetEnv             v3.V3SetEnvCommand             `command:"v3-set-env" description:"Set an env variable for an app"`
 	V3SetHealthCheck     v3.V3SetHealthCheckCommand     `command:"v3-set-health-check" description:"Change type of health check performed on an app's process"`
 	V3Stage              v3.V3StageCommand              `command:"v3-stage" description:"Create a new droplet for an app"`
 	V3Start              v3.V3StartCommand              `command:"v3-start" description:"Start an app"`
@@ -157,7 +156,7 @@ type commandList struct {
 	ServiceKey                         v2.ServiceKeyCommand                         `command:"service-key" description:"Show service key info"`
 	Services                           v2.ServicesCommand                           `command:"services" alias:"s" description:"List all service instances in the target space"`
 	Service                            v2.ServiceCommand                            `command:"service" description:"Show service instance info"`
-	SetEnv                             v2.SetEnvCommand                             `command:"set-env" alias:"se" description:"Set an env variable for an app"`
+	SetEnv                             v3.V3SetEnvCommand                           `command:"set-env" alias:"se" description:"Set an env variable for an app"`
 	SetHealthCheck                     v2.SetHealthCheckCommand                     `command:"set-health-check" description:"Change type of health check performed on an app"`
 	SetOrgDefaultIsolationSegment      v3.SetOrgDefaultIsolationSegmentCommand      `command:"set-org-default-isolation-segment" description:"Set the default isolation segment used for apps in spaces in an org"`
 	SetOrgRole                         v2.SetOrgRoleCommand                         `command:"set-org-role" description:"Assign an org role to a user"`

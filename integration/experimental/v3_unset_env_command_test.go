@@ -37,7 +37,7 @@ var _ = Describe("v3-unset-env command", func() {
 				Eventually(session).Should(Say("USAGE:"))
 				Eventually(session).Should(Say("cf v3-unset-env APP_NAME ENV_VAR_NAME"))
 				Eventually(session).Should(Say("SEE ALSO:"))
-				Eventually(session).Should(Say("v3-apps, v3-env, v3-restart, v3-set-env, v3-stage"))
+				Eventually(session).Should(Say("set-env, v3-apps, v3-env, v3-restart, v3-stage"))
 				Eventually(session).Should(Exit(0))
 			})
 		})
@@ -204,7 +204,7 @@ var _ = Describe("v3-unset-env command", func() {
 
 			When("the environment variable has been previously set", func() {
 				BeforeEach(func() {
-					Eventually(helpers.CF("v3-set-env", appName, envVarName, "some-value")).Should(Exit(0))
+					Eventually(helpers.CF("set-env", appName, envVarName, "some-value")).Should(Exit(0))
 				})
 
 				It("overrides the value of the existing environment variable", func() {

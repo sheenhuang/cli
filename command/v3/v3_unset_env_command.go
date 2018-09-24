@@ -24,7 +24,7 @@ type V3UnsetEnvActor interface {
 type V3UnsetEnvCommand struct {
 	RequiredArgs    flag.UnsetEnvironmentArgs `positional-args:"yes"`
 	usage           interface{}               `usage:"CF_NAME v3-unset-env APP_NAME ENV_VAR_NAME"`
-	relatedCommands interface{}               `related_commands:"v3-apps, v3-env, v3-restart, v3-set-env, v3-stage"`
+	relatedCommands interface{}               `related_commands:"v3-apps, v3-env, v3-restart, set-env, v3-stage"`
 
 	UI          command.UI
 	Config      command.Config

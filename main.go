@@ -85,7 +85,7 @@ func handleFlagErrorAndCommandHelp(flagErr *flags.Error, parser *flags.Parser, e
 			},
 		)
 
-		if found && flagErr.Type == flags.ErrUnknownFlag && (parser.Active.Name == "set-env" || parser.Active.Name == "v3-set-env") {
+		if found && flagErr.Type == flags.ErrUnknownFlag && (parser.Active.Name == "set-env") {
 			newArgs := []string{}
 			for _, arg := range originalArgs {
 				if arg[0] == '-' {

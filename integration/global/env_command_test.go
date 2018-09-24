@@ -38,7 +38,7 @@ var _ = Describe("env command", func() {
 				Eventually(session).Should(Say("USAGE:"))
 				Eventually(session).Should(Say("cf env APP_NAME"))
 				Eventually(session).Should(Say("SEE ALSO:"))
-				Eventually(session).Should(Say("running-environment-variable-group, staging-environment-variable-group, v3-app, v3-apps, v3-set-env, v3-unset-env"))
+				Eventually(session).Should(Say("running-environment-variable-group, staging-environment-variable-group, v3-app, v3-apps, set-env, v3-unset-env"))
 				Eventually(session).Should(Exit(0))
 			})
 		})
@@ -185,7 +185,7 @@ var _ = Describe("env command", func() {
 					Eventually(helpers.CF("v3-push", appName, "-p", appDir)).Should(Exit(0))
 				})
 
-				Eventually(helpers.CF("v3-set-env", appName, "user-provided-env-name", "user-provided-env-value")).Should(Exit(0))
+				Eventually(helpers.CF("set-env", appName, "user-provided-env-name", "user-provided-env-value")).Should(Exit(0))
 				Eventually(helpers.CF("create-user-provided-service", userProvidedServiceName)).Should(Exit(0))
 				Eventually(helpers.CF("bind-service", appName, userProvidedServiceName)).Should(Exit(0))
 				Eventually(helpers.CF("set-running-environment-variable-group", `{"running-env-name": "running-env-value", "number": 1}`)).Should(Exit(0))
