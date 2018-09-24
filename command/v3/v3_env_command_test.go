@@ -17,7 +17,7 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 )
 
-var _ = Describe("v3-env Command", func() {
+var _ = Describe("env Command", func() {
 	var (
 		cmd             v3.V3EnvCommand
 		testUI          *ui.UI

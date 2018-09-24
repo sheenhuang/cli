@@ -37,7 +37,7 @@ var _ = Describe("v3-unset-env command", func() {
 				Eventually(session).Should(Say("USAGE:"))
 				Eventually(session).Should(Say("cf v3-unset-env APP_NAME ENV_VAR_NAME"))
 				Eventually(session).Should(Say("SEE ALSO:"))
-				Eventually(session).Should(Say("set-env, v3-apps, v3-env, v3-restart, v3-stage"))
+				Eventually(session).Should(Say("env, set-env, v3-apps, v3-restart, v3-stage"))
 				Eventually(session).Should(Exit(0))
 			})
 		})

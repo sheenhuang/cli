@@ -40,7 +40,7 @@ var _ = Describe("set-env command", func() {
 				Eventually(session).Should(Say("ALIAS:"))
 				Eventually(session).Should(Say("se"))
 				Eventually(session).Should(Say("SEE ALSO:"))
-				Eventually(session).Should(Say("set-running-environment-variable-group, set-staging-environment-variable-group, v3-apps, v3-env, v3-restart, v3-stage, v3-unset-env"))
+				Eventually(session).Should(Say("env, set-running-environment-variable-group, set-staging-environment-variable-group, v3-apps, v3-restart, v3-stage, v3-unset-env"))
 				Eventually(session).Should(Exit(0))
 			})
 		})
