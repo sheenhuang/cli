@@ -195,12 +195,14 @@ var _ = Describe("push with a simple manifest and no flags", func() {
 						Eventually(session).Should(Exit(0))
 
 						session = helpers.CF("env", appName)
-						Eventually(session).Should(Say("key1:\\s+val1"))
-						Eventually(session).Should(Say("key2:\\s+2"))
-						Eventually(session).Should(Say("key3:\\s+true"))
-						Eventually(session).Should(Say("key4:\\s+123412341234"))
-						Eventually(session).Should(Say("key5:\\s+12345.123"))
 						Eventually(session).Should(Exit(0))
+						output := string(session.Out.Contents())
+
+						Expect(output).To(MatchRegexp("key1:\\s+\"val1\""))
+						Expect(output).To(MatchRegexp("key2:\\s+\"2\""))
+						Expect(output).To(MatchRegexp("key3:\\s+\"true\""))
+						Expect(output).To(MatchRegexp("key4:\\s+\"123412341234\""))
+						Expect(output).To(MatchRegexp("key5:\\s+\"12345.123\""))
 					})
 
 				})
@@ -340,11 +342,13 @@ var _ = Describe("push with a simple manifest and no flags", func() {
 				})
 
 				session := helpers.CF("env", appName)
-				Eventually(session).Should(Say("key1:\\s+val1"))
-				Eventually(session).Should(Say("key2:\\s+2"))
-				Eventually(session).Should(Say("key3:\\s+true"))
-				Eventually(session).Should(Say("key4:\\s+false"))
 				Eventually(session).Should(Exit(0))
+
+				output := string(session.Out.Contents())
+				Expect(output).To(MatchRegexp("key1:\\s+\"val1\""))
+				Expect(output).To(MatchRegexp("key2:\\s+\"2\""))
+				Expect(output).To(MatchRegexp("key3:\\s+\"true\""))
+				Expect(output).To(MatchRegexp("key4:\\s+\"false\""))
 			})
 		})
 	})
