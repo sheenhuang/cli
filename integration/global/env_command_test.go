@@ -167,6 +167,8 @@ var _ = Describe("env command", func() {
 				session := helpers.CF("env", invalidAppName)
 
 				Eventually(session).Should(Say("Getting env variables for app %s in org %s / space %s as %s\\.\\.\\.", invalidAppName, orgName, spaceName, userName))
+				Eventually(session).Should(Say("OK"))
+
 				Eventually(session.Err).Should(Say("App %s not found", invalidAppName))
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session).Should(Exit(1))
@@ -204,6 +206,8 @@ var _ = Describe("env command", func() {
 
 				output := string(session.Out.Contents())
 				Expect(output).To(MatchRegexp(fmt.Sprintf("Getting env variables for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName)))
+				Expect(output).To(MatchRegexp("OK"))
+
 				Expect(output).To(MatchRegexp("System-Provided:"))
 				Expect(output).To(MatchRegexp("VCAP_SERVICES: {\\s*\n"))
 				Expect(output).To(MatchRegexp("VCAP_APPLICATION"))
@@ -227,6 +231,8 @@ var _ = Describe("env command", func() {
 
 				session = helpers.CF("env", appName)
 				Eventually(session).Should(Say("Getting env variables for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+				Eventually(session).Should(Say("OK"))
+
 				Eventually(session).Should(Say("System-Provided:"))
 				Eventually(session).Should(Say("VCAP_SERVICES: {}"))
 				Eventually(session).Should(Say("VCAP_APPLICATION"))

@@ -74,6 +74,7 @@ func (cmd V3EnvCommand) Execute(args []string) error {
 		"SpaceName": cmd.Config.TargetedSpace().Name,
 		"Username":  user.Name,
 	})
+	cmd.UI.DisplayOK()
 	cmd.UI.DisplayNewline()
 
 	envGroups, warnings, err := cmd.Actor.GetEnvironmentVariablesByApplicationNameAndSpace(
