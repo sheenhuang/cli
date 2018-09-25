@@ -65,6 +65,15 @@ resources:
       versioned_file: master/cf-cli_edge_linux_x86-64.tgz
       region_name: us-west-1
 
+  - name: edge-windows-installer-64
+    type: s3
+    source:
+      bucket: v7-cf-cli-releases
+      access_key_id: ((cli-team-aws-s3-access-key-id))
+      secret_access_key: ((cli-team-aws-s3-secret-access-key))
+      versioned_file: master/cf-cli-installer_edge_winx64.zip
+      region_name: us-west-1
+
   - name: gcp-bosh-pool
     type: pool
     source:
@@ -135,7 +144,7 @@ jobs:
               file: cli-ci/ci/cli/tasks/cleanup-integration.yml
               input_mapping:
                 bosh-lite-lock: gcp-bosh-pool
-            params: &integration_params
+            params:
               CF_INT_CLIENT_ID: 'potato-face'
               CF_INT_CLIENT_SECRET: ((client-secret))
               CF_INT_DOCKER_IMAGE: ((dockerhub-private-image))
@@ -168,13 +177,20 @@ jobs:
           - get: cli-ci
       - task: extract-binaries
         file: cli-ci/ci/cli/tasks/extract-binaries.yml
-      - task: create-unix-installers
-        file: cli-ci/ci/cli/tasks/create-installers.yml
+      - aggregate:
+        - task: create-unix-installers
+          file: cli-ci/ci/cli/tasks/create-installers.yml
+        - task: create-windows-installers
+          file: cli-ci/ci/cli/tasks/create-installers-windows.yml
       - task: package-binaries
         file: cli-ci/ci/cli/tasks/package-binaries.yml
-      - put: edge-osx-binary-64
-        params:
-          file: archives/cf-cli_edge_osx.tgz
-      - put: edge-linux-binary-64
-        params:
-          file: archives/cf-cli_edge_linux_x86-64.tgz
+      - aggregate:
+        - put: edge-osx-binary-64
+          params:
+            file: archives/cf-cli_edge_osx.tgz
+        - put: edge-linux-binary-64
+          params:
+            file: archives/cf-cli_edge_linux_x86-64.tgz
+        - put: edge-windows-installer-64
+          params:
+            file: winstallers/cf-cli-installer_winx64.zip
