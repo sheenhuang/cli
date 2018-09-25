@@ -75,6 +75,8 @@ jobs:
       - aggregate:
           - task: units-linux
             file: cli-ci/ci/cli-v7/tasks/units-linux.yml
+          - task: units-osx
+            file: cli-ci/ci/cli-v7/tasks/units-osx.yml
 
   - name: build-binaries
     serial: true
