@@ -56,6 +56,15 @@ resources:
       versioned_file: master/cf-cli_edge_osx.tgz
       region_name: us-west-1
 
+  - name: edge-linux-binary-64
+    type: s3
+    source:
+      bucket: v7-cf-cli-releases
+      access_key_id: ((cli-team-aws-s3-access-key-id))
+      secret_access_key: ((cli-team-aws-s3-secret-access-key))
+      versioned_file: master/cf-cli_edge_linux_x86-64.tgz
+      region_name: us-west-1
+
   - name: gcp-bosh-pool
     type: pool
     source:
@@ -166,3 +175,6 @@ jobs:
       - put: edge-osx-binary-64
         params:
           file: archives/cf-cli_edge_osx.tgz
+      - put: edge-linux-binary-64
+        params:
+          file: archives/cf-cli_edge_linux_x86-64.tgz
