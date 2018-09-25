@@ -62,11 +62,11 @@ func (cmd *V3ScaleCommand) Setup(config command.Config, ui command.UI) error {
 	}
 	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
 
-	ccClientV2, uaaClientV2, err := sharedV2.NewClients(config, ui, true)
+	ccClientV2, _, err := sharedV2.NewClients(config, ui, false)
 	if err != nil {
 		return err
 	}
-	v2Actor := v2action.NewActor(ccClientV2, uaaClientV2, config)
+	v2Actor := v2action.NewActor(ccClientV2, nil, config)
 
 	cmd.AppSummaryDisplayer = shared.AppSummaryDisplayer{
 		UI:         ui,
@@ -107,11 +107,11 @@ func (cmd V3ScaleCommand) Execute(args []string) error {
 		return cmd.showCurrentScale(user.Name)
 	}
 
-	scalled, err := cmd.scaleProcess(app.GUID, user.Name)
+	scaled, err := cmd.scaleProcess(app.GUID, user.Name)
 	if err != nil {
 		return err
 	}
-	if !scalled {
+	if !scaled {
 		return nil
 	}
 
