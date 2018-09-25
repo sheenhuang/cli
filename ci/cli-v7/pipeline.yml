@@ -77,6 +77,8 @@ jobs:
             file: cli-ci/ci/cli-v7/tasks/units-linux.yml
           - task: units-osx
             file: cli-ci/ci/cli-v7/tasks/units-osx.yml
+          - task: units-windows
+            file: cli-ci/ci/cli-v7/tasks/units-windows.yml
 
   - name: build-binaries
     serial: true
