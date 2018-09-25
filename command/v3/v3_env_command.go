@@ -1,18 +1,13 @@
 package v3
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v3action"
-	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
-	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
-	"code.cloudfoundry.org/cli/command/translatableerror"
 	"code.cloudfoundry.org/cli/command/v3/shared"
+	"encoding/json"
+	"fmt"
 )
 
 //go:generate counterfeiter . V3EnvActor
@@ -40,10 +35,6 @@ func (cmd *V3EnvCommand) Setup(config command.Config, ui command.UI) error {
 
 	ccClient, _, err := shared.NewClients(config, ui, true, "")
 	if err != nil {
-		if v3Err, ok := err.(ccerror.V3UnexpectedResponseError); ok && v3Err.ResponseCode == http.StatusNotFound {
-			return translatableerror.MinimumCFAPIVersionNotMetError{MinimumVersion: ccversion.MinVersionApplicationFlowV3}
-		}
-
 		return err
 	}
 	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
@@ -52,12 +43,7 @@ func (cmd *V3EnvCommand) Setup(config command.Config, ui command.UI) error {
 }
 
 func (cmd V3EnvCommand) Execute(args []string) error {
-	err := command.MinimumCCAPIVersionCheck(cmd.Actor.CloudControllerAPIVersion(), ccversion.MinVersionApplicationFlowV3)
-	if err != nil {
-		return err
-	}
-
-	err = cmd.SharedActor.CheckTarget(true, true)
+	err := cmd.SharedActor.CheckTarget(true, true)
 	if err != nil {
 		return err
 	}
