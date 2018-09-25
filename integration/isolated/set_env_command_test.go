@@ -1,14 +1,12 @@
 package isolated
 
 import (
-	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/integration/helpers"
 	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/onsi/gomega/ghttp"
 )
 
 var _ = Describe("set-env command", func() {
@@ -76,51 +74,7 @@ var _ = Describe("set-env command", func() {
 		})
 	})
 
-	It("displays the experimental warning", func() {
-		session := helpers.CF("set-env", appName, envVarName, envVarValue)
-		Eventually(session.Err).Should(Say("This command is in EXPERIMENTAL stage and may change without notice"))
-		Eventually(session).Should(Exit())
-	})
-
 	When("the environment is not setup correctly", func() {
-		When("the v3 api does not exist", func() {
-			var server *Server
-
-			BeforeEach(func() {
-				server = helpers.StartAndTargetServerWithoutV3API()
-			})
-
-			AfterEach(func() {
-				server.Close()
-			})
-
-			It("fails with error message that the minimum version is not met", func() {
-				session := helpers.CF("set-env", appName, envVarName, envVarValue)
-				Eventually(session).Should(Say("FAILED"))
-				Eventually(session.Err).Should(Say("This command requires CF API version 3\\.27\\.0 or higher\\."))
-				Eventually(session).Should(Exit(1))
-			})
-		})
-
-		When("the v3 api version is lower than the minimum version", func() {
-			var server *Server
-
-			BeforeEach(func() {
-				server = helpers.StartAndTargetServerWithAPIVersions(helpers.DefaultV2Version, ccversion.MinV3ClientVersion)
-			})
-
-			AfterEach(func() {
-				server.Close()
-			})
-
-			It("fails with error message that the minimum version is not met", func() {
-				session := helpers.CF("set-env", appName, envVarName, envVarValue)
-				Eventually(session).Should(Say("FAILED"))
-				Eventually(session.Err).Should(Say("This command requires CF API version 3\\.27\\.0 or higher\\."))
-				Eventually(session).Should(Exit(1))
-			})
-		})
-
 		When("no API endpoint is set", func() {
 			BeforeEach(func() {
 				helpers.UnsetAPI()
