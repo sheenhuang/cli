@@ -1,48 +1,40 @@
 package v3
 
 import (
-	"net/http"
-
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v3action"
-	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
-	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
-	"code.cloudfoundry.org/cli/command/translatableerror"
 	"code.cloudfoundry.org/cli/command/v3/shared"
 )
 
-//go:generate counterfeiter . V3DeleteActor
+//go:generate counterfeiter . DeleteActor
 
-type V3DeleteActor interface {
+type DeleteActor interface {
 	CloudControllerAPIVersion() string
 	DeleteApplicationByNameAndSpace(name string, spaceGUID string) (v3action.Warnings, error)
 }
 
-type V3DeleteCommand struct {
-	RequiredArgs flag.AppName `positional-args:"yes"`
-	Force        bool         `short:"f" description:"Force deletion without confirmation"`
-	usage        interface{}  `usage:"CF_NAME v3-delete APP_NAME [-f]"`
+type DeleteCommand struct {
+	RequiredArgs       flag.AppName `positional-args:"yes"`
+	Force              bool         `short:"f" description:"Force deletion without confirmation"`
+	DeleteMappedRoutes bool         `short:"r" description:"Also delete any mapped routes [Not currently functional]"`
+	usage              interface{}  `usage:"CF_NAME delete APP_NAME [-r] [-f]"`
 
 	UI          command.UI
 	Config      command.Config
 	SharedActor command.SharedActor
-	Actor       V3DeleteActor
+	Actor       DeleteActor
 }
 
-func (cmd *V3DeleteCommand) Setup(config command.Config, ui command.UI) error {
+func (cmd *DeleteCommand) Setup(config command.Config, ui command.UI) error {
 	cmd.UI = ui
 	cmd.Config = config
 	cmd.SharedActor = sharedaction.NewActor(config)
 
 	ccClient, _, err := shared.NewClients(config, ui, true, "")
 	if err != nil {
-		if v3Err, ok := err.(ccerror.V3UnexpectedResponseError); ok && v3Err.ResponseCode == http.StatusNotFound {
-			return translatableerror.MinimumCFAPIVersionNotMetError{MinimumVersion: ccversion.MinVersionApplicationFlowV3}
-		}
-
 		return err
 	}
 	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
@@ -50,15 +42,12 @@ func (cmd *V3DeleteCommand) Setup(config command.Config, ui command.UI) error {
 	return nil
 }
 
-func (cmd V3DeleteCommand) Execute(args []string) error {
-	cmd.UI.DisplayWarning(command.ExperimentalWarning)
-
-	err := command.MinimumCCAPIVersionCheck(cmd.Actor.CloudControllerAPIVersion(), ccversion.MinVersionApplicationFlowV3)
-	if err != nil {
-		return err
+func (cmd DeleteCommand) Execute(args []string) error {
+	if cmd.DeleteMappedRoutes {
+		cmd.UI.DisplayWarning("-r flag not implemented - the mapped routes will not be deleted")
 	}
 
-	err = cmd.SharedActor.CheckTarget(true, true)
+	err := cmd.SharedActor.CheckTarget(true, true)
 	if err != nil {
 		return err
 	}

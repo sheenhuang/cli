@@ -8,7 +8,6 @@ import (
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
-	"code.cloudfoundry.org/cli/command/translatableerror"
 	"code.cloudfoundry.org/cli/command/v3"
 	"code.cloudfoundry.org/cli/command/v3/v3fakes"
 	"code.cloudfoundry.org/cli/util/configv3"
@@ -18,13 +17,13 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 )
 
-var _ = Describe("v3-delete Command", func() {
+var _ = Describe("delete Command", func() {
 	var (
-		cmd             v3.V3DeleteCommand
+		cmd             v3.DeleteCommand
 		testUI          *ui.UI
 		fakeConfig      *commandfakes.FakeConfig
 		fakeSharedActor *commandfakes.FakeSharedActor
-		fakeActor       *v3fakes.FakeV3DeleteActor
+		fakeActor       *v3fakes.FakeDeleteActor
 		input           *Buffer
 		binaryName      string
 		executeErr      error
@@ -36,13 +35,13 @@ var _ = Describe("v3-delete Command", func() {
 		testUI = ui.NewTestUI(input, NewBuffer(), NewBuffer())
 		fakeConfig = new(commandfakes.FakeConfig)
 		fakeSharedActor = new(commandfakes.FakeSharedActor)
-		fakeActor = new(v3fakes.FakeV3DeleteActor)
+		fakeActor = new(v3fakes.FakeDeleteActor)
 
 		binaryName = "faceman"
 		fakeConfig.BinaryNameReturns(binaryName)
 		app = "some-app"
 
-		cmd = v3.V3DeleteCommand{
+		cmd = v3.DeleteCommand{
 			RequiredArgs: flag.AppName{AppName: app},
 
 			UI:          testUI,
@@ -68,20 +67,14 @@ var _ = Describe("v3-delete Command", func() {
 		executeErr = cmd.Execute(nil)
 	})
 
-	When("the API version is below the minimum", func() {
+	When("checking target fails", func() {
 		BeforeEach(func() {
-			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinV3ClientVersion)
+			cmd.DeleteMappedRoutes = true
+			cmd.Force = true
 		})
 
-		It("returns a MinimumAPIVersionNotMetError", func() {
-			Expect(executeErr).To(MatchError(translatableerror.MinimumCFAPIVersionNotMetError{
-				CurrentVersion: ccversion.MinV3ClientVersion,
-				MinimumVersion: ccversion.MinVersionApplicationFlowV3,
-			}))
-		})
-
-		It("displays the experimental warning", func() {
-			Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
+		It("returns an error", func() {
+			Expect(testUI.Err).To(Say("-r flag not implemented - the mapped routes will not be deleted"))
 		})
 	})
 

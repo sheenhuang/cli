@@ -8,7 +8,7 @@ import (
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
-type FakeV3DeleteActor struct {
+type FakeDeleteActor struct {
 	CloudControllerAPIVersionStub        func() string
 	cloudControllerAPIVersionMutex       sync.RWMutex
 	cloudControllerAPIVersionArgsForCall []struct{}
@@ -36,7 +36,7 @@ type FakeV3DeleteActor struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeV3DeleteActor) CloudControllerAPIVersion() string {
+func (fake *FakeDeleteActor) CloudControllerAPIVersion() string {
 	fake.cloudControllerAPIVersionMutex.Lock()
 	ret, specificReturn := fake.cloudControllerAPIVersionReturnsOnCall[len(fake.cloudControllerAPIVersionArgsForCall)]
 	fake.cloudControllerAPIVersionArgsForCall = append(fake.cloudControllerAPIVersionArgsForCall, struct{}{})
@@ -51,20 +51,20 @@ func (fake *FakeV3DeleteActor) CloudControllerAPIVersion() string {
 	return fake.cloudControllerAPIVersionReturns.result1
 }
 
-func (fake *FakeV3DeleteActor) CloudControllerAPIVersionCallCount() int {
+func (fake *FakeDeleteActor) CloudControllerAPIVersionCallCount() int {
 	fake.cloudControllerAPIVersionMutex.RLock()
 	defer fake.cloudControllerAPIVersionMutex.RUnlock()
 	return len(fake.cloudControllerAPIVersionArgsForCall)
 }
 
-func (fake *FakeV3DeleteActor) CloudControllerAPIVersionReturns(result1 string) {
+func (fake *FakeDeleteActor) CloudControllerAPIVersionReturns(result1 string) {
 	fake.CloudControllerAPIVersionStub = nil
 	fake.cloudControllerAPIVersionReturns = struct {
 		result1 string
 	}{result1}
 }
 
-func (fake *FakeV3DeleteActor) CloudControllerAPIVersionReturnsOnCall(i int, result1 string) {
+func (fake *FakeDeleteActor) CloudControllerAPIVersionReturnsOnCall(i int, result1 string) {
 	fake.CloudControllerAPIVersionStub = nil
 	if fake.cloudControllerAPIVersionReturnsOnCall == nil {
 		fake.cloudControllerAPIVersionReturnsOnCall = make(map[int]struct {
@@ -76,7 +76,7 @@ func (fake *FakeV3DeleteActor) CloudControllerAPIVersionReturnsOnCall(i int, res
 	}{result1}
 }
 
-func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpace(name string, spaceGUID string) (v3action.Warnings, error) {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpace(name string, spaceGUID string) (v3action.Warnings, error) {
 	fake.deleteApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.deleteApplicationByNameAndSpaceReturnsOnCall[len(fake.deleteApplicationByNameAndSpaceArgsForCall)]
 	fake.deleteApplicationByNameAndSpaceArgsForCall = append(fake.deleteApplicationByNameAndSpaceArgsForCall, struct {
@@ -94,19 +94,19 @@ func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpace(name string, spac
 	return fake.deleteApplicationByNameAndSpaceReturns.result1, fake.deleteApplicationByNameAndSpaceReturns.result2
 }
 
-func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpaceCallCount() int {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceCallCount() int {
 	fake.deleteApplicationByNameAndSpaceMutex.RLock()
 	defer fake.deleteApplicationByNameAndSpaceMutex.RUnlock()
 	return len(fake.deleteApplicationByNameAndSpaceArgsForCall)
 }
 
-func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpaceArgsForCall(i int) (string, string) {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceArgsForCall(i int) (string, string) {
 	fake.deleteApplicationByNameAndSpaceMutex.RLock()
 	defer fake.deleteApplicationByNameAndSpaceMutex.RUnlock()
 	return fake.deleteApplicationByNameAndSpaceArgsForCall[i].name, fake.deleteApplicationByNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpaceReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceReturns(result1 v3action.Warnings, result2 error) {
 	fake.DeleteApplicationByNameAndSpaceStub = nil
 	fake.deleteApplicationByNameAndSpaceReturns = struct {
 		result1 v3action.Warnings
@@ -114,7 +114,7 @@ func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpaceReturns(result1 v3
 	}{result1, result2}
 }
 
-func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
 	fake.DeleteApplicationByNameAndSpaceStub = nil
 	if fake.deleteApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.deleteApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
@@ -128,7 +128,7 @@ func (fake *FakeV3DeleteActor) DeleteApplicationByNameAndSpaceReturnsOnCall(i in
 	}{result1, result2}
 }
 
-func (fake *FakeV3DeleteActor) Invocations() map[string][][]interface{} {
+func (fake *FakeDeleteActor) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
 	fake.cloudControllerAPIVersionMutex.RLock()
@@ -142,7 +142,7 @@ func (fake *FakeV3DeleteActor) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
-func (fake *FakeV3DeleteActor) recordInvocation(key string, args []interface{}) {
+func (fake *FakeDeleteActor) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
 	if fake.invocations == nil {
@@ -154,4 +154,4 @@ func (fake *FakeV3DeleteActor) recordInvocation(key string, args []interface{}) 
 	fake.invocations[key] = append(fake.invocations[key], args)
 }
 
-var _ v3.V3DeleteActor = new(FakeV3DeleteActor)
+var _ v3.DeleteActor = new(FakeDeleteActor)
