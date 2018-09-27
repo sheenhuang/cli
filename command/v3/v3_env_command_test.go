@@ -113,13 +113,13 @@ var _ = Describe("env Command", func() {
 					Expect(testUI.Out).To(Say(`application-name: "application-value"`))
 
 					Expect(testUI.Out).To(Say("User-Provided:"))
-					Expect(testUI.Out).To(Say(`user-name: "user-value"`))
+					Expect(testUI.Out).To(Say(`user-name: user-value`))
 
 					Expect(testUI.Out).To(Say("Running Environment Variable Groups:"))
-					Expect(testUI.Out).To(Say(`running-name: "running-value"`))
+					Expect(testUI.Out).To(Say(`running-name: running-value`))
 
 					Expect(testUI.Out).To(Say("Staging Environment Variable Groups:"))
-					Expect(testUI.Out).To(Say(`staging-name: "staging-value"`))
+					Expect(testUI.Out).To(Say(`staging-name: staging-value`))
 
 					Expect(testUI.Err).To(Say("get-warning-1"))
 					Expect(testUI.Err).To(Say("get-warning-2"))
