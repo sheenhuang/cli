@@ -1,15 +1,16 @@
 package global
 
 import (
-	"code.cloudfoundry.org/cli/integration/helpers"
 	"fmt"
+
+	"code.cloudfoundry.org/cli/integration/helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("env command", func() {
+var _ = FDescribe("env command", func() {
 	var (
 		orgName     string
 		spaceName   string
@@ -148,8 +149,8 @@ var _ = Describe("env command", func() {
 				Eventually(helpers.CF("set-env", appName, "user-provided-env-name", "user-provided-env-value")).Should(Exit(0))
 				Eventually(helpers.CF("create-user-provided-service", userProvidedServiceName)).Should(Exit(0))
 				Eventually(helpers.CF("bind-service", appName, userProvidedServiceName)).Should(Exit(0))
-				Eventually(helpers.CF("set-running-environment-variable-group", `{"running-env-name": "running-env-value", "number": 1}`)).Should(Exit(0))
-				Eventually(helpers.CF("set-staging-environment-variable-group", `{"staging-env-name": "staging-env-value", "number": 2}`)).Should(Exit(0))
+				Eventually(helpers.CF("set-running-environment-variable-group", `{"running-env-name": "running-env-value", "number": 1, "string": "1"}`)).Should(Exit(0))
+				Eventually(helpers.CF("set-staging-environment-variable-group", `{"staging-env-name": "staging-env-value", "number": 2, "string": "2"}`)).Should(Exit(0))
 			})
 
 			AfterEach(func() {
@@ -173,14 +174,14 @@ var _ = Describe("env command", func() {
 				Expect(output).To(MatchRegexp("VCAP_APPLICATION"))
 
 				Expect(output).To(MatchRegexp("User-Provided:"))
-				Expect(output).To(MatchRegexp(`user-provided-env-name: "user-provided-env-value"`))
+				Expect(output).To(MatchRegexp(`user-provided-env-name:\s+user-provided-env-value`))
 
 				Expect(output).To(MatchRegexp("Running Environment Variable Groups:"))
-				Expect(output).To(MatchRegexp(`running-env-name: "running-env-value"`))
+				Expect(output).To(MatchRegexp(`running-env-name:\s+running-env-value`))
 				Expect(output).To(MatchRegexp(`number: 1`))
 
 				Expect(output).To(MatchRegexp("Staging Environment Variable Groups:"))
-				Expect(output).To(MatchRegexp(`staging-env-name: "staging-env-value"`))
+				Expect(output).To(MatchRegexp(`staging-env-name:\s+staging-env-value`))
 				Expect(output).To(MatchRegexp(`number: 2`))
 
 				By("displaying help messages when they are not set")

@@ -1,13 +1,15 @@
 package v3
 
 import (
+	"encoding/json"
+	"fmt"
+	"strings"
+
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v3action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/v3/shared"
-	"encoding/json"
-	"fmt"
 )
 
 //go:generate counterfeiter . V3EnvActor
@@ -74,10 +76,10 @@ func (cmd V3EnvCommand) Execute(args []string) error {
 
 	if len(envGroups.System) > 0 || len(envGroups.Application) > 0 {
 		cmd.UI.DisplayHeader("System-Provided:")
-		cmd.displayEnvGroup(envGroups.System)
+		cmd.displaySystem(envGroups.System)
 		if len(envGroups.Application) > 0 {
 			cmd.UI.DisplayNewline()
-			cmd.displayEnvGroup(envGroups.Application)
+			cmd.displaySystem(envGroups.Application)
 		}
 	} else {
 		cmd.UI.DisplayText("No system-provided env variables have been set")
@@ -113,12 +115,79 @@ func (cmd V3EnvCommand) Execute(args []string) error {
 
 func (cmd V3EnvCommand) displayEnvGroup(group map[string]interface{}) error {
 	for key, val := range group {
-		valJSON, err := json.MarshalIndent(val, "", " ")
+		returnVal, err := cmd.recursiveThing(val)
 		if err != nil {
 			return err
 		}
-		cmd.UI.DisplayText(fmt.Sprintf("%s: %s", key, string(valJSON)))
+		cmd.UI.DisplayText(fmt.Sprintf("%s: %s", key, returnVal))
 	}
-
 	return nil
 }
+
+func (cmd V3EnvCommand) recursiveThing(val interface{}) (string, error) {
+	switch val.(type) {
+	// case json.Number:
+	// 	return fmt.Sprintf("%v", val), nil
+	// case string:
+	// 	return val.(string), nil
+	// case int:
+	// 	return fmt.Sprintf("%v", val), nil
+	// case bool:
+	// 	return strconv.FormatBool(val.(bool)), nil
+	case nil:
+		return "null", nil
+	case map[string]interface{}:
+		returnVal := "{"
+		for k, v := range val.(map[string]interface{}) {
+			thing, err := cmd.recursiveThing(v)
+			if err != nil {
+				return "", err
+			}
+			returnVal = fmt.Sprintf("%s%s: %s, ", returnVal, k, thing)
+		}
+		runeVal := []rune(returnVal)
+		//TODO: need a better way to add close brace
+		//TODO: need to handle the enpty map and array cases gracefully
+		runeVal[len(runeVal)-2] = '}'
+		return strings.TrimSpace(string(runeVal)), nil
+	case []interface{}:
+		returnVal := "["
+		for _, v := range val.([]interface{}) {
+			thing, err := cmd.recursiveThing(v)
+			if err != nil {
+				return "", err
+			}
+			returnVal = fmt.Sprintf("%s%s, ", returnVal, thing)
+		}
+		runeVal := []rune(returnVal)
+		runeVal[len(runeVal)-2] = ']'
+		return strings.TrimSpace(string(runeVal)), nil
+	default:
+		return fmt.Sprintf("%v", val), nil
+	}
+}
+
+func (cmd V3EnvCommand) displaySystem(group map[string]interface{}) error {
+	for key, val := range group {
+		jsonVal, err := json.MarshalIndent(val, "", " ")
+		if err != nil {
+			return err
+		}
+		cmd.UI.DisplayText(fmt.Sprintf("%s: %s", key, jsonVal))
+	}
+	return nil
+}
+
+// func (cmd V3EnvCommand) displayEnvGroupKeyValue(group map[string]string) error {
+// 	var table [][]string
+// 	for key, val := range group {
+// 		table = append(table, []string{key + ":", val})
+// 	}
+// 	cmd.UI.DisplayKeyValueTable("", table, 3)
+
+// 	return nil
+// }
+
+// converter (Interface{})
+//	type switch
+// cast to string
