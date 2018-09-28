@@ -3,7 +3,7 @@ package v3
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
+	"sort"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v3action"
@@ -114,57 +114,21 @@ func (cmd V3EnvCommand) Execute(args []string) error {
 }
 
 func (cmd V3EnvCommand) displayEnvGroup(group map[string]interface{}) error {
-	for key, val := range group {
-		returnVal, err := cmd.recursiveThing(val)
-		if err != nil {
-			return err
-		}
-		cmd.UI.DisplayText(fmt.Sprintf("%s: %s", key, returnVal))
+	keys := sortKeys(group)
+
+	for _, key := range keys {
+		cmd.UI.DisplayText(fmt.Sprintf("%s: %v", key, group[key]))
 	}
 	return nil
 }
 
-func (cmd V3EnvCommand) recursiveThing(val interface{}) (string, error) {
-	switch val.(type) {
-	// case json.Number:
-	// 	return fmt.Sprintf("%v", val), nil
-	// case string:
-	// 	return val.(string), nil
-	// case int:
-	// 	return fmt.Sprintf("%v", val), nil
-	// case bool:
-	// 	return strconv.FormatBool(val.(bool)), nil
-	case nil:
-		return "null", nil
-	case map[string]interface{}:
-		returnVal := "{"
-		for k, v := range val.(map[string]interface{}) {
-			thing, err := cmd.recursiveThing(v)
-			if err != nil {
-				return "", err
-			}
-			returnVal = fmt.Sprintf("%s%s: %s, ", returnVal, k, thing)
-		}
-		runeVal := []rune(returnVal)
-		//TODO: need a better way to add close brace
-		//TODO: need to handle the enpty map and array cases gracefully
-		runeVal[len(runeVal)-2] = '}'
-		return strings.TrimSpace(string(runeVal)), nil
-	case []interface{}:
-		returnVal := "["
-		for _, v := range val.([]interface{}) {
-			thing, err := cmd.recursiveThing(v)
-			if err != nil {
-				return "", err
-			}
-			returnVal = fmt.Sprintf("%s%s, ", returnVal, thing)
-		}
-		runeVal := []rune(returnVal)
-		runeVal[len(runeVal)-2] = ']'
-		return strings.TrimSpace(string(runeVal)), nil
-	default:
-		return fmt.Sprintf("%v", val), nil
+func sortKeys(group map[string]interface{}) []string {
+	keys := make([]string, len(group))
+	for key := range group {
+		keys = append(keys, key)
 	}
+	sort.Strings(keys)
+	return keys
 }
 
 func (cmd V3EnvCommand) displaySystem(group map[string]interface{}) error {
@@ -177,17 +141,3 @@ func (cmd V3EnvCommand) displaySystem(group map[string]interface{}) error {
 	}
 	return nil
 }
-
-// func (cmd V3EnvCommand) displayEnvGroupKeyValue(group map[string]string) error {
-// 	var table [][]string
-// 	for key, val := range group {
-// 		table = append(table, []string{key + ":", val})
-// 	}
-// 	cmd.UI.DisplayKeyValueTable("", table, 3)
-
-// 	return nil
-// }
-
-// converter (Interface{})
-//	type switch
-// cast to string

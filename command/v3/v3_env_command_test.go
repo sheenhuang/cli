@@ -129,6 +129,55 @@ var _ = Describe("env Command", func() {
 					Expect(appName).To(Equal("some-app"))
 					Expect(spaceGUID).To(Equal("some-space-guid"))
 				})
+
+				Describe("sorting of non-json environment variables", func() {
+					BeforeEach(func() {
+						envGroups := v3action.EnvironmentVariableGroups{
+							System:      map[string]interface{}{},
+							Application: map[string]interface{}{},
+							EnvironmentVariables: map[string]interface{}{
+								"alpha":   "1",
+								"charlie": "1",
+								"bravo":   "1",
+							},
+							Running: map[string]interface{}{
+								"foxtrot": "1",
+								"delta":   "1",
+								"echo":    "1",
+							},
+							Staging: map[string]interface{}{
+								"hotel": "1",
+								"india": "1",
+								"golf":  "1",
+							},
+						}
+						fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(envGroups, v3action.Warnings{"get-warning-1", "get-warning-2"}, nil)
+					})
+
+					It("sorts the EnvironmentVariables alphabetically", func() {
+						Expect(executeErr).ToNot(HaveOccurred())
+
+						Expect(testUI.Out).To(Say(`alpha: 1`))
+						Expect(testUI.Out).To(Say(`bravo: 1`))
+						Expect(testUI.Out).To(Say(`charlie: 1`))
+					})
+
+					It("sorts the Running alphabetically", func() {
+						Expect(executeErr).ToNot(HaveOccurred())
+
+						Expect(testUI.Out).To(Say(`delta: 1`))
+						Expect(testUI.Out).To(Say(`echo: 1`))
+						Expect(testUI.Out).To(Say(`foxtrot: 1`))
+					})
+
+					It("sorts the Staging alphabetically", func() {
+						Expect(executeErr).ToNot(HaveOccurred())
+
+						Expect(testUI.Out).To(Say(`golf: 1`))
+						Expect(testUI.Out).To(Say(`hotel: 1`))
+						Expect(testUI.Out).To(Say(`india: 1`))
+					})
+				})
 			})
 
 			When("getting the environment returns empty env vars for all groups", func() {
