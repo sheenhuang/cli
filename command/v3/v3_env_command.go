@@ -124,8 +124,10 @@ func (cmd V3EnvCommand) displayEnvGroup(group map[string]interface{}) error {
 
 func sortKeys(group map[string]interface{}) []string {
 	keys := make([]string, len(group))
+	index := 0
 	for key := range group {
-		keys = append(keys, key)
+		keys[index] = key
+		index++
 	}
 	sort.Strings(keys)
 	return keys
