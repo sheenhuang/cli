@@ -21,6 +21,7 @@ type DeleteCommand struct {
 	Force              bool         `short:"f" description:"Force deletion without confirmation"`
 	DeleteMappedRoutes bool         `short:"r" description:"Also delete any mapped routes [Not currently functional]"`
 	usage              interface{}  `usage:"CF_NAME delete APP_NAME [-r] [-f]"`
+	relatedCommands	   interface{}  `related_commands:"apps, scale, stop"`
 
 	UI          command.UI
 	Config      command.Config
