@@ -36,7 +36,7 @@ type V3ScaleCommand struct {
 	DiskLimit           flag.Megabytes `short:"k" required:"false" description:"Disk limit (e.g. 256M, 1024M, 1G)"`
 	MemoryLimit         flag.Megabytes `short:"m" required:"false" description:"Memory limit (e.g. 256M, 1024M, 1G)"`
 	ProcessType         string         `long:"process" default:"web" description:"App process to scale"`
-	usage               interface{}    `usage:"CF_NAME v3-scale APP_NAME [--process PROCESS] [-i INSTANCES] [-k DISK] [-m MEMORY]"`
+	usage               interface{}    `usage:"CF_NAME v3-scale APP_NAME [--process PROCESS] [-i INSTANCES] [-k DISK] [-m MEMORY] [-f]"`
 	relatedCommands     interface{}    `related_commands:"v3-push"`
 	envCFStartupTimeout interface{}    `environmentName:"CF_STARTUP_TIMEOUT" environmentDescription:"Max wait time for app instance startup, in minutes" environmentDefault:"5"`
 
