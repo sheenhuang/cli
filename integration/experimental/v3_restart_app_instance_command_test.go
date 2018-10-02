@@ -241,7 +241,7 @@ var _ = Describe("v3-restart-app-instance command", func() {
 
 						It("defaults to requested process", func() {
 							By("scaling worker process to 1 instance")
-							session := helpers.CF("v3-scale", appName, "--process", "console", "-i", "1")
+							session := helpers.CF("scale", appName, "--process", "console", "-i", "1")
 							Eventually(session).Should(Exit(0))
 
 							By("waiting for worker process to come up")

@@ -23,7 +23,7 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 )
 
-var _ = Describe("v3-scale Command", func() {
+var _ = Describe("scale Command", func() {
 	var (
 		cmd             v3.V3ScaleCommand
 		input           *Buffer

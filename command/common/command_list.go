@@ -29,7 +29,6 @@ type commandList struct {
 	V3Push               v3.V3PushCommand               `command:"v3-push" description:"Push a new app or sync changes to an existing app"`
 	V3Restart            v3.V3RestartCommand            `command:"v3-restart" description:"Stop all instances of the app, then start them again. This causes downtime."`
 	V3RestartAppInstance v3.V3RestartAppInstanceCommand `command:"v3-restart-app-instance" description:"Terminate, then instantiate an app instance"`
-	V3Scale              v3.V3ScaleCommand              `command:"v3-scale" description:"Change or view the instance count, disk space limit, and memory limit for an app"`
 	V3SetDroplet         v3.V3SetDropletCommand         `command:"v3-set-droplet" description:"Set the droplet used to run an app"`
 	V3SetHealthCheck     v3.V3SetHealthCheckCommand     `command:"v3-set-health-check" description:"Change type of health check performed on an app's process"`
 	V3Stage              v3.V3StageCommand              `command:"v3-stage" description:"Create a new droplet for an app"`
@@ -145,7 +144,7 @@ type commandList struct {
 	RunningEnvironmentVariableGroup    v2.RunningEnvironmentVariableGroupCommand    `command:"running-environment-variable-group" alias:"revg" description:"Retrieve the contents of the running environment variable group"`
 	RunningSecurityGroups              v2.RunningSecurityGroupsCommand              `command:"running-security-groups" description:"List security groups in the set of security groups for running applications"`
 	RunTask                            v3.RunTaskCommand                            `command:"run-task" alias:"rt" description:"Run a one-off task on an app"`
-	Scale                              v2.ScaleCommand                              `command:"scale" description:"Change or view the instance count, disk space limit, and memory limit for an app"`
+	Scale                              v3.V3ScaleCommand                            `command:"scale" description:"Change or view the instance count, disk space limit, and memory limit for an app"`
 	SecurityGroups                     v2.SecurityGroupsCommand                     `command:"security-groups" description:"List all security groups"`
 	SecurityGroup                      v2.SecurityGroupCommand                      `command:"security-group" description:"Show a single security group"`
 	ServiceAccess                      v2.ServiceAccessCommand                      `command:"service-access" description:"List service access settings"`

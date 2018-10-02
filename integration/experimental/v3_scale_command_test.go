@@ -13,7 +13,7 @@ import (
 	. "github.com/onsi/gomega/ghttp"
 )
 
-var _ = Describe("v3-scale command", func() {
+var _ = Describe("scale command", func() {
 	var (
 		orgName   string
 		spaceName string
@@ -31,13 +31,13 @@ var _ = Describe("v3-scale command", func() {
 	Describe("help", func() {
 		When("--help flag is set", func() {
 			It("displays command usage to output", func() {
-				session := helpers.CF("v3-scale", "--help")
+				session := helpers.CF("scale", "--help")
 
 				Eventually(session).Should(Say("NAME:"))
-				Eventually(session).Should(Say("v3-scale - Change or view the instance count, disk space limit, and memory limit for an app"))
+				Eventually(session).Should(Say("scale - Change or view the instance count, disk space limit, and memory limit for an app"))
 
 				Eventually(session).Should(Say("USAGE:"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME \\[--process PROCESS\\] \\[-i INSTANCES\\] \\[-k DISK\\] \\[-m MEMORY\\]"))
+				Eventually(session).Should(Say("cf scale APP_NAME \\[--process PROCESS\\] \\[-i INSTANCES\\] \\[-k DISK\\] \\[-m MEMORY\\]"))
 
 				Eventually(session).Should(Say("OPTIONS:"))
 				Eventually(session).Should(Say("-f\\s+Force restart of app without prompt"))
@@ -61,7 +61,7 @@ var _ = Describe("v3-scale command", func() {
 			})
 
 			It("fails with no API endpoint set message", func() {
-				session := helpers.CF("v3-scale", appName)
+				session := helpers.CF("scale", appName)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("No API endpoint set\\. Use 'cf login' or 'cf api' to target an endpoint\\."))
 				Eventually(session).Should(Exit(1))
@@ -80,7 +80,7 @@ var _ = Describe("v3-scale command", func() {
 			})
 
 			It("fails with error message that the minimum version is not met", func() {
-				session := helpers.CF("v3-scale", appName)
+				session := helpers.CF("scale", appName)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("This command requires CF API version 3\\.27\\.0 or higher\\."))
 				Eventually(session).Should(Exit(1))
@@ -99,7 +99,7 @@ var _ = Describe("v3-scale command", func() {
 			})
 
 			It("fails with error message that the minimum version is not met", func() {
-				session := helpers.CF("v3-scale", appName)
+				session := helpers.CF("scale", appName)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("This command requires CF API version 3\\.27\\.0 or higher\\."))
 				Eventually(session).Should(Exit(1))
@@ -112,7 +112,7 @@ var _ = Describe("v3-scale command", func() {
 			})
 
 			It("fails with not logged in message", func() {
-				session := helpers.CF("v3-scale", appName)
+				session := helpers.CF("scale", appName)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("Not logged in\\. Use 'cf login' to log in\\."))
 				Eventually(session).Should(Exit(1))
@@ -126,7 +126,7 @@ var _ = Describe("v3-scale command", func() {
 			})
 
 			It("fails with no org targeted error message", func() {
-				session := helpers.CF("v3-scale", appName)
+				session := helpers.CF("scale", appName)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("No org targeted, use 'cf target -o ORG' to target an org\\."))
 				Eventually(session).Should(Exit(1))
@@ -141,7 +141,7 @@ var _ = Describe("v3-scale command", func() {
 			})
 
 			It("fails with no space targeted error message", func() {
-				session := helpers.CF("v3-scale", appName)
+				session := helpers.CF("scale", appName)
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session.Err).Should(Say("No space targeted, use 'cf target -s SPACE' to target a space\\."))
 				Eventually(session).Should(Exit(1))
@@ -160,7 +160,7 @@ var _ = Describe("v3-scale command", func() {
 
 		When("the app name is not provided", func() {
 			It("tells the user that the app name is required, prints help text, and exits 1", func() {
-				session := helpers.CF("v3-scale")
+				session := helpers.CF("scale")
 
 				Eventually(session.Err).Should(Say("Incorrect Usage: the required argument `APP_NAME` was not provided"))
 				Eventually(session).Should(Say("NAME:"))
@@ -171,7 +171,7 @@ var _ = Describe("v3-scale command", func() {
 		When("the app does not exist", func() {
 			It("displays app not found and exits 1", func() {
 				invalidAppName := "invalid-app-name"
-				session := helpers.CF("v3-scale", invalidAppName)
+				session := helpers.CF("scale", invalidAppName)
 				Eventually(session.Err).Should(Say("App %s not found", invalidAppName))
 				Eventually(session).Should(Say("FAILED"))
 				Eventually(session).Should(Exit(1))
@@ -187,7 +187,7 @@ var _ = Describe("v3-scale command", func() {
 
 			When("scale option flags are not provided", func() {
 				It("displays the current scale properties for all processes", func() {
-					session := helpers.CF("v3-scale", appName)
+					session := helpers.CF("scale", appName)
 
 					Eventually(session).Should(Say("Showing current scale of app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 					Consistently(session).ShouldNot(Say("Scaling"))
@@ -219,13 +219,13 @@ var _ = Describe("v3-scale command", func() {
 			When("only one scale option flag is provided", func() {
 				It("scales the app accordingly", func() {
 					By("verifying we start with a single instance")
-					session := helpers.CF("v3-scale", appName)
+					session := helpers.CF("scale", appName)
 					Eventually(session).Should(Exit(0))
 					appTable := helpers.ParseV3AppProcessTable(session.Out.Contents())
 					Expect(appTable.Processes).To(HaveLen(3))
 
 					By("scaling to 3 instances")
-					session = helpers.CF("v3-scale", appName, "-i", "3")
+					session = helpers.CF("scale", appName, "-i", "3")
 					Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 					Consistently(session).ShouldNot(Say("This will cause the app to restart"))
 					Consistently(session).ShouldNot(Say("Stopping"))
@@ -245,7 +245,7 @@ var _ = Describe("v3-scale command", func() {
 					By("scaling memory to 64M")
 					buffer := NewBuffer()
 					buffer.Write([]byte("y\n"))
-					session = helpers.CFWithStdin(buffer, "v3-scale", appName, "-m", "64M")
+					session = helpers.CFWithStdin(buffer, "scale", appName, "-m", "64M")
 					Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 					Eventually(session).Should(Say("This will cause the app to restart\\. Are you sure you want to scale %s\\? \\[yN\\]:", appName))
 					Eventually(session).Should(Say("Stopping app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
@@ -265,7 +265,7 @@ var _ = Describe("v3-scale command", func() {
 					By("scaling disk to 92M")
 					buffer = NewBuffer()
 					buffer.Write([]byte("y\n"))
-					session = helpers.CFWithStdin(buffer, "v3-scale", appName, "-k", "92M")
+					session = helpers.CFWithStdin(buffer, "scale", appName, "-k", "92M")
 					Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 					Eventually(session).Should(Say("This will cause the app to restart\\. Are you sure you want to scale %s\\? \\[yN\\]:", appName))
 					Eventually(session).Should(Say("Stopping app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
@@ -283,7 +283,7 @@ var _ = Describe("v3-scale command", func() {
 					Expect(instanceSummary.Disk).To(MatchRegexp(`\d+(\.\d+)?[KMG]? of 92M`))
 
 					By("scaling to 0 instances")
-					session = helpers.CF("v3-scale", appName, "-i", "0")
+					session = helpers.CF("scale", appName, "-i", "0")
 					Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 					Consistently(session).ShouldNot(Say("This will cause the app to restart"))
 					Consistently(session).ShouldNot(Say("Stopping"))
@@ -298,7 +298,7 @@ var _ = Describe("v3-scale command", func() {
 					It("cancels the scale", func() {
 						buffer := NewBuffer()
 						buffer.Write([]byte("n\n"))
-						session := helpers.CFWithStdin(buffer, "v3-scale", appName, "-i", "2", "-k", "90M")
+						session := helpers.CFWithStdin(buffer, "scale", appName, "-i", "2", "-k", "90M")
 						Eventually(session).Should(Say("This will cause the app to restart"))
 						Consistently(session).ShouldNot(Say("Stopping"))
 						Consistently(session).ShouldNot(Say("Starting"))
@@ -317,7 +317,7 @@ var _ = Describe("v3-scale command", func() {
 					It("scales the app accordingly", func() {
 						buffer := NewBuffer()
 						buffer.Write([]byte("y\n"))
-						session := helpers.CFWithStdin(buffer, "v3-scale", appName, "-i", "2", "-k", "120M", "-m", "60M")
+						session := helpers.CFWithStdin(buffer, "scale", appName, "-i", "2", "-k", "120M", "-m", "60M")
 						Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 						Eventually(session).Should(Say("This will cause the app to restart\\. Are you sure you want to scale %s\\? \\[yN\\]:", appName))
 						Eventually(session).Should(Say("Stopping app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
@@ -341,7 +341,7 @@ var _ = Describe("v3-scale command", func() {
 					It("scales the app and displays the app summary", func() {
 						buffer := NewBuffer()
 						buffer.Write([]byte("y\n"))
-						session := helpers.CFWithStdin(buffer, "v3-scale", appName, "-i", "2", "-k", "120M", "-m", "6M")
+						session := helpers.CFWithStdin(buffer, "scale", appName, "-i", "2", "-k", "120M", "-m", "6M")
 						Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 						Eventually(session).Should(Say("This will cause the app to restart\\. Are you sure you want to scale %s\\? \\[yN\\]:", appName))
 						Eventually(session).Should(Say("Stopping app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
@@ -371,7 +371,7 @@ var _ = Describe("v3-scale command", func() {
 				)
 
 				BeforeEach(func() {
-					session = helpers.CF("v3-scale", appName)
+					session = helpers.CF("scale", appName)
 					Eventually(session).Should(Exit(0))
 
 					appTable := helpers.ParseV3AppProcessTable(session.Out.Contents())
@@ -382,7 +382,7 @@ var _ = Describe("v3-scale command", func() {
 				})
 
 				It("the action should be a no-op", func() {
-					session = helpers.CF("v3-scale", appName, "-i", currentInstances, "-m", maxMemory, "-k", maxDiskSize)
+					session = helpers.CF("scale", appName, "-i", currentInstances, "-m", maxMemory, "-k", maxDiskSize)
 					Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 					Consistently(session).ShouldNot(Say("This will cause the app to restart"))
 					Consistently(session).ShouldNot(Say("Stopping"))
@@ -404,7 +404,7 @@ var _ = Describe("v3-scale command", func() {
 
 			When("the process flag is provided", func() {
 				It("scales the requested process", func() {
-					session := helpers.CF("v3-scale", appName, "-i", "2", "--process", "console")
+					session := helpers.CF("scale", appName, "-i", "2", "--process", "console")
 					Eventually(session).Should(Say("Scaling app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
 					Eventually(session).Should(Exit(0))
 
@@ -426,52 +426,52 @@ var _ = Describe("v3-scale command", func() {
 	When("invalid scale option values are provided", func() {
 		When("a negative value is passed to a flag argument", func() {
 			It("outputs an error message to the user, provides help text, and exits 1", func() {
-				session := helpers.CF("v3-scale", "some-app", "-i=-5")
+				session := helpers.CF("scale", "some-app", "-i=-5")
 				Eventually(session.Err).Should(Say("Incorrect Usage: invalid argument for flag '-i' \\(expected int > 0\\)"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 
-				session = helpers.CF("v3-scale", "some-app", "-k=-5")
+				session = helpers.CF("scale", "some-app", "-k=-5")
 				Eventually(session.Err).Should(Say("Byte quantity must be an integer with a unit of measurement like M, MB, G, or GB"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 
-				session = helpers.CF("v3-scale", "some-app", "-m=-5")
+				session = helpers.CF("scale", "some-app", "-m=-5")
 				Eventually(session.Err).Should(Say("Byte quantity must be an integer with a unit of measurement like M, MB, G, or GB"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 			})
 		})
 
 		When("a non-integer value is passed to a flag argument", func() {
 			It("outputs an error message to the user, provides help text, and exits 1", func() {
-				session := helpers.CF("v3-scale", "some-app", "-i", "not-an-integer")
+				session := helpers.CF("scale", "some-app", "-i", "not-an-integer")
 				Eventually(session.Err).Should(Say("Incorrect Usage: invalid argument for flag '-i' \\(expected int > 0\\)"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 
-				session = helpers.CF("v3-scale", "some-app", "-k", "not-an-integer")
+				session = helpers.CF("scale", "some-app", "-k", "not-an-integer")
 				Eventually(session.Err).Should(Say("Byte quantity must be an integer with a unit of measurement like M, MB, G, or GB"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 
-				session = helpers.CF("v3-scale", "some-app", "-m", "not-an-integer")
+				session = helpers.CF("scale", "some-app", "-m", "not-an-integer")
 				Eventually(session.Err).Should(Say("Byte quantity must be an integer with a unit of measurement like M, MB, G, or GB"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 			})
 		})
 
 		When("the unit of measurement is not provided", func() {
 			It("outputs an error message to the user, provides help text, and exits 1", func() {
-				session := helpers.CF("v3-scale", "some-app", "-k", "9")
+				session := helpers.CF("scale", "some-app", "-k", "9")
 				Eventually(session.Err).Should(Say("Byte quantity must be an integer with a unit of measurement like M, MB, G, or GB"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 
-				session = helpers.CF("v3-scale", "some-app", "-m", "7")
+				session = helpers.CF("scale", "some-app", "-m", "7")
 				Eventually(session.Err).Should(Say("Byte quantity must be an integer with a unit of measurement like M, MB, G, or GB"))
-				Eventually(session).Should(Say("cf v3-scale APP_NAME")) // help
+				Eventually(session).Should(Say("cf scale APP_NAME")) // help
 				Eventually(session).Should(Exit(1))
 			})
 		})

@@ -59,7 +59,7 @@ memory usage: 32M
 		}))
 	})
 
-	It("can parse app instance table from v3-scale", func() {
+	It("can parse app instance table from scale", func() {
 		input := `
 Showing health and status for app dora in org wut / space wut as admin...
 
