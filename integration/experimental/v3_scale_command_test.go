@@ -54,12 +54,6 @@ var _ = Describe("v3-scale command", func() {
 		})
 	})
 
-	It("displays the experimental warning", func() {
-		session := helpers.CF("v3-scale", appName)
-		Eventually(session.Err).Should(Say("This command is in EXPERIMENTAL stage and may change without notice"))
-		Eventually(session).Should(Exit())
-	})
-
 	When("the environment is not setup correctly", func() {
 		When("no API endpoint is set", func() {
 			BeforeEach(func() {
