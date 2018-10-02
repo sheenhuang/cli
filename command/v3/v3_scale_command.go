@@ -80,8 +80,6 @@ func (cmd *V3ScaleCommand) Setup(config command.Config, ui command.UI) error {
 }
 
 func (cmd V3ScaleCommand) Execute(args []string) error {
-	cmd.UI.DisplayWarning(command.ExperimentalWarning)
-
 	err := command.MinimumCCAPIVersionCheck(cmd.Actor.CloudControllerAPIVersion(), ccversion.MinVersionApplicationFlowV3)
 	if err != nil {
 		return err
