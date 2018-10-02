@@ -606,7 +606,6 @@ var _ = Describe("help Command", func() {
 				Expect(testUI.Out).To(Say("   v3-apps\\s+List all apps in the target space"))
 				Expect(testUI.Out).To(Say("   v3-create-app\\s+Create a V3 App"))
 				Expect(testUI.Out).To(Say("   v3-push\\s+Push a new app or sync changes to an existing app"))
-				Expect(testUI.Out).To(Say("   v3-scale\\s+Change or view the instance count, disk space limit, and memory limit for an app"))
 				Expect(testUI.Out).To(Say("   v3-start\\s+Start an app"))
 				Expect(testUI.Out).To(Say("   v3-stop\\s+Stop an app"))
 				Expect(testUI.Out).To(Say("   v3-restart\\s+Stop all instances of the app, then start them again. This causes downtime."))
