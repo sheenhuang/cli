@@ -10,7 +10,7 @@ import (
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
-	"code.cloudfoundry.org/cli/command/v3"
+	. "code.cloudfoundry.org/cli/command/v3"
 	"code.cloudfoundry.org/cli/command/v3/shared"
 	"code.cloudfoundry.org/cli/command/v3/shared/sharedfakes"
 	"code.cloudfoundry.org/cli/command/v3/v3fakes"
@@ -25,7 +25,7 @@ import (
 
 var _ = Describe("scale Command", func() {
 	var (
-		cmd             v3.ScaleCommand
+		cmd             ScaleCommand
 		input           *Buffer
 		output          *Buffer
 		testUI          *ui.UI
@@ -48,7 +48,7 @@ var _ = Describe("scale Command", func() {
 		fakeV2Actor = new(sharedfakes.FakeV2AppActor)
 		appName = "some-app"
 
-		cmd = v3.ScaleCommand{
+		cmd = ScaleCommand{
 			UI:          testUI,
 			Config:      fakeConfig,
 			SharedActor: fakeSharedActor,
