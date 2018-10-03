@@ -16,9 +16,9 @@ import (
 	"code.cloudfoundry.org/cli/command/v3/shared"
 )
 
-//go:generate counterfeiter . V3ScaleActor
+//go:generate counterfeiter . ScaleActor
 
-type V3ScaleActor interface {
+type ScaleActor interface {
 	shared.V3AppSummaryActor
 
 	CloudControllerAPIVersion() string
@@ -29,7 +29,7 @@ type V3ScaleActor interface {
 	PollStart(appGUID string, warnings chan<- v3action.Warnings) error
 }
 
-type V3ScaleCommand struct {
+type ScaleCommand struct {
 	RequiredArgs        flag.AppName   `positional-args:"yes"`
 	Force               bool           `short:"f" description:"Force restart of app without prompt"`
 	Instances           flag.Instances `short:"i" required:"false" description:"Number of instances"`
@@ -42,12 +42,12 @@ type V3ScaleCommand struct {
 
 	UI                  command.UI
 	Config              command.Config
-	Actor               V3ScaleActor
+	Actor               ScaleActor
 	SharedActor         command.SharedActor
 	AppSummaryDisplayer shared.AppSummaryDisplayer
 }
 
-func (cmd *V3ScaleCommand) Setup(config command.Config, ui command.UI) error {
+func (cmd *ScaleCommand) Setup(config command.Config, ui command.UI) error {
 	cmd.UI = ui
 	cmd.Config = config
 	cmd.SharedActor = sharedaction.NewActor(config)
@@ -79,7 +79,7 @@ func (cmd *V3ScaleCommand) Setup(config command.Config, ui command.UI) error {
 	return nil
 }
 
-func (cmd V3ScaleCommand) Execute(args []string) error {
+func (cmd ScaleCommand) Execute(args []string) error {
 	err := command.MinimumCCAPIVersionCheck(cmd.Actor.CloudControllerAPIVersion(), ccversion.MinVersionApplicationFlowV3)
 	if err != nil {
 		return err
@@ -143,7 +143,7 @@ func (cmd V3ScaleCommand) Execute(args []string) error {
 	return cmd.showCurrentScale(user.Name)
 }
 
-func (cmd V3ScaleCommand) scaleProcess(appGUID string, username string) (bool, error) {
+func (cmd ScaleCommand) scaleProcess(appGUID string, username string) (bool, error) {
 	cmd.UI.DisplayTextWithFlavor("Scaling app {{.AppName}} in org {{.OrgName}} / space {{.SpaceName}} as {{.Username}}...", map[string]interface{}{
 		"AppName":   cmd.RequiredArgs.AppName,
 		"OrgName":   cmd.Config.TargetedOrganization().Name,
@@ -190,7 +190,7 @@ func (cmd V3ScaleCommand) scaleProcess(appGUID string, username string) (bool, e
 	return true, nil
 }
 
-func (cmd V3ScaleCommand) restartApplication(appGUID string, username string) error {
+func (cmd ScaleCommand) restartApplication(appGUID string, username string) error {
 	cmd.UI.DisplayTextWithFlavor("Stopping app {{.AppName}} in org {{.OrgName}} / space {{.SpaceName}} as {{.Username}}...", map[string]interface{}{
 		"AppName":   cmd.RequiredArgs.AppName,
 		"OrgName":   cmd.Config.TargetedOrganization().Name,
@@ -222,7 +222,7 @@ func (cmd V3ScaleCommand) restartApplication(appGUID string, username string) er
 	return nil
 }
 
-func (cmd V3ScaleCommand) showCurrentScale(userName string) error {
+func (cmd ScaleCommand) showCurrentScale(userName string) error {
 	cmd.UI.DisplayTextWithFlavor("Showing current scale of app {{.AppName}} in org {{.OrgName}} / space {{.SpaceName}} as {{.Username}}...", map[string]interface{}{
 		"AppName":   cmd.RequiredArgs.AppName,
 		"OrgName":   cmd.Config.TargetedOrganization().Name,

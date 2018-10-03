@@ -8,7 +8,7 @@ import (
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
-type FakeV3ScaleActor struct {
+type FakeScaleActor struct {
 	GetApplicationSummaryByNameAndSpaceStub        func(appName string, spaceGUID string, withObfuscatedValues bool) (v3action.ApplicationSummary, v3action.Warnings, error)
 	getApplicationSummaryByNameAndSpaceMutex       sync.RWMutex
 	getApplicationSummaryByNameAndSpaceArgsForCall []struct {
@@ -109,7 +109,7 @@ type FakeV3ScaleActor struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v3action.ApplicationSummary, v3action.Warnings, error) {
+func (fake *FakeScaleActor) GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v3action.ApplicationSummary, v3action.Warnings, error) {
 	fake.getApplicationSummaryByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationSummaryByNameAndSpaceReturnsOnCall[len(fake.getApplicationSummaryByNameAndSpaceArgsForCall)]
 	fake.getApplicationSummaryByNameAndSpaceArgsForCall = append(fake.getApplicationSummaryByNameAndSpaceArgsForCall, struct {
@@ -128,19 +128,19 @@ func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpace(appName string
 	return fake.getApplicationSummaryByNameAndSpaceReturns.result1, fake.getApplicationSummaryByNameAndSpaceReturns.result2, fake.getApplicationSummaryByNameAndSpaceReturns.result3
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpaceCallCount() int {
+func (fake *FakeScaleActor) GetApplicationSummaryByNameAndSpaceCallCount() int {
 	fake.getApplicationSummaryByNameAndSpaceMutex.RLock()
 	defer fake.getApplicationSummaryByNameAndSpaceMutex.RUnlock()
 	return len(fake.getApplicationSummaryByNameAndSpaceArgsForCall)
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpaceArgsForCall(i int) (string, string, bool) {
+func (fake *FakeScaleActor) GetApplicationSummaryByNameAndSpaceArgsForCall(i int) (string, string, bool) {
 	fake.getApplicationSummaryByNameAndSpaceMutex.RLock()
 	defer fake.getApplicationSummaryByNameAndSpaceMutex.RUnlock()
 	return fake.getApplicationSummaryByNameAndSpaceArgsForCall[i].appName, fake.getApplicationSummaryByNameAndSpaceArgsForCall[i].spaceGUID, fake.getApplicationSummaryByNameAndSpaceArgsForCall[i].withObfuscatedValues
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpaceReturns(result1 v3action.ApplicationSummary, result2 v3action.Warnings, result3 error) {
+func (fake *FakeScaleActor) GetApplicationSummaryByNameAndSpaceReturns(result1 v3action.ApplicationSummary, result2 v3action.Warnings, result3 error) {
 	fake.GetApplicationSummaryByNameAndSpaceStub = nil
 	fake.getApplicationSummaryByNameAndSpaceReturns = struct {
 		result1 v3action.ApplicationSummary
@@ -149,7 +149,7 @@ func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpaceReturns(result1
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpaceReturnsOnCall(i int, result1 v3action.ApplicationSummary, result2 v3action.Warnings, result3 error) {
+func (fake *FakeScaleActor) GetApplicationSummaryByNameAndSpaceReturnsOnCall(i int, result1 v3action.ApplicationSummary, result2 v3action.Warnings, result3 error) {
 	fake.GetApplicationSummaryByNameAndSpaceStub = nil
 	if fake.getApplicationSummaryByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationSummaryByNameAndSpaceReturnsOnCall = make(map[int]struct {
@@ -165,7 +165,7 @@ func (fake *FakeV3ScaleActor) GetApplicationSummaryByNameAndSpaceReturnsOnCall(i
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3ScaleActor) CloudControllerAPIVersion() string {
+func (fake *FakeScaleActor) CloudControllerAPIVersion() string {
 	fake.cloudControllerAPIVersionMutex.Lock()
 	ret, specificReturn := fake.cloudControllerAPIVersionReturnsOnCall[len(fake.cloudControllerAPIVersionArgsForCall)]
 	fake.cloudControllerAPIVersionArgsForCall = append(fake.cloudControllerAPIVersionArgsForCall, struct{}{})
@@ -180,20 +180,20 @@ func (fake *FakeV3ScaleActor) CloudControllerAPIVersion() string {
 	return fake.cloudControllerAPIVersionReturns.result1
 }
 
-func (fake *FakeV3ScaleActor) CloudControllerAPIVersionCallCount() int {
+func (fake *FakeScaleActor) CloudControllerAPIVersionCallCount() int {
 	fake.cloudControllerAPIVersionMutex.RLock()
 	defer fake.cloudControllerAPIVersionMutex.RUnlock()
 	return len(fake.cloudControllerAPIVersionArgsForCall)
 }
 
-func (fake *FakeV3ScaleActor) CloudControllerAPIVersionReturns(result1 string) {
+func (fake *FakeScaleActor) CloudControllerAPIVersionReturns(result1 string) {
 	fake.CloudControllerAPIVersionStub = nil
 	fake.cloudControllerAPIVersionReturns = struct {
 		result1 string
 	}{result1}
 }
 
-func (fake *FakeV3ScaleActor) CloudControllerAPIVersionReturnsOnCall(i int, result1 string) {
+func (fake *FakeScaleActor) CloudControllerAPIVersionReturnsOnCall(i int, result1 string) {
 	fake.CloudControllerAPIVersionStub = nil
 	if fake.cloudControllerAPIVersionReturnsOnCall == nil {
 		fake.cloudControllerAPIVersionReturnsOnCall = make(map[int]struct {
@@ -205,7 +205,7 @@ func (fake *FakeV3ScaleActor) CloudControllerAPIVersionReturnsOnCall(i int, resu
 	}{result1}
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeScaleActor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
 	fake.getApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationByNameAndSpaceReturnsOnCall[len(fake.getApplicationByNameAndSpaceArgsForCall)]
 	fake.getApplicationByNameAndSpaceArgsForCall = append(fake.getApplicationByNameAndSpaceArgsForCall, struct {
@@ -223,19 +223,19 @@ func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpace(appName string, space
 	return fake.getApplicationByNameAndSpaceReturns.result1, fake.getApplicationByNameAndSpaceReturns.result2, fake.getApplicationByNameAndSpaceReturns.result3
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpaceCallCount() int {
+func (fake *FakeScaleActor) GetApplicationByNameAndSpaceCallCount() int {
 	fake.getApplicationByNameAndSpaceMutex.RLock()
 	defer fake.getApplicationByNameAndSpaceMutex.RUnlock()
 	return len(fake.getApplicationByNameAndSpaceArgsForCall)
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpaceArgsForCall(i int) (string, string) {
+func (fake *FakeScaleActor) GetApplicationByNameAndSpaceArgsForCall(i int) (string, string) {
 	fake.getApplicationByNameAndSpaceMutex.RLock()
 	defer fake.getApplicationByNameAndSpaceMutex.RUnlock()
 	return fake.getApplicationByNameAndSpaceArgsForCall[i].appName, fake.getApplicationByNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeScaleActor) GetApplicationByNameAndSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	fake.getApplicationByNameAndSpaceReturns = struct {
 		result1 v3action.Application
@@ -244,7 +244,7 @@ func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpaceReturns(result1 v3acti
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeScaleActor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	if fake.getApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
@@ -260,7 +260,7 @@ func (fake *FakeV3ScaleActor) GetApplicationByNameAndSpaceReturnsOnCall(i int, r
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3ScaleActor) ScaleProcessByApplication(appGUID string, process v3action.Process) (v3action.Warnings, error) {
+func (fake *FakeScaleActor) ScaleProcessByApplication(appGUID string, process v3action.Process) (v3action.Warnings, error) {
 	fake.scaleProcessByApplicationMutex.Lock()
 	ret, specificReturn := fake.scaleProcessByApplicationReturnsOnCall[len(fake.scaleProcessByApplicationArgsForCall)]
 	fake.scaleProcessByApplicationArgsForCall = append(fake.scaleProcessByApplicationArgsForCall, struct {
@@ -278,19 +278,19 @@ func (fake *FakeV3ScaleActor) ScaleProcessByApplication(appGUID string, process 
 	return fake.scaleProcessByApplicationReturns.result1, fake.scaleProcessByApplicationReturns.result2
 }
 
-func (fake *FakeV3ScaleActor) ScaleProcessByApplicationCallCount() int {
+func (fake *FakeScaleActor) ScaleProcessByApplicationCallCount() int {
 	fake.scaleProcessByApplicationMutex.RLock()
 	defer fake.scaleProcessByApplicationMutex.RUnlock()
 	return len(fake.scaleProcessByApplicationArgsForCall)
 }
 
-func (fake *FakeV3ScaleActor) ScaleProcessByApplicationArgsForCall(i int) (string, v3action.Process) {
+func (fake *FakeScaleActor) ScaleProcessByApplicationArgsForCall(i int) (string, v3action.Process) {
 	fake.scaleProcessByApplicationMutex.RLock()
 	defer fake.scaleProcessByApplicationMutex.RUnlock()
 	return fake.scaleProcessByApplicationArgsForCall[i].appGUID, fake.scaleProcessByApplicationArgsForCall[i].process
 }
 
-func (fake *FakeV3ScaleActor) ScaleProcessByApplicationReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeScaleActor) ScaleProcessByApplicationReturns(result1 v3action.Warnings, result2 error) {
 	fake.ScaleProcessByApplicationStub = nil
 	fake.scaleProcessByApplicationReturns = struct {
 		result1 v3action.Warnings
@@ -298,7 +298,7 @@ func (fake *FakeV3ScaleActor) ScaleProcessByApplicationReturns(result1 v3action.
 	}{result1, result2}
 }
 
-func (fake *FakeV3ScaleActor) ScaleProcessByApplicationReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeScaleActor) ScaleProcessByApplicationReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
 	fake.ScaleProcessByApplicationStub = nil
 	if fake.scaleProcessByApplicationReturnsOnCall == nil {
 		fake.scaleProcessByApplicationReturnsOnCall = make(map[int]struct {
@@ -312,7 +312,7 @@ func (fake *FakeV3ScaleActor) ScaleProcessByApplicationReturnsOnCall(i int, resu
 	}{result1, result2}
 }
 
-func (fake *FakeV3ScaleActor) StopApplication(appGUID string) (v3action.Warnings, error) {
+func (fake *FakeScaleActor) StopApplication(appGUID string) (v3action.Warnings, error) {
 	fake.stopApplicationMutex.Lock()
 	ret, specificReturn := fake.stopApplicationReturnsOnCall[len(fake.stopApplicationArgsForCall)]
 	fake.stopApplicationArgsForCall = append(fake.stopApplicationArgsForCall, struct {
@@ -329,19 +329,19 @@ func (fake *FakeV3ScaleActor) StopApplication(appGUID string) (v3action.Warnings
 	return fake.stopApplicationReturns.result1, fake.stopApplicationReturns.result2
 }
 
-func (fake *FakeV3ScaleActor) StopApplicationCallCount() int {
+func (fake *FakeScaleActor) StopApplicationCallCount() int {
 	fake.stopApplicationMutex.RLock()
 	defer fake.stopApplicationMutex.RUnlock()
 	return len(fake.stopApplicationArgsForCall)
 }
 
-func (fake *FakeV3ScaleActor) StopApplicationArgsForCall(i int) string {
+func (fake *FakeScaleActor) StopApplicationArgsForCall(i int) string {
 	fake.stopApplicationMutex.RLock()
 	defer fake.stopApplicationMutex.RUnlock()
 	return fake.stopApplicationArgsForCall[i].appGUID
 }
 
-func (fake *FakeV3ScaleActor) StopApplicationReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeScaleActor) StopApplicationReturns(result1 v3action.Warnings, result2 error) {
 	fake.StopApplicationStub = nil
 	fake.stopApplicationReturns = struct {
 		result1 v3action.Warnings
@@ -349,7 +349,7 @@ func (fake *FakeV3ScaleActor) StopApplicationReturns(result1 v3action.Warnings, 
 	}{result1, result2}
 }
 
-func (fake *FakeV3ScaleActor) StopApplicationReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeScaleActor) StopApplicationReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
 	fake.StopApplicationStub = nil
 	if fake.stopApplicationReturnsOnCall == nil {
 		fake.stopApplicationReturnsOnCall = make(map[int]struct {
@@ -363,7 +363,7 @@ func (fake *FakeV3ScaleActor) StopApplicationReturnsOnCall(i int, result1 v3acti
 	}{result1, result2}
 }
 
-func (fake *FakeV3ScaleActor) StartApplication(appGUID string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeScaleActor) StartApplication(appGUID string) (v3action.Application, v3action.Warnings, error) {
 	fake.startApplicationMutex.Lock()
 	ret, specificReturn := fake.startApplicationReturnsOnCall[len(fake.startApplicationArgsForCall)]
 	fake.startApplicationArgsForCall = append(fake.startApplicationArgsForCall, struct {
@@ -380,19 +380,19 @@ func (fake *FakeV3ScaleActor) StartApplication(appGUID string) (v3action.Applica
 	return fake.startApplicationReturns.result1, fake.startApplicationReturns.result2, fake.startApplicationReturns.result3
 }
 
-func (fake *FakeV3ScaleActor) StartApplicationCallCount() int {
+func (fake *FakeScaleActor) StartApplicationCallCount() int {
 	fake.startApplicationMutex.RLock()
 	defer fake.startApplicationMutex.RUnlock()
 	return len(fake.startApplicationArgsForCall)
 }
 
-func (fake *FakeV3ScaleActor) StartApplicationArgsForCall(i int) string {
+func (fake *FakeScaleActor) StartApplicationArgsForCall(i int) string {
 	fake.startApplicationMutex.RLock()
 	defer fake.startApplicationMutex.RUnlock()
 	return fake.startApplicationArgsForCall[i].appGUID
 }
 
-func (fake *FakeV3ScaleActor) StartApplicationReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeScaleActor) StartApplicationReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
 	fake.StartApplicationStub = nil
 	fake.startApplicationReturns = struct {
 		result1 v3action.Application
@@ -401,7 +401,7 @@ func (fake *FakeV3ScaleActor) StartApplicationReturns(result1 v3action.Applicati
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3ScaleActor) StartApplicationReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeScaleActor) StartApplicationReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
 	fake.StartApplicationStub = nil
 	if fake.startApplicationReturnsOnCall == nil {
 		fake.startApplicationReturnsOnCall = make(map[int]struct {
@@ -417,7 +417,7 @@ func (fake *FakeV3ScaleActor) StartApplicationReturnsOnCall(i int, result1 v3act
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3ScaleActor) PollStart(appGUID string, warnings chan<- v3action.Warnings) error {
+func (fake *FakeScaleActor) PollStart(appGUID string, warnings chan<- v3action.Warnings) error {
 	fake.pollStartMutex.Lock()
 	ret, specificReturn := fake.pollStartReturnsOnCall[len(fake.pollStartArgsForCall)]
 	fake.pollStartArgsForCall = append(fake.pollStartArgsForCall, struct {
@@ -435,26 +435,26 @@ func (fake *FakeV3ScaleActor) PollStart(appGUID string, warnings chan<- v3action
 	return fake.pollStartReturns.result1
 }
 
-func (fake *FakeV3ScaleActor) PollStartCallCount() int {
+func (fake *FakeScaleActor) PollStartCallCount() int {
 	fake.pollStartMutex.RLock()
 	defer fake.pollStartMutex.RUnlock()
 	return len(fake.pollStartArgsForCall)
 }
 
-func (fake *FakeV3ScaleActor) PollStartArgsForCall(i int) (string, chan<- v3action.Warnings) {
+func (fake *FakeScaleActor) PollStartArgsForCall(i int) (string, chan<- v3action.Warnings) {
 	fake.pollStartMutex.RLock()
 	defer fake.pollStartMutex.RUnlock()
 	return fake.pollStartArgsForCall[i].appGUID, fake.pollStartArgsForCall[i].warnings
 }
 
-func (fake *FakeV3ScaleActor) PollStartReturns(result1 error) {
+func (fake *FakeScaleActor) PollStartReturns(result1 error) {
 	fake.PollStartStub = nil
 	fake.pollStartReturns = struct {
 		result1 error
 	}{result1}
 }
 
-func (fake *FakeV3ScaleActor) PollStartReturnsOnCall(i int, result1 error) {
+func (fake *FakeScaleActor) PollStartReturnsOnCall(i int, result1 error) {
 	fake.PollStartStub = nil
 	if fake.pollStartReturnsOnCall == nil {
 		fake.pollStartReturnsOnCall = make(map[int]struct {
@@ -466,7 +466,7 @@ func (fake *FakeV3ScaleActor) PollStartReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
-func (fake *FakeV3ScaleActor) Invocations() map[string][][]interface{} {
+func (fake *FakeScaleActor) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
 	fake.getApplicationSummaryByNameAndSpaceMutex.RLock()
@@ -490,7 +490,7 @@ func (fake *FakeV3ScaleActor) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
-func (fake *FakeV3ScaleActor) recordInvocation(key string, args []interface{}) {
+func (fake *FakeScaleActor) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
 	if fake.invocations == nil {
@@ -502,4 +502,4 @@ func (fake *FakeV3ScaleActor) recordInvocation(key string, args []interface{}) {
 	fake.invocations[key] = append(fake.invocations[key], args)
 }
 
-var _ v3.V3ScaleActor = new(FakeV3ScaleActor)
+var _ v3.ScaleActor = new(FakeScaleActor)

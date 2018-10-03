@@ -25,13 +25,13 @@ import (
 
 var _ = Describe("scale Command", func() {
 	var (
-		cmd             v3.V3ScaleCommand
+		cmd             v3.ScaleCommand
 		input           *Buffer
 		output          *Buffer
 		testUI          *ui.UI
 		fakeConfig      *commandfakes.FakeConfig
 		fakeSharedActor *commandfakes.FakeSharedActor
-		fakeActor       *v3fakes.FakeV3ScaleActor
+		fakeActor       *v3fakes.FakeScaleActor
 		fakeV2Actor     *sharedfakes.FakeV2AppActor
 		appName         string
 		binaryName      string
@@ -44,11 +44,11 @@ var _ = Describe("scale Command", func() {
 		testUI = ui.NewTestUI(input, output, NewBuffer())
 		fakeConfig = new(commandfakes.FakeConfig)
 		fakeSharedActor = new(commandfakes.FakeSharedActor)
-		fakeActor = new(v3fakes.FakeV3ScaleActor)
+		fakeActor = new(v3fakes.FakeScaleActor)
 		fakeV2Actor = new(sharedfakes.FakeV2AppActor)
 		appName = "some-app"
 
-		cmd = v3.V3ScaleCommand{
+		cmd = v3.ScaleCommand{
 			UI:          testUI,
 			Config:      fakeConfig,
 			SharedActor: fakeSharedActor,
