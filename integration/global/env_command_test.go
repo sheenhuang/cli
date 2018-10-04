@@ -147,10 +147,12 @@ var _ = Describe("env command", func() {
 				})
 
 				Eventually(helpers.CF("set-env", appName, "user-provided-env-name", "user-provided-env-value")).Should(Exit(0))
+				Eventually(helpers.CF("set-env", appName, "an-out-of-order-name", "some-env-value")).Should(Exit(0))
+				Eventually(helpers.CF("set-env", appName, "Capital-env-var", "some-other-env-value")).Should(Exit(0))
 				Eventually(helpers.CF("create-user-provided-service", userProvidedServiceName)).Should(Exit(0))
 				Eventually(helpers.CF("bind-service", appName, userProvidedServiceName)).Should(Exit(0))
-				Eventually(helpers.CF("set-running-environment-variable-group", `{"running-env-name": "running-env-value", "number": 1, "string": "1"}`)).Should(Exit(0))
-				Eventually(helpers.CF("set-staging-environment-variable-group", `{"staging-env-name": "staging-env-value", "number": 2, "string": "2"}`)).Should(Exit(0))
+				Eventually(helpers.CF("set-running-environment-variable-group", `{"running-env-name": "running-env-value", "number": 1, "Xstring": "X"}`)).Should(Exit(0))
+				Eventually(helpers.CF("set-staging-environment-variable-group", `{"staging-env-name": "staging-env-value", "number": 2, "Ystring": "Y"}`)).Should(Exit(0))
 			})
 
 			AfterEach(func() {
@@ -163,29 +165,35 @@ var _ = Describe("env command", func() {
 			It("displays the environment variables", func() {
 				By("displaying env variables when they are set")
 				session := helpers.CF("env", appName)
+
+				Eventually(session).Should(Say(fmt.Sprintf("Getting env variables for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName)))
+				Eventually(session).Should(Say("OK"))
+
+				Eventually(session).Should(Say("System-Provided:"))
+				Eventually(session).Should(Say("VCAP_SERVICES: {\\s*\n"))
+				Eventually(session).Should(Say("VCAP_APPLICATION"))
+
+				Eventually(session).Should(Say("User-Provided:"))
+				Eventually(session).Should(Say(`Capital-env-var:\s+some-other-env-value`))
+				Eventually(session).Should(Say(`an-out-of-order-name:\s+some-env-value`))
+				Eventually(session).Should(Say(`user-provided-env-name:\s+user-provided-env-value`))
+
+				Eventually(session).Should(Say("Running Environment Variable Groups:"))
+				Eventually(session).Should(Say(`Xstring:\s+X`))
+				Eventually(session).Should(Say(`number:\s+1`))
+				Eventually(session).Should(Say(`running-env-name:\s+running-env-value`))
+
+				Eventually(session).Should(Say("Staging Environment Variable Groups:"))
+				Eventually(session).Should(Say(`Ystring:\s+Y`))
+				Eventually(session).Should(Say(`number:\s+2`))
+				Eventually(session).Should(Say(`staging-env-name:\s+staging-env-value`))
+
 				Eventually(session).Should(Exit(0))
-
-				output := string(session.Out.Contents())
-				Expect(output).To(MatchRegexp(fmt.Sprintf("Getting env variables for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName)))
-				Expect(output).To(MatchRegexp("OK"))
-
-				Expect(output).To(MatchRegexp("System-Provided:"))
-				Expect(output).To(MatchRegexp("VCAP_SERVICES: {\\s*\n"))
-				Expect(output).To(MatchRegexp("VCAP_APPLICATION"))
-
-				Expect(output).To(MatchRegexp("User-Provided:"))
-				Expect(output).To(MatchRegexp(`user-provided-env-name:\s+user-provided-env-value`))
-
-				Expect(output).To(MatchRegexp("Running Environment Variable Groups:"))
-				Expect(output).To(MatchRegexp(`running-env-name:\s+running-env-value`))
-				Expect(output).To(MatchRegexp(`number: 1`))
-
-				Expect(output).To(MatchRegexp("Staging Environment Variable Groups:"))
-				Expect(output).To(MatchRegexp(`staging-env-name:\s+staging-env-value`))
-				Expect(output).To(MatchRegexp(`number: 2`))
 
 				By("displaying help messages when they are not set")
 				Eventually(helpers.CF("v3-unset-env", appName, "user-provided-env-name")).Should(Exit(0))
+				Eventually(helpers.CF("v3-unset-env", appName, "an-out-of-order-name")).Should(Exit(0))
+				Eventually(helpers.CF("v3-unset-env", appName, "Capital-env-var")).Should(Exit(0))
 				Eventually(helpers.CF("unbind-service", appName, userProvidedServiceName)).Should(Exit(0))
 				Eventually(helpers.CF("set-running-environment-variable-group", `{}`)).Should(Exit(0))
 				Eventually(helpers.CF("set-staging-environment-variable-group", `{}`)).Should(Exit(0))
