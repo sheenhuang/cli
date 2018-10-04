@@ -15,7 +15,6 @@ import (
 //go:generate counterfeiter . V3EnvActor
 
 type V3EnvActor interface {
-	CloudControllerAPIVersion() string
 	GetEnvironmentVariablesByApplicationNameAndSpace(appName string, spaceGUID string) (v3action.EnvironmentVariableGroups, v3action.Warnings, error)
 }
 
@@ -44,7 +43,7 @@ func (cmd *V3EnvCommand) Setup(config command.Config, ui command.UI) error {
 	return nil
 }
 
-func (cmd V3EnvCommand) Execute(args []string) error {
+func (cmd V3EnvCommand) Execute(_ []string) error {
 	err := cmd.SharedActor.CheckTarget(true, true)
 	if err != nil {
 		return err
@@ -123,11 +122,9 @@ func (cmd V3EnvCommand) displayEnvGroup(group map[string]interface{}) error {
 }
 
 func sortKeys(group map[string]interface{}) []string {
-	keys := make([]string, len(group))
-	index := 0
+	keys := make([]string, 0, len(group))
 	for key := range group {
-		keys[index] = key
-		index++
+		keys = append(keys, key)
 	}
 	sort.Strings(keys)
 	return keys
