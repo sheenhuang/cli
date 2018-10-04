@@ -223,3 +223,7 @@ func (client *Client) GrantSpaceManagerByUsername(spaceGUID string, username str
 
 	return response.Warnings, err
 }
+
+func (client *Client) UpdateSpaceDeveloperByUsername(spaceGUID string, username string) (Warnings, error) {
+	return Warnings{}, nil
+}
