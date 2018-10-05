@@ -122,6 +122,12 @@ var _ = Describe("delete Command", func() {
 				fakeActor.DeleteApplicationByNameAndSpaceReturns(v3action.Warnings{"some-warning"}, nil)
 			})
 
+			It("delegates to the Actor", func() {
+				actualName, actualSpace := fakeActor.DeleteApplicationByNameAndSpaceArgsForCall(0)
+				Expect(actualName).To(Equal(app))
+				Expect(actualSpace).To(Equal(fakeConfig.TargetedSpace().GUID))
+			})
+
 			It("deletes the app", func() {
 				Expect(executeErr).ToNot(HaveOccurred())
 
