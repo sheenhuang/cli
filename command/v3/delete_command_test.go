@@ -67,13 +67,13 @@ var _ = Describe("delete Command", func() {
 		executeErr = cmd.Execute(nil)
 	})
 
-	When("checking target fails", func() {
+	When("the -r flag is provided", func() {
 		BeforeEach(func() {
 			cmd.DeleteMappedRoutes = true
 			cmd.Force = true
 		})
 
-		It("returns an error", func() {
+		It("prints a warning", func() {
 			Expect(testUI.Err).To(Say("-r flag not implemented - the mapped routes will not be deleted"))
 		})
 	})
