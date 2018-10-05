@@ -12,13 +12,13 @@ import (
 	"code.cloudfoundry.org/cli/command/v3/shared"
 )
 
-//go:generate counterfeiter . V3EnvActor
+//go:generate counterfeiter . EnvActor
 
-type V3EnvActor interface {
+type EnvActor interface {
 	GetEnvironmentVariablesByApplicationNameAndSpace(appName string, spaceGUID string) (v3action.EnvironmentVariableGroups, v3action.Warnings, error)
 }
 
-type V3EnvCommand struct {
+type EnvCommand struct {
 	RequiredArgs    flag.EnvironmentArgs `positional-args:"yes"`
 	usage           interface{}          `usage:"CF_NAME env APP_NAME"`
 	relatedCommands interface{}          `related_commands:"app, v3-apps, set-env, v3-unset-env, running-environment-variable-group, staging-environment-variable-group"`
@@ -26,10 +26,10 @@ type V3EnvCommand struct {
 	UI          command.UI
 	Config      command.Config
 	SharedActor command.SharedActor
-	Actor       V3EnvActor
+	Actor       EnvActor
 }
 
-func (cmd *V3EnvCommand) Setup(config command.Config, ui command.UI) error {
+func (cmd *EnvCommand) Setup(config command.Config, ui command.UI) error {
 	cmd.UI = ui
 	cmd.Config = config
 	cmd.SharedActor = sharedaction.NewActor(config)
@@ -43,7 +43,7 @@ func (cmd *V3EnvCommand) Setup(config command.Config, ui command.UI) error {
 	return nil
 }
 
-func (cmd V3EnvCommand) Execute(_ []string) error {
+func (cmd EnvCommand) Execute(_ []string) error {
 	err := cmd.SharedActor.CheckTarget(true, true)
 	if err != nil {
 		return err
@@ -112,7 +112,7 @@ func (cmd V3EnvCommand) Execute(_ []string) error {
 	return nil
 }
 
-func (cmd V3EnvCommand) displayEnvGroup(group map[string]interface{}) error {
+func (cmd EnvCommand) displayEnvGroup(group map[string]interface{}) error {
 	keys := sortKeys(group)
 
 	for _, key := range keys {
@@ -130,7 +130,7 @@ func sortKeys(group map[string]interface{}) []string {
 	return keys
 }
 
-func (cmd V3EnvCommand) displaySystem(group map[string]interface{}) error {
+func (cmd EnvCommand) displaySystem(group map[string]interface{}) error {
 	for key, val := range group {
 		jsonVal, err := json.MarshalIndent(val, "", " ")
 		if err != nil {

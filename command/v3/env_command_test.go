@@ -6,7 +6,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v3action"
 	"code.cloudfoundry.org/cli/command/commandfakes"
-	"code.cloudfoundry.org/cli/command/v3"
+	. "code.cloudfoundry.org/cli/command/v3"
 	"code.cloudfoundry.org/cli/command/v3/v3fakes"
 	"code.cloudfoundry.org/cli/util/configv3"
 	"code.cloudfoundry.org/cli/util/ui"
@@ -17,11 +17,11 @@ import (
 
 var _ = Describe("env Command", func() {
 	var (
-		cmd             v3.V3EnvCommand
+		cmd             EnvCommand
 		testUI          *ui.UI
 		fakeConfig      *commandfakes.FakeConfig
 		fakeSharedActor *commandfakes.FakeSharedActor
-		fakeActor       *v3fakes.FakeV3EnvActor
+		fakeActor       *v3fakes.FakeEnvActor
 		binaryName      string
 		executeErr      error
 		appName         string
@@ -31,9 +31,9 @@ var _ = Describe("env Command", func() {
 		testUI = ui.NewTestUI(nil, NewBuffer(), NewBuffer())
 		fakeConfig = new(commandfakes.FakeConfig)
 		fakeSharedActor = new(commandfakes.FakeSharedActor)
-		fakeActor = new(v3fakes.FakeV3EnvActor)
+		fakeActor = new(v3fakes.FakeEnvActor)
 
-		cmd = v3.V3EnvCommand{
+		cmd = EnvCommand{
 			UI:          testUI,
 			Config:      fakeConfig,
 			SharedActor: fakeSharedActor,

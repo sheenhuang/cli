@@ -97,7 +97,7 @@ type commandList struct {
 	EnableOrgIsolation                 v3.EnableOrgIsolationCommand                 `command:"enable-org-isolation" description:"Entitle an organization to an isolation segment"`
 	EnableServiceAccess                v2.EnableServiceAccessCommand                `command:"enable-service-access" description:"Enable access to a service or service plan for one or all orgs"`
 	EnableSSH                          v2.EnableSSHCommand                          `command:"enable-ssh" description:"Enable ssh for the application"`
-	Env                                v3.V3EnvCommand                              `command:"env" alias:"e" description:"Show all env variables for an app"`
+	Env                                v3.EnvCommand                                `command:"env" alias:"e" description:"Show all env variables for an app"`
 	Events                             v2.EventsCommand                             `command:"events" description:"Show recent app events"`
 	FeatureFlags                       v2.FeatureFlagsCommand                       `command:"feature-flags" description:"Retrieve list of feature flags with status"`
 	FeatureFlag                        v2.FeatureFlagCommand                        `command:"feature-flag" description:"Retrieve an individual feature flag with status"`
