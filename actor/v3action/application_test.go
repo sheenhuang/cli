@@ -56,6 +56,11 @@ var _ = Describe("Application Actions", func() {
 				fakeCloudControllerClient.GetApplicationsReturns([]ccv3.Application{ccv3.Application{Name: "some-app", GUID: "abc123"}}, ccv3.Warnings{"some-get-app-warning"}, nil)
 			})
 
+			It("Delegates to the GetApplicationActor", func() {
+				actualAppGUID := fakeCloudControllerClient.DeleteApplicationArgsForCall(0)
+				Expect(actualAppGUID).To(Equal("abc123"))
+			})
+
 			When("sending the delete fails", func() {
 				BeforeEach(func() {
 					fakeCloudControllerClient.DeleteApplicationReturns("", ccv3.Warnings{"some-delete-app-warning"}, errors.New("some-delete-app-error"))
@@ -70,6 +75,12 @@ var _ = Describe("Application Actions", func() {
 			When("sending the delete succeeds", func() {
 				BeforeEach(func() {
 					fakeCloudControllerClient.DeleteApplicationReturns("/some-job-url", ccv3.Warnings{"some-delete-app-warning"}, nil)
+				})
+
+				It("Delegates polling the app to the CC client", func() {
+					actualJobURL := fakeCloudControllerClient.PollJobArgsForCall(0)
+
+					Expect(actualJobURL).To(Equal(ccv3.JobURL("/some-job-url")))
 				})
 
 				When("polling fails", func() {
