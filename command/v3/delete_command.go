@@ -45,7 +45,7 @@ func (cmd *DeleteCommand) Setup(config command.Config, ui command.UI) error {
 
 func (cmd DeleteCommand) Execute(args []string) error {
 	if cmd.DeleteMappedRoutes {
-		cmd.UI.DisplayWarning("-r flag not implemented - the mapped routes will not be deleted")
+		cmd.UI.DisplayWarning("-r flag not implemented - the mapped routes will not be deleted. Use `delete-orphaned-routes` instead.")
 	}
 
 	err := cmd.SharedActor.CheckTarget(true, true)
