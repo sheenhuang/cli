@@ -154,7 +154,7 @@ type commandList struct {
 	ServiceKey                         v2.ServiceKeyCommand                         `command:"service-key" description:"Show service key info"`
 	Services                           v2.ServicesCommand                           `command:"services" alias:"s" description:"List all service instances in the target space"`
 	Service                            v2.ServiceCommand                            `command:"service" description:"Show service instance info"`
-	SetEnv                             v3.V3SetEnvCommand                           `command:"set-env" alias:"se" description:"Set an env variable for an app"`
+	SetEnv                             v3.SetEnvCommand                             `command:"set-env" alias:"se" description:"Set an env variable for an app"`
 	SetHealthCheck                     v2.SetHealthCheckCommand                     `command:"set-health-check" description:"Change type of health check performed on an app"`
 	SetOrgDefaultIsolationSegment      v3.SetOrgDefaultIsolationSegmentCommand      `command:"set-org-default-isolation-segment" description:"Set the default isolation segment used for apps in spaces in an org"`
 	SetOrgRole                         v2.SetOrgRoleCommand                         `command:"set-org-role" description:"Assign an org role to a user"`

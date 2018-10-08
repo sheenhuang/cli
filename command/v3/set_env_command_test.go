@@ -18,11 +18,11 @@ import (
 
 var _ = Describe("set-env Command", func() {
 	var (
-		cmd             v3.V3SetEnvCommand
+		cmd             v3.SetEnvCommand
 		testUI          *ui.UI
 		fakeConfig      *commandfakes.FakeConfig
 		fakeSharedActor *commandfakes.FakeSharedActor
-		fakeActor       *v3fakes.FakeV3SetEnvActor
+		fakeActor       *v3fakes.FakeSetEnvActor
 		binaryName      string
 		executeErr      error
 		appName         string
@@ -32,9 +32,9 @@ var _ = Describe("set-env Command", func() {
 		testUI = ui.NewTestUI(nil, NewBuffer(), NewBuffer())
 		fakeConfig = new(commandfakes.FakeConfig)
 		fakeSharedActor = new(commandfakes.FakeSharedActor)
-		fakeActor = new(v3fakes.FakeV3SetEnvActor)
+		fakeActor = new(v3fakes.FakeSetEnvActor)
 
-		cmd = v3.V3SetEnvCommand{
+		cmd = v3.SetEnvCommand{
 			UI:          testUI,
 			Config:      fakeConfig,
 			SharedActor: fakeSharedActor,

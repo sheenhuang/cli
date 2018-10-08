@@ -8,14 +8,14 @@ import (
 	"code.cloudfoundry.org/cli/command/v3/shared"
 )
 
-//go:generate counterfeiter . V3SetEnvActor
+//go:generate counterfeiter . SetEnvActor
 
-type V3SetEnvActor interface {
+type SetEnvActor interface {
 	CloudControllerAPIVersion() string
 	SetEnvironmentVariableByApplicationNameAndSpace(appName string, spaceGUID string, envPair v3action.EnvironmentVariablePair) (v3action.Warnings, error)
 }
 
-type V3SetEnvCommand struct {
+type SetEnvCommand struct {
 	RequiredArgs    flag.SetEnvironmentArgs `positional-args:"yes"`
 	usage           interface{}             `usage:"CF_NAME set-env APP_NAME ENV_VAR_NAME ENV_VAR_VALUE"`
 	relatedCommands interface{}             `related_commands:"v3-apps, env, v3-restart, set-running-environment-variable-group, set-staging-environment-variable-group, v3-stage, v3-unset-env"`
@@ -23,10 +23,10 @@ type V3SetEnvCommand struct {
 	UI          command.UI
 	Config      command.Config
 	SharedActor command.SharedActor
-	Actor       V3SetEnvActor
+	Actor       SetEnvActor
 }
 
-func (cmd *V3SetEnvCommand) Setup(config command.Config, ui command.UI) error {
+func (cmd *SetEnvCommand) Setup(config command.Config, ui command.UI) error {
 	cmd.UI = ui
 	cmd.Config = config
 	cmd.SharedActor = sharedaction.NewActor(config)
@@ -40,7 +40,7 @@ func (cmd *V3SetEnvCommand) Setup(config command.Config, ui command.UI) error {
 	return nil
 }
 
-func (cmd V3SetEnvCommand) Execute(args []string) error {
+func (cmd SetEnvCommand) Execute(args []string) error {
 	err := cmd.SharedActor.CheckTarget(true, true)
 	if err != nil {
 		return err
