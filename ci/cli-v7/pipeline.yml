@@ -120,6 +120,10 @@ jobs:
         file: cli-ci/ci/cli/tasks/generate-i18n-resources.yml
       - task: build
         file: cli-ci/ci/cli/tasks/build-binaries.yml
+      - task: build-osx
+        file: cli-ci/ci/cli/tasks/build-osx-binary.yml
+      - task: combine-binaries
+        file: cli-ci/ci/cli/tasks/combine-binaries.yml
       - put: cf-cli-binaries
         params:
           file: compiled/cf-cli-binaries.tgz
