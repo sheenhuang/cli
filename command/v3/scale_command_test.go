@@ -129,8 +129,7 @@ var _ = Describe("scale Command", func() {
 			It("returns an ApplicationNotFoundError and all warnings", func() {
 				Expect(executeErr).To(Equal(actionerror.ApplicationNotFoundError{Name: appName}))
 
-				Expect(testUI.Out).ToNot(Say("Showing"))
-				Expect(testUI.Out).ToNot(Say("Scaling"))
+				Expect(testUI.Out).ToNot(Say("Showing | Scaling"))
 				Expect(testUI.Err).To(Say("get-app-warning"))
 
 				Expect(fakeActor.GetApplicationByNameAndSpaceCallCount()).To(Equal(1))
@@ -237,12 +236,8 @@ var _ = Describe("scale Command", func() {
 				It("displays current scale properties and all warnings", func() {
 					Expect(executeErr).ToNot(HaveOccurred())
 
-					Expect(testUI.Out).ToNot(Say("Scaling"))
-					Expect(testUI.Out).ToNot(Say("This will cause the app to restart"))
-					Expect(testUI.Out).ToNot(Say("Stopping"))
-					Expect(testUI.Out).ToNot(Say("Starting"))
-					Expect(testUI.Out).ToNot(Say("Waiting"))
 					Expect(testUI.Out).To(Say("Showing current scale of app some-app in org some-org / space some-space as some-user\\.\\.\\."))
+					Expect(testUI.Out).ToNot(Say("Scaling | This will cause the app to restart | Stopping | Starting | Waiting"))
 
 					firstAppTable := helpers.ParseV3AppProcessTable(output.Contents())
 					Expect(len(firstAppTable.Processes)).To(Equal(2))
@@ -325,13 +320,10 @@ var _ = Describe("scale Command", func() {
 						It("does not scale the app", func() {
 							Expect(executeErr).ToNot(HaveOccurred())
 
-							Expect(testUI.Out).ToNot(Say("Showing"))
 							Expect(testUI.Out).To(Say("Scaling app some-app in org some-org / space some-space as some-user\\.\\.\\."))
 							Expect(testUI.Out).To(Say("This will cause the app to restart\\. Are you sure you want to scale some-app\\? \\[yN\\]:"))
 							Expect(testUI.Out).To(Say("Scaling cancelled"))
-							Expect(testUI.Out).ToNot(Say("Stopping"))
-							Expect(testUI.Out).ToNot(Say("Starting"))
-							Expect(testUI.Out).ToNot(Say("Waiting"))
+							Expect(testUI.Out).ToNot(Say("Showing | Stopping | Starting | Waiting"))
 
 							Expect(fakeActor.ScaleProcessByApplicationCallCount()).To(Equal(0))
 						})
@@ -346,13 +338,10 @@ var _ = Describe("scale Command", func() {
 						It("does not scale the app", func() {
 							Expect(executeErr).ToNot(HaveOccurred())
 
-							Expect(testUI.Out).ToNot(Say("Showing"))
 							Expect(testUI.Out).To(Say("Scaling app some-app in org some-org / space some-space as some-user\\.\\.\\."))
 							Expect(testUI.Out).To(Say("This will cause the app to restart\\. Are you sure you want to scale some-app\\? \\[yN\\]:"))
 							Expect(testUI.Out).To(Say("Scaling cancelled"))
-							Expect(testUI.Out).ToNot(Say("Stopping"))
-							Expect(testUI.Out).ToNot(Say("Starting"))
-							Expect(testUI.Out).ToNot(Say("Waiting"))
+							Expect(testUI.Out).ToNot(Say("Showing | Stopping | Starting | Waiting"))
 
 							Expect(fakeActor.ScaleProcessByApplicationCallCount()).To(Equal(0))
 						})
@@ -370,6 +359,40 @@ var _ = Describe("scale Command", func() {
 									warnings <- v3action.Warnings{"some-poll-warning-1", "some-poll-warning-2"}
 									return nil
 								}
+							})
+
+							It("delegates the right appGUID", func() {
+								actualGUID, _ := fakeActor.PollStartArgsForCall(0)
+								Expect(actualGUID).To(Equal("some-app-guid"))
+							})
+
+							When("Restarting the app fails to stop the app", func() {
+								BeforeEach(func() {
+									fakeActor.StopApplicationReturns(v3action.Warnings{"some-restart-warning"}, errors.New("stop-error"))
+								})
+
+								It("Prints warnings and returns an error", func() {
+									Expect(executeErr).To(MatchError("stop-error"))
+
+									Expect(testUI.Err).To(Say("some-restart-warning"))
+								})
+							})
+
+							When("Restarting the app fails to start the app", func() {
+								BeforeEach(func() {
+									fakeActor.StartApplicationReturns(v3action.Application{}, v3action.Warnings{"some-start-warning"}, errors.New("start-error"))
+								})
+
+								It("Delegates the correct appGUID", func() {
+									actualGUID := fakeActor.StartApplicationArgsForCall(0)
+									Expect(actualGUID).To(Equal("some-app-guid"))
+								})
+
+								It("Prints warnings and returns an error", func() {
+									Expect(executeErr).To(MatchError("start-error"))
+
+									Expect(testUI.Err).To(Say("some-start-warning"))
+								})
 							})
 
 							It("scales, restarts, and displays scale properties", func() {
@@ -449,6 +472,11 @@ var _ = Describe("scale Command", func() {
 								}
 							})
 
+							It("delegates the right appGUID", func() {
+								actualGUID, _ := fakeActor.PollStartArgsForCall(0)
+								Expect(actualGUID).To(Equal("some-app-guid"))
+							})
+
 							It("displays all warnings and fails", func() {
 								Expect(testUI.Err).To(Say("some-poll-warning-1"))
 								Expect(testUI.Err).To(Say("some-poll-warning-2"))
@@ -460,6 +488,11 @@ var _ = Describe("scale Command", func() {
 						When("polling times out", func() {
 							BeforeEach(func() {
 								fakeActor.PollStartReturns(actionerror.StartupTimeoutError{})
+							})
+
+							It("delegates the right appGUID", func() {
+								actualGUID, _ := fakeActor.PollStartArgsForCall(0)
+								Expect(actualGUID).To(Equal("some-app-guid"))
 							})
 
 							It("returns the StartupTimeoutError", func() {
@@ -481,9 +514,9 @@ var _ = Describe("scale Command", func() {
 						Expect(executeErr).ToNot(HaveOccurred())
 
 						Expect(testUI.Out).To(Say("Scaling app some-app in org some-org / space some-space as some-user\\.\\.\\."))
-						Expect(testUI.Out).NotTo(Say("This will cause the app to restart\\. Are you sure you want to scale some-app\\? \\[yN\\]:"))
 						Expect(testUI.Out).To(Say("Stopping app some-app in org some-org / space some-space as some-user\\.\\.\\."))
 						Expect(testUI.Out).To(Say("Starting app some-app in org some-org / space some-space as some-user\\.\\.\\."))
+						Expect(testUI.Out).NotTo(Say("This will cause the app to restart\\. Are you sure you want to scale some-app\\? \\[yN\\]:"))
 
 						Expect(fakeActor.GetApplicationByNameAndSpaceCallCount()).To(Equal(1))
 						Expect(fakeActor.ScaleProcessByApplicationCallCount()).To(Equal(1))
@@ -511,9 +544,7 @@ var _ = Describe("scale Command", func() {
 					Expect(executeErr).ToNot(HaveOccurred())
 
 					Expect(testUI.Out).To(Say("Scaling"))
-					Expect(testUI.Out).NotTo(Say("This will cause the app to restart"))
-					Expect(testUI.Out).NotTo(Say("Stopping"))
-					Expect(testUI.Out).NotTo(Say("Starting"))
+					Expect(testUI.Out).NotTo(Say("This will cause the app to restart | Stopping | Starting"))
 
 					Expect(testUI.Err).To(Say("get-app-warning"))
 					Expect(testUI.Err).To(Say("scale-warning"))
