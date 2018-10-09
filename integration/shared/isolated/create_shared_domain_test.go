@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = FDescribe("create-shared-domain command", func() {
+var _ = Describe("create-shared-domain command", func() {
 	Context("Help", func() {
 		It("displays the help information", func() {
 			session := helpers.CF("create-shared-domain", "--help")
@@ -109,6 +109,25 @@ var _ = FDescribe("create-shared-domain command", func() {
 					session = helpers.CF("domains")
 					Eventually(session).Should(Say("%s\\s+shared", domainName))
 
+					var sharedDomainResponse struct {
+						Resources []struct {
+							Metadata struct {
+								RouterGroupGUID string `json:"router_group_guid"`
+							} `json:"entity"`
+						} `json:"resources"`
+					}
+
+					helpers.Curl(&sharedDomainResponse, "/v2/shared_domains?q=name:%s", domainName)
+					currentRouterGroupGUID := sharedDomainResponse.Resources[0].Metadata.RouterGroupGUID
+
+					type RouterGroup struct {
+						GUID string `json:"guid"`
+					}
+					var routerGroupListResponse []RouterGroup
+
+					helpers.Curl(&routerGroupListResponse, "/routing/v1/router_groups?name=%s", routerGroupName)
+					expectedRouterGroupGUID := routerGroupListResponse[0].GUID
+					Expect(currentRouterGroupGUID).Should(Equal(expectedRouterGroupGUID))
 				})
 
 			})
