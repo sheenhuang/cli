@@ -73,7 +73,7 @@ func (actor Actor) getProcessSummariesForApp(appGUID string, withObfuscatedValue
 	log.WithFields(log.Fields{
 		"appGUID":              appGUID,
 		"withObfuscatedValues": withObfuscatedValues,
-	}).Info("retieving process information")
+	}).Info("retrieving process information")
 
 	ccv3Processes, warnings, err := actor.CloudControllerClient.GetApplicationProcesses(appGUID)
 	allWarnings := Warnings(warnings)
