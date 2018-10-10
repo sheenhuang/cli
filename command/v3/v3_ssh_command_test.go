@@ -20,7 +20,7 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 )
 
-var _ = Describe("v3-ssh Command", func() {
+var _ = Describe("ssh Command", func() {
 	var (
 		cmd             v3.V3SSHCommand
 		testUI          *ui.UI

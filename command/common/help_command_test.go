@@ -502,6 +502,7 @@ var _ = Describe("help Command", func() {
 				Expect(testUI.Out).To(Say("   apps\\s+List all apps in the target space"))
 				Expect(testUI.Out).To(Say("   restart-app-instance\\s+Terminate, then restart an app instance"))
 				Expect(testUI.Out).To(Say("   ssh-enabled\\s+Reports whether SSH is enabled on an application container instance"))
+				Expect(testUI.Out).To(Say("   ssh\\s+SSH to an application container instance"))
 				Expect(testUI.Out).To(Say(""))
 				Expect(testUI.Out).To(Say("SERVICES:"))
 				Expect(testUI.Out).To(Say("   marketplace\\s+List available offerings in the marketplace"))
@@ -619,7 +620,6 @@ var _ = Describe("help Command", func() {
 				Expect(testUI.Out).To(Say("   v3-set-health-check\\s+Change type of health check performed on an app's process"))
 				Expect(testUI.Out).To(Say("   v3-packages\\s+List packages of an app"))
 				Expect(testUI.Out).To(Say("   v3-create-package\\s+Uploads a V3 Package"))
-				Expect(testUI.Out).To(Say("   v3-ssh\\s+SSH to an application container instance"))
 			})
 
 			When("there are multiple installed plugins", func() {
