@@ -35,7 +35,6 @@ type commandList struct {
 	V3Start              v3.V3StartCommand              `command:"v3-start" description:"Start an app"`
 	V3Stop               v3.V3StopCommand               `command:"v3-stop" description:"Stop an app"`
 	V3UnsetEnv           v3.V3UnsetEnvCommand           `command:"v3-unset-env" description:"Remove an env variable from an app"`
-	V3SSH                v3.V3SSHCommand                `command:"v3-ssh" description:"SSH to an application container instance"`
 
 	AddPluginRepo                      plugin.AddPluginRepoCommand                  `command:"add-plugin-repo" description:"Add a new plugin repository"`
 	AddNetworkPolicy                   v3.AddNetworkPolicyCommand                   `command:"add-network-policy" description:"Create policy to allow direct network traffic from one app to another"`
@@ -174,7 +173,7 @@ type commandList struct {
 	Space                              v2.SpaceCommand                              `command:"space" description:"Show space info"`
 	SSHCode                            v2.SSHCodeCommand                            `command:"ssh-code" description:"Get a one time password for ssh clients"`
 	SSHEnabled                         v2.SSHEnabledCommand                         `command:"ssh-enabled" description:"Reports whether SSH is enabled on an application container instance"`
-	SSH                                v2.SSHCommand                                `command:"ssh" description:"SSH to an application container instance"`
+	SSH                                v3.V3SSHCommand                              `command:"ssh" description:"SSH to an application container instance"`
 	Stacks                             v2.StacksCommand                             `command:"stacks" description:"List all stacks (a stack is a pre-built file system, including an operating system, that can run apps)"`
 	Stack                              v2.StackCommand                              `command:"stack" description:"Show information for a stack (a stack is a pre-built file system, including an operating system, that can run apps)"`
 	StagingEnvironmentVariableGroup    v2.StagingEnvironmentVariableGroupCommand    `command:"staging-environment-variable-group" alias:"sevg" description:"Retrieve the contents of the staging environment variable group"`
