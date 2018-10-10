@@ -17,7 +17,6 @@ import (
 type ScaleActor interface {
 	shared.V3AppSummaryActor
 
-	CloudControllerAPIVersion() string
 	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
 	ScaleProcessByApplication(appGUID string, process v3action.Process) (v3action.Warnings, error)
 	StopApplication(appGUID string) (v3action.Warnings, error)
@@ -103,6 +102,7 @@ func (cmd ScaleCommand) Execute(args []string) error {
 	pollWarnings := make(chan v3action.Warnings)
 	done := make(chan bool)
 	go func() {
+		defer close(done)
 		for {
 			select {
 			case message := <-pollWarnings:
@@ -122,9 +122,8 @@ func (cmd ScaleCommand) Execute(args []string) error {
 				AppName:    cmd.RequiredArgs.AppName,
 				BinaryName: cmd.Config.BinaryName(),
 			}
-		} else {
-			return err
 		}
+		return err
 	}
 
 	return cmd.showCurrentScale(user.Name)
