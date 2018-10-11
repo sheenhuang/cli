@@ -6,11 +6,9 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v3action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
-	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
-	"code.cloudfoundry.org/cli/command/translatableerror"
-	"code.cloudfoundry.org/cli/command/v3"
+	. "code.cloudfoundry.org/cli/command/v3"
 	"code.cloudfoundry.org/cli/command/v3/v3fakes"
 	"code.cloudfoundry.org/cli/util/configv3"
 	"code.cloudfoundry.org/cli/util/ui"
@@ -19,13 +17,13 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 )
 
-var _ = Describe("v3-set-health-check Command", func() {
+var _ = Describe("set-health-check Command", func() {
 	var (
-		cmd             v3.V3SetHealthCheckCommand
+		cmd             SetHealthCheckCommand
 		testUI          *ui.UI
 		fakeConfig      *commandfakes.FakeConfig
 		fakeSharedActor *commandfakes.FakeSharedActor
-		fakeActor       *v3fakes.FakeV3SetHealthCheckActor
+		fakeActor       *v3fakes.FakeSetHealthCheckActor
 		binaryName      string
 		executeErr      error
 		app             string
@@ -36,14 +34,14 @@ var _ = Describe("v3-set-health-check Command", func() {
 		testUI = ui.NewTestUI(nil, NewBuffer(), NewBuffer())
 		fakeConfig = new(commandfakes.FakeConfig)
 		fakeSharedActor = new(commandfakes.FakeSharedActor)
-		fakeActor = new(v3fakes.FakeV3SetHealthCheckActor)
+		fakeActor = new(v3fakes.FakeSetHealthCheckActor)
 
 		binaryName = "faceman"
 		fakeConfig.BinaryNameReturns(binaryName)
 		app = "some-app"
 		healthCheckType = "some-health-check-type"
 
-		cmd = v3.V3SetHealthCheckCommand{
+		cmd = SetHealthCheckCommand{
 			RequiredArgs:      flag.SetHealthCheckArgs{AppName: app, HealthCheck: flag.HealthCheckType{Type: healthCheckType}},
 			HTTPEndpoint:      "some-http-endpoint",
 			ProcessType:       "some-process-type",
@@ -71,33 +69,13 @@ var _ = Describe("v3-set-health-check Command", func() {
 		executeErr = cmd.Execute(nil)
 	})
 
-	When("the API version is below the minimum", func() {
-		BeforeEach(func() {
-			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinV3ClientVersion)
-		})
-
-		It("returns a MinimumAPIVersionNotMetError", func() {
-			Expect(executeErr).To(MatchError(translatableerror.MinimumCFAPIVersionNotMetError{
-				CurrentVersion: ccversion.MinV3ClientVersion,
-				MinimumVersion: ccversion.MinVersionApplicationFlowV3,
-			}))
-		})
-
-		It("displays the experimental warning", func() {
-			Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
-		})
-	})
-
 	When("checking target fails", func() {
 		BeforeEach(func() {
-			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			fakeSharedActor.CheckTargetReturns(actionerror.NoOrganizationTargetedError{BinaryName: binaryName})
 		})
 
 		It("returns an error", func() {
 			Expect(executeErr).To(MatchError(actionerror.NoOrganizationTargetedError{BinaryName: binaryName}))
-
-			Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
 
 			Expect(fakeSharedActor.CheckTargetCallCount()).To(Equal(1))
 			checkTargetedOrg, checkTargetedSpace := fakeSharedActor.CheckTargetArgsForCall(0)
@@ -110,7 +88,6 @@ var _ = Describe("v3-set-health-check Command", func() {
 		var expectedErr error
 
 		BeforeEach(func() {
-			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			expectedErr = errors.New("some current user error")
 			fakeConfig.CurrentUserReturns(configv3.User{}, expectedErr)
 		})
@@ -124,7 +101,6 @@ var _ = Describe("v3-set-health-check Command", func() {
 		var expectedErr error
 
 		BeforeEach(func() {
-			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			expectedErr = actionerror.ApplicationNotFoundError{Name: app}
 			fakeActor.SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(v3action.Application{}, v3action.Warnings{"warning-1", "warning-2"}, expectedErr)
 		})
@@ -132,7 +108,6 @@ var _ = Describe("v3-set-health-check Command", func() {
 		It("returns the error and prints warnings", func() {
 			Expect(executeErr).To(Equal(actionerror.ApplicationNotFoundError{Name: app}))
 
-			Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
 			Expect(testUI.Out).To(Say("Updating health check type for app some-app process some-process-type in org some-org / space some-space as steve\\.\\.\\."))
 
 			Expect(testUI.Err).To(Say("warning-1"))
@@ -142,7 +117,6 @@ var _ = Describe("v3-set-health-check Command", func() {
 
 	When("application is started", func() {
 		BeforeEach(func() {
-			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			fakeActor.SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(
 				v3action.Application{
 					State: constant.ApplicationStarted,
@@ -154,7 +128,6 @@ var _ = Describe("v3-set-health-check Command", func() {
 		It("displays a message to restart application", func() {
 			Expect(executeErr).ToNot(HaveOccurred())
 
-			Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
 			Expect(testUI.Out).To(Say("Updating health check type for app some-app process some-process-type in org some-org / space some-space as steve\\.\\.\\."))
 			Expect(testUI.Out).To(Say("TIP: An app restart is required for the change to take effect\\."))
 
@@ -174,7 +147,6 @@ var _ = Describe("v3-set-health-check Command", func() {
 
 	When("app is not started", func() {
 		BeforeEach(func() {
-			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			fakeActor.SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(
 				v3action.Application{
 					State: constant.ApplicationStopped,
@@ -185,8 +157,6 @@ var _ = Describe("v3-set-health-check Command", func() {
 
 		It("does not display a message to restart application", func() {
 			Expect(executeErr).ToNot(HaveOccurred())
-
-			Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
 			Expect(testUI.Out).To(Say("Updating health check type for app some-app process some-process-type in org some-org / space some-space as steve\\.\\.\\."))
 			Expect(testUI.Out).NotTo(Say("TIP: An app restart is required for the change to take effect\\."))
 

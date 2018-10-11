@@ -617,7 +617,6 @@ var _ = Describe("help Command", func() {
 				Expect(testUI.Out).To(Say("   v3-set-droplet\\s+Set the droplet used to run an app"))
 				Expect(testUI.Out).To(Say("   v3-unset-env\\s+Remove an env variable from an app"))
 				Expect(testUI.Out).To(Say("   v3-get-health-check\\s+Show the type of health check performed on an app"))
-				Expect(testUI.Out).To(Say("   v3-set-health-check\\s+Change type of health check performed on an app's process"))
 				Expect(testUI.Out).To(Say("   v3-packages\\s+List packages of an app"))
 				Expect(testUI.Out).To(Say("   v3-create-package\\s+Uploads a V3 Package"))
 			})

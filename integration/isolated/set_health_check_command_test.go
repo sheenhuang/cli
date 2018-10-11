@@ -2,111 +2,196 @@ package isolated
 
 import (
 	"code.cloudfoundry.org/cli/integration/helpers"
-
 	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("set-health-check command", func() {
+	var (
+		orgName   string
+		spaceName string
+		appName   string
+	)
+
+	BeforeEach(func() {
+		orgName = helpers.NewOrgName()
+		spaceName = helpers.NewSpaceName()
+		appName = helpers.PrefixedRandomName("app")
+	})
+
 	Describe("help", func() {
 		When("--help flag is set", func() {
 			It("Displays command usage to output", func() {
 				session := helpers.CF("set-health-check", "--help")
+
 				Eventually(session).Should(Say("NAME:"))
-				Eventually(session).Should(Say("set-health-check - Change type of health check performed on an app"))
+				Eventually(session).Should(Say("set-health-check - Change type of health check performed on an app's process"))
 				Eventually(session).Should(Say("USAGE:"))
-				Eventually(session).Should(Say("cf set-health-check APP_NAME \\(process \\| port \\| http \\[--endpoint PATH\\]\\)"))
-				Eventually(session).Should(Say("TIP: 'none' has been deprecated but is accepted for 'process'."))
+				Eventually(session).Should(Say(`cf set-health-check APP_NAME \(process \| port \| http \[--endpoint PATH\]\) \[--process PROCESS\] \[--invocation-timeout INVOCATION_TIMEOUT\]`))
+
 				Eventually(session).Should(Say("EXAMPLES:"))
-				Eventually(session).Should(Say("   cf set-health-check worker-app process"))
-				Eventually(session).Should(Say("   cf set-health-check my-web-app http --endpoint /foo"))
+				Eventually(session).Should(Say("cf set-health-check worker-app process --process worker"))
+				Eventually(session).Should(Say("cf set-health-check my-web-app http --endpoint /foo"))
+				Eventually(session).Should(Say("cf set-health-check my-web-app http --invocation-timeout 10"))
+
 				Eventually(session).Should(Say("OPTIONS:"))
-				Eventually(session).Should(Say("   --endpoint      Path on the app \\(Default: /\\)"))
+				Eventually(session).Should(Say(`--endpoint\s+Path on the app \(Default: /\)`))
+				Eventually(session).Should(Say(`--invocation-timeout\s+Time \(in seconds\) that controls individual health check invocations`))
+				Eventually(session).Should(Say(`--process\s+App process to update \(Default: web\)`))
+
 				Eventually(session).Should(Exit(0))
 			})
 		})
 	})
 
-	When("the environment is not setup correctly", func() {
-		It("fails with the appropriate errors", func() {
-			helpers.CheckEnvironmentTargetedCorrectly(true, true, ReadOnlyOrg, "set-health-check", "app-name", "port")
+	When("the app name is not provided", func() {
+		It("tells the user that the app name is required, prints help text, and exits 1", func() {
+			session := helpers.CF("set-health-check")
+
+			Eventually(session.Err).Should(Say("Incorrect Usage: the required arguments `APP_NAME` and `HEALTH_CHECK_TYPE` were not provided"))
+			Eventually(session).Should(Say("NAME:"))
+			Eventually(session).Should(Exit(1))
 		})
 	})
 
-	When("the input is invalid", func() {
-		DescribeTable("fails with incorrect usage method",
-			func(args ...string) {
-				cmd := append([]string{"set-health-check"}, args...)
-				session := helpers.CF(cmd...)
-				Eventually(session.Err).Should(Say("Incorrect Usage:"))
-				Eventually(session).Should(Say("NAME:"))
+	When("the health check type is not provided", func() {
+		It("tells the user that health check type is required, prints help text, and exits 1", func() {
+			session := helpers.CF("set-health-check", appName)
+
+			Eventually(session.Err).Should(Say("Incorrect Usage: the required argument `HEALTH_CHECK_TYPE` was not provided"))
+			Eventually(session).Should(Say("NAME:"))
+			Eventually(session).Should(Exit(1))
+		})
+	})
+
+	When("the environment is not setup correctly", func() {
+		When("no API endpoint is set", func() {
+			BeforeEach(func() {
+				helpers.UnsetAPI()
+			})
+
+			It("fails with no API endpoint set message", func() {
+				session := helpers.CF("set-health-check", appName, "port")
+				Eventually(session).Should(Say("FAILED"))
+				Eventually(session.Err).Should(Say("No API endpoint set\\. Use 'cf login' or 'cf api' to target an endpoint\\."))
 				Eventually(session).Should(Exit(1))
-			},
-			Entry("when app-name and health-check-type are not passed in"),
-			Entry("when health-check-type is not passed in", "some-app"),
-			Entry("when health-check-type is invalid", "some-app", "wut"),
-		)
+			})
+		})
+
+		When("not logged in", func() {
+			BeforeEach(func() {
+				helpers.LogoutCF()
+			})
+
+			It("fails with not logged in message", func() {
+				session := helpers.CF("set-health-check", appName, "port")
+				Eventually(session).Should(Say("FAILED"))
+				Eventually(session.Err).Should(Say("Not logged in\\. Use 'cf login' to log in\\."))
+				Eventually(session).Should(Exit(1))
+			})
+		})
+
+		When("there is no org set", func() {
+			BeforeEach(func() {
+				helpers.LogoutCF()
+				helpers.LoginCF()
+			})
+
+			It("fails with no org targeted error message", func() {
+				session := helpers.CF("set-health-check", appName, "port")
+				Eventually(session).Should(Say("FAILED"))
+				Eventually(session.Err).Should(Say("No org targeted, use 'cf target -o ORG' to target an org\\."))
+				Eventually(session).Should(Exit(1))
+			})
+		})
+
+		When("there is no space set", func() {
+			BeforeEach(func() {
+				helpers.LogoutCF()
+				helpers.LoginCF()
+				helpers.TargetOrg(ReadOnlyOrg)
+			})
+
+			It("fails with no space targeted error message", func() {
+				session := helpers.CF("set-health-check", appName, "port")
+				Eventually(session).Should(Say("FAILED"))
+				Eventually(session.Err).Should(Say("No space targeted, use 'cf target -s SPACE' to target a space\\."))
+				Eventually(session).Should(Exit(1))
+			})
+		})
 	})
 
 	When("the environment is set up correctly", func() {
-		var (
-			orgName   string
-			spaceName string
-		)
+		var userName string
 
 		BeforeEach(func() {
-			orgName = helpers.NewOrgName()
-			spaceName = helpers.NewSpaceName()
-
 			helpers.SetupCF(orgName, spaceName)
+			userName, _ = helpers.GetCredentials()
 		})
 
 		AfterEach(func() {
 			helpers.QuickDeleteOrg(orgName)
 		})
 
-		When("the app does not exist", func() {
-			It("tells the user that the app is not found and exits 1", func() {
-				appName := helpers.PrefixedRandomName("app")
-				session := helpers.CF("set-health-check", appName, "port")
-
-				Eventually(session).Should(Say("FAILED"))
-				Eventually(session.Err).Should(Say("App %s not found", appName))
-				Eventually(session).Should(Exit(1))
-			})
-		})
-
 		When("the app exists", func() {
-			var appName string
-
 			BeforeEach(func() {
-				appName = helpers.PrefixedRandomName("app")
-				helpers.WithHelloWorldApp(func(appDir string) {
-					Eventually(helpers.CF("push", appName, "-p", appDir, "-b", "staticfile_buildpack", "--no-start")).Should(Exit(0))
+				helpers.WithProcfileApp(func(appDir string) {
+					Eventually(helpers.CustomCF(helpers.CFEnv{WorkingDirectory: appDir}, "v3-push", appName)).Should(Exit(0))
 				})
 			})
 
-			DescribeTable("Updates health-check-type and exits 0",
-				func(settingType string) {
-					session := helpers.CF("set-health-check", appName, settingType)
-
-					username, _ := helpers.GetCredentials()
-					Eventually(session).Should(Say("Updating health check type for app %s in org %s / space %s as %s", appName, orgName, spaceName, username))
-					Eventually(session).Should(Say("OK"))
+			When("the process type is set", func() {
+				It("displays the health check types for each process", func() {
+					session := helpers.CF("set-health-check", appName, "http", "--endpoint", "/healthcheck", "--process", "console")
+					Eventually(session).Should(Say("Updating health check type for app %s process console in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session).Should(Say("TIP: An app restart is required for the change to take effect\\."))
 					Eventually(session).Should(Exit(0))
 
-					getSession := helpers.CF("get-health-check", appName)
-					Eventually(getSession).Should(Say("health check type:\\s+%s", settingType))
-					Eventually(getSession).Should(Exit(0))
-				},
-				Entry("when setting the health-check-type to 'none'", "none"),
-				Entry("when setting the health-check-type to 'process'", "process"),
-				Entry("when setting the health-check-type to 'port'", "port"),
-				Entry("when setting the health-check-type to 'http'", "http"),
-			)
+					session = helpers.CF("v3-get-health-check", appName)
+					Eventually(session).Should(Say("Getting process health check types for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session).Should(Say(`process\s+health check\s+endpoint \(for http\)\s+invocation timeout`))
+					Eventually(session).Should(Say(`web\s+port\s+1`))
+					Eventually(session).Should(Say(`console\s+http\s+/healthcheck\s+1`))
+
+					Eventually(session).Should(Exit(0))
+				})
+			})
+
+			When("the invocation timeout is set", func() {
+				It("displays the health check types for each process", func() {
+					session := helpers.CF("set-health-check", appName, "http", "--endpoint", "/healthcheck", "--invocation-timeout", "2")
+					Eventually(session).Should(Say("Updating health check type for app %s process web in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session).Should(Say("TIP: An app restart is required for the change to take effect\\."))
+					Eventually(session).Should(Exit(0))
+
+					session = helpers.CF("v3-get-health-check", appName)
+					Eventually(session).Should(Say("Getting process health check types for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session).Should(Say(`process\s+health check\s+endpoint \(for http\)\s+invocation timeout`))
+					Eventually(session).Should(Say(`web\s+http\s+/healthcheck\s+2`))
+
+					Eventually(session).Should(Exit(0))
+				})
+
+			})
+
+			When("process type and invocation timeout are not set", func() {
+				It("displays the health check types for each process", func() {
+					session := helpers.CF("set-health-check", appName, "http", "--endpoint", "/healthcheck")
+					Eventually(session).Should(Say("Updating health check type for app %s process web in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session).Should(Say("TIP: An app restart is required for the change to take effect\\."))
+					Eventually(session).Should(Exit(0))
+
+					session = helpers.CF("v3-get-health-check", appName)
+					Eventually(session).Should(Say("Getting process health check types for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session).Should(Say(`process\s+health check\s+endpoint \(for http\)\s+invocation timeout`))
+					Eventually(session).Should(Say(`web\s+http\s+/healthcheck\s+1`))
+					Eventually(session).Should(Say(`console\s+process\s+1`))
+
+					Eventually(session).Should(Exit(0))
+				})
+			})
 
 			When("no http health check endpoint is given", func() {
 				BeforeEach(func() {
@@ -120,47 +205,59 @@ var _ = Describe("set-health-check command", func() {
 				})
 			})
 
-			When("a valid http health check endpoint is given", func() {
+			When("the process type does not exist", func() {
 				BeforeEach(func() {
-					Eventually(helpers.CF("set-health-check", appName, "http", "--endpoint", "/foo")).Should(Exit(0))
+					helpers.WithProcfileApp(func(appDir string) {
+						Eventually(helpers.CustomCF(helpers.CFEnv{WorkingDirectory: appDir}, "v3-push", appName)).Should(Exit(0))
+					})
 				})
 
-				It("sets the http health check endpoint to the given endpoint", func() {
-					session := helpers.CF("get-health-check", appName)
-					Eventually(session).Should(Say("endpoint \\(for http type\\):\\s+/foo"))
-					Eventually(session).Should(Exit(0))
+				It("returns a process not found error", func() {
+					session := helpers.CF("set-health-check", appName, "http", "--endpoint", "/healthcheck", "--process", "nonexistent-type")
+					Eventually(session).Should(Say("Updating health check type for app %s process nonexistent-type in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session.Err).Should(Say("Process nonexistent-type not found"))
+					Eventually(session).Should(Say("FAILED"))
+					Eventually(session).Should(Exit(1))
+				})
+			})
+
+			When("health check type is not 'http' and endpoint is set", func() {
+				It("returns an error", func() {
+					session := helpers.CF("set-health-check", appName, "port", "--endpoint", "oh-no", "--process", "console")
+					Eventually(session.Out).Should(Say("Updating health check type for app %s process console in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, userName))
+					Eventually(session.Err).Should(Say("Health check type must be 'http' to set a health check HTTP endpoint."))
+					Eventually(session.Out).Should(Say("FAILED"))
+					Eventually(session).Should(Exit(1))
 				})
 			})
 
 			When("an invalid http health check endpoint is given", func() {
 				It("outputs an error and exits 1", func() {
 					session := helpers.CF("set-health-check", appName, "http", "--endpoint", "invalid")
-					Eventually(session.Err).Should(Say("The app is invalid: health_check_http_endpoint HTTP health check endpoint is not a valid URI path: invalid"))
+					Eventually(session.Err).Should(Say("Health check endpoint must be a valid URI path"))
 					Eventually(session).Should(Exit(1))
 				})
 			})
 
-			When("an endpoint is given with a non-http health check type", func() {
-				It("outputs an error and exits 1", func() {
-					session := helpers.CF("set-health-check", appName, "port", "--endpoint", "/foo")
-					Eventually(session.Err).Should(Say("Health check type must be 'http' to set a health check HTTP endpoint\\."))
+			When("the invocation timeout is less than one", func() {
+				It("returns an error", func() {
+					session := helpers.CF("set-health-check", appName, "port", "--invocation-timeout", "0", "--process", "console")
+					Eventually(session.Err).Should(Say("Value must be greater than or equal to 1."))
 					Eventually(session).Should(Exit(1))
 				})
 			})
+		})
 
-			When("the app is started", func() {
-				BeforeEach(func() {
-					appName = helpers.PrefixedRandomName("app")
-					helpers.WithHelloWorldApp(func(appDir string) {
-						Eventually(helpers.CF("push", appName, "-p", appDir, "-b", "staticfile_buildpack")).Should(Exit(0))
-					})
-				})
+		When("the app does not exist", func() {
+			It("displays app not found and exits 1", func() {
+				invalidAppName := "invalid-app-name"
+				session := helpers.CF("set-health-check", invalidAppName, "port")
 
-				It("displays tip to restart the app", func() {
-					session := helpers.CF("set-health-check", appName, "port")
-					Eventually(session).Should(Say("TIP: An app restart is required for the change to take effect\\."))
-					Eventually(session).Should(Exit(0))
-				})
+				Eventually(session.Out).Should(Say("Updating health check type for app %s process web in org %s / space %s as %s\\.\\.\\.", invalidAppName, orgName, spaceName, userName))
+				Eventually(session.Err).Should(Say("App %s not found", invalidAppName))
+				Eventually(session.Out).Should(Say("FAILED"))
+
+				Eventually(session).Should(Exit(1))
 			})
 		})
 	})
