@@ -173,7 +173,7 @@ type commandList struct {
 	Space                              v2.SpaceCommand                              `command:"space" description:"Show space info"`
 	SSHCode                            v2.SSHCodeCommand                            `command:"ssh-code" description:"Get a one time password for ssh clients"`
 	SSHEnabled                         v2.SSHEnabledCommand                         `command:"ssh-enabled" description:"Reports whether SSH is enabled on an application container instance"`
-	SSH                                v3.V3SSHCommand                              `command:"ssh" description:"SSH to an application container instance"`
+	SSH                                v3.SSHCommand                                `command:"ssh" description:"SSH to an application container instance"`
 	Stacks                             v2.StacksCommand                             `command:"stacks" description:"List all stacks (a stack is a pre-built file system, including an operating system, that can run apps)"`
 	Stack                              v2.StackCommand                              `command:"stack" description:"Show information for a stack (a stack is a pre-built file system, including an operating system, that can run apps)"`
 	StagingEnvironmentVariableGroup    v2.StagingEnvironmentVariableGroupCommand    `command:"staging-environment-variable-group" alias:"sevg" description:"Retrieve the contents of the staging environment variable group"`

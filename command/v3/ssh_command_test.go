@@ -6,11 +6,10 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v3action"
-	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/translatableerror"
-	"code.cloudfoundry.org/cli/command/v3"
+	. "code.cloudfoundry.org/cli/command/v3"
 	"code.cloudfoundry.org/cli/command/v3/v3fakes"
 	"code.cloudfoundry.org/cli/util/configv3"
 	"code.cloudfoundry.org/cli/util/ui"
@@ -22,12 +21,12 @@ import (
 
 var _ = Describe("ssh Command", func() {
 	var (
-		cmd             v3.V3SSHCommand
+		cmd             SSHCommand
 		testUI          *ui.UI
 		fakeConfig      *commandfakes.FakeConfig
 		fakeSharedActor *commandfakes.FakeSharedActor
-		fakeActor       *v3fakes.FakeV3SSHActor
-		fakeSSHActor    *v3fakes.FakeSSHActor
+		fakeActor       *v3fakes.FakeSSHActor
+		fakeSSHActor    *v3fakes.FakeSharedSSHActor
 		executeErr      error
 		appName         string
 	)
@@ -36,11 +35,11 @@ var _ = Describe("ssh Command", func() {
 		testUI = ui.NewTestUI(nil, NewBuffer(), NewBuffer())
 		fakeConfig = new(commandfakes.FakeConfig)
 		fakeSharedActor = new(commandfakes.FakeSharedActor)
-		fakeActor = new(v3fakes.FakeV3SSHActor)
-		fakeSSHActor = new(v3fakes.FakeSSHActor)
+		fakeActor = new(v3fakes.FakeSSHActor)
+		fakeSSHActor = new(v3fakes.FakeSharedSSHActor)
 
 		appName = "some-app"
-		cmd = v3.V3SSHCommand{
+		cmd = SSHCommand{
 			RequiredArgs: flag.AppName{AppName: appName},
 
 			ProcessType:         "some-process-type",
@@ -62,26 +61,8 @@ var _ = Describe("ssh Command", func() {
 			executeErr = cmd.Execute(nil)
 		})
 
-		When("the API version is below the minimum", func() {
-			BeforeEach(func() {
-				fakeActor.CloudControllerAPIVersionReturns(ccversion.MinV3ClientVersion)
-			})
-
-			It("returns a MinimumAPIVersionNotMetError", func() {
-				Expect(executeErr).To(MatchError(translatableerror.MinimumCFAPIVersionNotMetError{
-					CurrentVersion: ccversion.MinV3ClientVersion,
-					MinimumVersion: ccversion.MinVersionApplicationFlowV3,
-				}))
-			})
-
-			It("displays the experimental warning", func() {
-				Expect(testUI.Err).To(Say("This command is in EXPERIMENTAL stage and may change without notice"))
-			})
-		})
-
 		When("checking target fails", func() {
 			BeforeEach(func() {
-				fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 				fakeSharedActor.CheckTargetReturns(actionerror.NotLoggedInError{BinaryName: "steve"})
 			})
 
@@ -97,7 +78,6 @@ var _ = Describe("ssh Command", func() {
 
 		When("the user is targeted to an organization and space", func() {
 			BeforeEach(func() {
-				fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 				fakeConfig.TargetedSpaceReturns(configv3.Space{GUID: "some-space-guid"})
 			})
 

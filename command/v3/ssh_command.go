@@ -14,20 +14,19 @@ import (
 	"code.cloudfoundry.org/cli/util/clissh"
 )
 
-//go:generate counterfeiter . SSHActor
+//go:generate counterfeiter . SharedSSHActor
 
-type SSHActor interface {
+type SharedSSHActor interface {
 	ExecuteSecureShell(sshClient sharedaction.SecureShellClient, sshOptions sharedaction.SSHOptions) error
 }
 
-//go:generate counterfeiter . V3SSHActor
+//go:generate counterfeiter . SSHActor
 
-type V3SSHActor interface {
-	CloudControllerAPIVersion() string
+type SSHActor interface {
 	GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndex(appName string, spaceGUID string, processType string, processIndex uint) (v3action.SSHAuthentication, v3action.Warnings, error)
 }
 
-type V3SSHCommand struct {
+type SSHCommand struct {
 	RequiredArgs          flag.AppName             `positional-args:"yes"`
 	ProcessIndex          uint                     `long:"app-instance-index" short:"i" default:"0" description:"App process instance index"`
 	Commands              []string                 `long:"command" short:"c" description:"Command to run"`
@@ -39,19 +38,19 @@ type V3SSHCommand struct {
 	SkipHostValidation    bool                     `long:"skip-host-validation" short:"k" description:"Skip host key validation. Not recommended!"`
 	SkipRemoteExecution   bool                     `long:"skip-remote-execution" short:"N" description:"Do not execute a remote command"`
 
-	usage           interface{} `usage:"CF_NAME v3-ssh APP_NAME [--process PROCESS] [-i INDEX] [-c COMMAND]\n   [-L [BIND_ADDRESS:]LOCAL_PORT:REMOTE_HOST:REMOTE_PORT]... [--skip-remote-execution]\n   [--disable-pseudo-tty | --force-pseudo-tty | --request-pseudo-tty] [--skip-host-validation]"`
+	usage           interface{} `usage:"CF_NAME ssh APP_NAME [--process PROCESS] [-i INDEX] [-c COMMAND]...\n   [-L [BIND_ADDRESS:]LOCAL_PORT:REMOTE_HOST:REMOTE_PORT]... [--skip-remote-execution]\n   [--disable-pseudo-tty | --force-pseudo-tty | --request-pseudo-tty] [--skip-host-validation]"`
 	relatedCommands interface{} `related_commands:"allow-space-ssh, enable-ssh, space-ssh-allowed, ssh-code, ssh-enabled"`
 	allproxy        interface{} `environmentName:"all_proxy" environmentDescription:"Specify a proxy server to enable proxying for all requests"`
 
 	UI          command.UI
 	Config      command.Config
 	SharedActor command.SharedActor
-	Actor       V3SSHActor
-	SSHActor    SSHActor
+	Actor       SSHActor
+	SSHActor    SharedSSHActor
 	SSHClient   *clissh.SecureShell
 }
 
-func (cmd *V3SSHCommand) Setup(config command.Config, ui command.UI) error {
+func (cmd *SSHCommand) Setup(config command.Config, ui command.UI) error {
 	cmd.UI = ui
 	cmd.Config = config
 	sharedActor := sharedaction.NewActor(config)
@@ -74,15 +73,9 @@ func (cmd *V3SSHCommand) Setup(config command.Config, ui command.UI) error {
 	return nil
 }
 
-func (cmd V3SSHCommand) Execute(args []string) error {
-	cmd.UI.DisplayWarning(command.ExperimentalWarning)
+func (cmd SSHCommand) Execute(args []string) error {
 
-	err := command.MinimumCCAPIVersionCheck(cmd.Actor.CloudControllerAPIVersion(), ccversion.MinVersionApplicationFlowV3)
-	if err != nil {
-		return err
-	}
-
-	err = cmd.SharedActor.CheckTarget(true, true)
+	err := cmd.SharedActor.CheckTarget(true, true)
 	if err != nil {
 		return err
 	}
@@ -128,13 +121,13 @@ func (cmd V3SSHCommand) Execute(args []string) error {
 	return nil
 }
 
-func (cmd V3SSHCommand) parseForwardSpecs() ([]sharedaction.LocalPortForward, error) {
+func (cmd SSHCommand) parseForwardSpecs() ([]sharedaction.LocalPortForward, error) {
 	return nil, nil
 }
 
 // EvaluateTTYOption determines which TTY options are mutually exclusive and
 // returns an error accordingly.
-func (cmd V3SSHCommand) EvaluateTTYOption() (sharedaction.TTYOption, error) {
+func (cmd SSHCommand) EvaluateTTYOption() (sharedaction.TTYOption, error) {
 	var count int
 
 	option := sharedaction.RequestTTYAuto
