@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -116,7 +116,7 @@ var _ = Describe("v3-set-droplet Command", func() {
 				GUID: "some-space-guid",
 			})
 			fakeConfig.CurrentUserReturns(configv3.User{Name: "steve"}, nil)
-			fakeActor.SetApplicationDropletByApplicationNameAndSpaceReturns(v3action.Warnings{"warning-1", "warning-2"}, nil)
+			fakeActor.SetApplicationDropletByApplicationNameAndSpaceReturns(v7action.Warnings{"warning-1", "warning-2"}, nil)
 		})
 
 		It("displays that the droplet was assigned", func() {
@@ -148,7 +148,7 @@ var _ = Describe("v3-set-droplet Command", func() {
 			})
 			fakeConfig.CurrentUserReturns(configv3.User{Name: "steve"}, nil)
 			expectedErr = actionerror.ApplicationNotFoundError{Name: app}
-			fakeActor.SetApplicationDropletByApplicationNameAndSpaceReturns(v3action.Warnings{"warning-1", "warning-2"}, expectedErr)
+			fakeActor.SetApplicationDropletByApplicationNameAndSpaceReturns(v7action.Warnings{"warning-1", "warning-2"}, expectedErr)
 		})
 
 		It("displays that the droplet was assigned", func() {

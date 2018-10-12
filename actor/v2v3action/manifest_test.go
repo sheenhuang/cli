@@ -10,7 +10,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/v2action"
 	. "code.cloudfoundry.org/cli/actor/v2v3action"
 	"code.cloudfoundry.org/cli/actor/v2v3action/v2v3actionfakes"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/types"
 	"code.cloudfoundry.org/cli/util/manifest"
@@ -86,8 +86,8 @@ var _ = Describe("Manifest", func() {
 
 			When("the v3Actor.GetApplicationByNameAndSpace succeeds", func() {
 				BeforeEach(func() {
-					v3Application := v3action.Application{LifecycleBuildpacks: []string{"some-buildpack"}}
-					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3Application, v3action.Warnings{"v3-action-warnings"}, nil)
+					v3Application := v7action.Application{LifecycleBuildpacks: []string{"some-buildpack"}}
+					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3Application, v7action.Warnings{"v3-action-warnings"}, nil)
 				})
 
 				It("should return an application with v3 specific attributes", func() {
@@ -102,7 +102,7 @@ var _ = Describe("Manifest", func() {
 
 			When("the v3Actor.GetApplicationByNameAndSpace fails", func() {
 				BeforeEach(func() {
-					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3action.Application{}, v3action.Warnings{"v3-action-warnings"}, errors.New("i'm a v3 error"))
+					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v7action.Application{}, v7action.Warnings{"v3-action-warnings"}, errors.New("i'm a v3 error"))
 				})
 
 				It("it raises the error", func() {

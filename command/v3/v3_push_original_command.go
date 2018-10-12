@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/pushaction"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
@@ -27,18 +27,18 @@ type OriginalV2PushActor interface {
 
 type OriginalV3PushActor interface {
 	CloudControllerAPIVersion() string
-	CreateAndUploadBitsPackageByApplicationNameAndSpace(appName string, spaceGUID string, bitsPath string) (v3action.Package, v3action.Warnings, error)
-	CreateDockerPackageByApplicationNameAndSpace(appName string, spaceGUID string, dockerImageCredentials v3action.DockerImageCredentials) (v3action.Package, v3action.Warnings, error)
-	CreateApplicationInSpace(app v3action.Application, spaceGUID string) (v3action.Application, v3action.Warnings, error)
-	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
-	GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v3action.ApplicationSummary, v3action.Warnings, error)
-	GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v3action.NOAAClient) (<-chan *v3action.LogMessage, <-chan error, v3action.Warnings, error)
-	PollStart(appGUID string, warnings chan<- v3action.Warnings) error
-	SetApplicationDropletByApplicationNameAndSpace(appName string, spaceGUID string, dropletGUID string) (v3action.Warnings, error)
-	StagePackage(packageGUID string, appName string) (<-chan v3action.Droplet, <-chan v3action.Warnings, <-chan error)
-	StartApplication(appGUID string) (v3action.Application, v3action.Warnings, error)
-	StopApplication(appGUID string) (v3action.Warnings, error)
-	UpdateApplication(app v3action.Application) (v3action.Application, v3action.Warnings, error)
+	CreateAndUploadBitsPackageByApplicationNameAndSpace(appName string, spaceGUID string, bitsPath string) (v7action.Package, v7action.Warnings, error)
+	CreateDockerPackageByApplicationNameAndSpace(appName string, spaceGUID string, dockerImageCredentials v7action.DockerImageCredentials) (v7action.Package, v7action.Warnings, error)
+	CreateApplicationInSpace(app v7action.Application, spaceGUID string) (v7action.Application, v7action.Warnings, error)
+	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
+	GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v7action.ApplicationSummary, v7action.Warnings, error)
+	GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v7action.NOAAClient) (<-chan *v7action.LogMessage, <-chan error, v7action.Warnings, error)
+	PollStart(appGUID string, warnings chan<- v7action.Warnings) error
+	SetApplicationDropletByApplicationNameAndSpace(appName string, spaceGUID string, dropletGUID string) (v7action.Warnings, error)
+	StagePackage(packageGUID string, appName string) (<-chan v7action.Droplet, <-chan v7action.Warnings, <-chan error)
+	StartApplication(appGUID string) (v7action.Application, v7action.Warnings, error)
+	StopApplication(appGUID string) (v7action.Warnings, error)
+	UpdateApplication(app v7action.Application) (v7action.Application, v7action.Warnings, error)
 }
 
 func (cmd *V3PushCommand) OriginalSetup(config command.Config, ui command.UI) error {
@@ -54,7 +54,7 @@ func (cmd *V3PushCommand) OriginalSetup(config command.Config, ui command.UI) er
 
 		return err
 	}
-	v3actor := v3action.NewActor(ccClient, config, sharedActor, nil)
+	v3actor := v7action.NewActor(ccClient, config, sharedActor, nil)
 	cmd.OriginalActor = v3actor
 
 	ccClientV2, uaaClientV2, err := sharedV2.NewClients(config, ui, true)
@@ -109,7 +109,7 @@ func (cmd V3PushCommand) OriginalExecute(args []string) error {
 		return translatableerror.ConflictingBuildpacksError{}
 	}
 
-	var app v3action.Application
+	var app v7action.Application
 	app, err = cmd.getApplication()
 	if _, ok := err.(actionerror.ApplicationNotFoundError); ok {
 		app, err = cmd.createApplication(user.Name)
@@ -165,7 +165,7 @@ func (cmd V3PushCommand) OriginalExecute(args []string) error {
 
 	cmd.UI.DisplayText("Waiting for app to start...")
 
-	warnings := make(chan v3action.Warnings)
+	warnings := make(chan v7action.Warnings)
 	done := make(chan bool)
 	go func() {
 		for {
@@ -223,8 +223,8 @@ func (cmd V3PushCommand) validateArgs() error {
 	return nil
 }
 
-func (cmd V3PushCommand) createApplication(userName string) (v3action.Application, error) {
-	appToCreate := v3action.Application{
+func (cmd V3PushCommand) createApplication(userName string) (v7action.Application, error) {
+	appToCreate := v7action.Application{
 		Name: cmd.RequiredArgs.AppName,
 	}
 
@@ -241,7 +241,7 @@ func (cmd V3PushCommand) createApplication(userName string) (v3action.Applicatio
 	)
 	cmd.UI.DisplayWarnings(warnings)
 	if err != nil {
-		return v3action.Application{}, err
+		return v7action.Application{}, err
 	}
 
 	cmd.UI.DisplayTextWithFlavor("Creating app {{.AppName}} in org {{.CurrentOrg}} / space {{.CurrentSpace}} as {{.CurrentUser}}...", map[string]interface{}{
@@ -256,17 +256,17 @@ func (cmd V3PushCommand) createApplication(userName string) (v3action.Applicatio
 	return app, nil
 }
 
-func (cmd V3PushCommand) getApplication() (v3action.Application, error) {
+func (cmd V3PushCommand) getApplication() (v7action.Application, error) {
 	app, warnings, err := cmd.OriginalActor.GetApplicationByNameAndSpace(cmd.RequiredArgs.AppName, cmd.Config.TargetedSpace().GUID)
 	cmd.UI.DisplayWarnings(warnings)
 	if err != nil {
-		return v3action.Application{}, err
+		return v7action.Application{}, err
 	}
 
 	return app, nil
 }
 
-func (cmd V3PushCommand) updateApplication(userName string, appGUID string) (v3action.Application, error) {
+func (cmd V3PushCommand) updateApplication(userName string, appGUID string) (v7action.Application, error) {
 	cmd.UI.DisplayTextWithFlavor("Updating app {{.AppName}} in org {{.CurrentOrg}} / space {{.CurrentSpace}} as {{.CurrentUser}}...", map[string]interface{}{
 		"AppName":      cmd.RequiredArgs.AppName,
 		"CurrentSpace": cmd.Config.TargetedSpace().Name,
@@ -274,7 +274,7 @@ func (cmd V3PushCommand) updateApplication(userName string, appGUID string) (v3a
 		"CurrentUser":  userName,
 	})
 
-	appToUpdate := v3action.Application{
+	appToUpdate := v7action.Application{
 		GUID: appGUID,
 	}
 
@@ -289,7 +289,7 @@ func (cmd V3PushCommand) updateApplication(userName string, appGUID string) (v3a
 	app, warnings, err := cmd.OriginalActor.UpdateApplication(appToUpdate)
 	cmd.UI.DisplayWarnings(warnings)
 	if err != nil {
-		return v3action.Application{}, err
+		return v7action.Application{}, err
 	}
 
 	cmd.UI.DisplayOK()
@@ -297,7 +297,7 @@ func (cmd V3PushCommand) updateApplication(userName string, appGUID string) (v3a
 	return app, nil
 }
 
-func (cmd V3PushCommand) createAndMapRoutes(app v3action.Application) error {
+func (cmd V3PushCommand) createAndMapRoutes(app v7action.Application) error {
 	cmd.UI.DisplayText("Mapping routes...")
 	routeWarnings, err := cmd.OriginalV2PushActor.CreateAndMapDefaultApplicationRoute(cmd.Config.TargetedOrganization().GUID, cmd.Config.TargetedSpace().GUID, v2action.Application{Name: app.Name, GUID: app.GUID})
 	cmd.UI.DisplayWarnings(routeWarnings)
@@ -310,27 +310,27 @@ func (cmd V3PushCommand) createAndMapRoutes(app v3action.Application) error {
 	return nil
 }
 
-func (cmd V3PushCommand) createPackage() (v3action.Package, error) {
+func (cmd V3PushCommand) createPackage() (v7action.Package, error) {
 	isDockerImage := (cmd.DockerImage.Path != "")
 	err := cmd.PackageDisplayer.DisplaySetupMessage(cmd.RequiredArgs.AppName, isDockerImage)
 	if err != nil {
-		return v3action.Package{}, err
+		return v7action.Package{}, err
 	}
 
 	var (
-		pkg      v3action.Package
-		warnings v3action.Warnings
+		pkg      v7action.Package
+		warnings v7action.Warnings
 	)
 
 	if isDockerImage {
-		pkg, warnings, err = cmd.OriginalActor.CreateDockerPackageByApplicationNameAndSpace(cmd.RequiredArgs.AppName, cmd.Config.TargetedSpace().GUID, v3action.DockerImageCredentials{Path: cmd.DockerImage.Path, Username: cmd.DockerUsername, Password: cmd.Config.DockerPassword()})
+		pkg, warnings, err = cmd.OriginalActor.CreateDockerPackageByApplicationNameAndSpace(cmd.RequiredArgs.AppName, cmd.Config.TargetedSpace().GUID, v7action.DockerImageCredentials{Path: cmd.DockerImage.Path, Username: cmd.DockerUsername, Password: cmd.Config.DockerPassword()})
 	} else {
 		pkg, warnings, err = cmd.OriginalActor.CreateAndUploadBitsPackageByApplicationNameAndSpace(cmd.RequiredArgs.AppName, cmd.Config.TargetedSpace().GUID, string(cmd.AppPath))
 	}
 
 	cmd.UI.DisplayWarnings(warnings)
 	if err != nil {
-		return v3action.Package{}, err
+		return v7action.Package{}, err
 	}
 
 	cmd.UI.DisplayOK()
@@ -338,7 +338,7 @@ func (cmd V3PushCommand) createPackage() (v3action.Package, error) {
 	return pkg, nil
 }
 
-func (cmd V3PushCommand) stagePackage(pkg v3action.Package, userName string) (string, error) {
+func (cmd V3PushCommand) stagePackage(pkg v7action.Package, userName string) (string, error) {
 	cmd.UI.DisplayTextWithFlavor("Staging package for app {{.AppName}} in org {{.OrgName}} / space {{.SpaceName}} as {{.Username}}...", map[string]interface{}{
 		"AppName":   cmd.RequiredArgs.AppName,
 		"OrgName":   cmd.Config.TargetedOrganization().Name,

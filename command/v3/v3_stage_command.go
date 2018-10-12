@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -19,8 +19,8 @@ import (
 
 type V3StageActor interface {
 	CloudControllerAPIVersion() string
-	GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v3action.NOAAClient) (<-chan *v3action.LogMessage, <-chan error, v3action.Warnings, error)
-	StagePackage(packageGUID string, appName string) (<-chan v3action.Droplet, <-chan v3action.Warnings, <-chan error)
+	GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v7action.NOAAClient) (<-chan *v7action.LogMessage, <-chan error, v7action.Warnings, error)
+	StagePackage(packageGUID string, appName string) (<-chan v7action.Droplet, <-chan v7action.Warnings, <-chan error)
 }
 
 type V3StageCommand struct {
@@ -31,7 +31,7 @@ type V3StageCommand struct {
 
 	UI          command.UI
 	Config      command.Config
-	NOAAClient  v3action.NOAAClient
+	NOAAClient  v7action.NOAAClient
 	SharedActor command.SharedActor
 	Actor       V3StageActor
 }
@@ -50,7 +50,7 @@ func (cmd *V3StageCommand) Setup(config command.Config, ui command.UI) error {
 		return err
 	}
 
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 	cmd.NOAAClient = shared.NewNOAAClient(ccClient.Info.Logging(), config, uaaClient, ui)
 
 	return nil
@@ -88,7 +88,7 @@ func (cmd V3StageCommand) Execute(args []string) error {
 	}
 
 	dropletStream, warningsStream, errStream := cmd.Actor.StagePackage(cmd.PackageGUID, cmd.RequiredArgs.AppName)
-	var droplet v3action.Droplet
+	var droplet v7action.Droplet
 	droplet, err = shared.PollStage(dropletStream, warningsStream, errStream, logStream, logErrStream, cmd.UI)
 	if err != nil {
 		return err

@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,7 +18,7 @@ type FakeV3RestartAppInstanceActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexStub        func(appName string, spaceGUID string, processType string, instanceIndex int) (v3action.Warnings, error)
+	DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexStub        func(appName string, spaceGUID string, processType string, instanceIndex int) (v7action.Warnings, error)
 	deleteInstanceByApplicationNameSpaceProcessTypeAndIndexMutex       sync.RWMutex
 	deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall []struct {
 		appName       string
@@ -27,11 +27,11 @@ type FakeV3RestartAppInstanceActor struct {
 		instanceIndex int
 	}
 	deleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	deleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -78,7 +78,7 @@ func (fake *FakeV3RestartAppInstanceActor) CloudControllerAPIVersionReturnsOnCal
 	}{result1}
 }
 
-func (fake *FakeV3RestartAppInstanceActor) DeleteInstanceByApplicationNameSpaceProcessTypeAndIndex(appName string, spaceGUID string, processType string, instanceIndex int) (v3action.Warnings, error) {
+func (fake *FakeV3RestartAppInstanceActor) DeleteInstanceByApplicationNameSpaceProcessTypeAndIndex(appName string, spaceGUID string, processType string, instanceIndex int) (v7action.Warnings, error) {
 	fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexMutex.Lock()
 	ret, specificReturn := fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall[len(fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall)]
 	fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall = append(fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall, struct {
@@ -110,24 +110,24 @@ func (fake *FakeV3RestartAppInstanceActor) DeleteInstanceByApplicationNameSpaceP
 	return fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].appName, fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].spaceGUID, fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].processType, fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].instanceIndex
 }
 
-func (fake *FakeV3RestartAppInstanceActor) DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3RestartAppInstanceActor) DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns(result1 v7action.Warnings, result2 error) {
 	fake.DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexStub = nil
 	fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeV3RestartAppInstanceActor) DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3RestartAppInstanceActor) DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexStub = nil
 	if fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall == nil {
 		fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.deleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

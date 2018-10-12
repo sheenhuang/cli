@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,30 +18,30 @@ type FakeV3PushVersionActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	GetStreamingLogsForApplicationByNameAndSpaceStub        func(appName string, spaceGUID string, client v3action.NOAAClient) (<-chan *v3action.LogMessage, <-chan error, v3action.Warnings, error)
+	GetStreamingLogsForApplicationByNameAndSpaceStub        func(appName string, spaceGUID string, client v7action.NOAAClient) (<-chan *v7action.LogMessage, <-chan error, v7action.Warnings, error)
 	getStreamingLogsForApplicationByNameAndSpaceMutex       sync.RWMutex
 	getStreamingLogsForApplicationByNameAndSpaceArgsForCall []struct {
 		appName   string
 		spaceGUID string
-		client    v3action.NOAAClient
+		client    v7action.NOAAClient
 	}
 	getStreamingLogsForApplicationByNameAndSpaceReturns struct {
-		result1 <-chan *v3action.LogMessage
+		result1 <-chan *v7action.LogMessage
 		result2 <-chan error
-		result3 v3action.Warnings
+		result3 v7action.Warnings
 		result4 error
 	}
 	getStreamingLogsForApplicationByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 <-chan *v3action.LogMessage
+		result1 <-chan *v7action.LogMessage
 		result2 <-chan error
-		result3 v3action.Warnings
+		result3 v7action.Warnings
 		result4 error
 	}
-	PollStartStub        func(appGUID string, warningsChannel chan<- v3action.Warnings) error
+	PollStartStub        func(appGUID string, warningsChannel chan<- v7action.Warnings) error
 	pollStartMutex       sync.RWMutex
 	pollStartArgsForCall []struct {
 		appGUID         string
-		warningsChannel chan<- v3action.Warnings
+		warningsChannel chan<- v7action.Warnings
 	}
 	pollStartReturns struct {
 		result1 error
@@ -49,17 +49,17 @@ type FakeV3PushVersionActor struct {
 	pollStartReturnsOnCall map[int]struct {
 		result1 error
 	}
-	RestartApplicationStub        func(appGUID string) (v3action.Warnings, error)
+	RestartApplicationStub        func(appGUID string) (v7action.Warnings, error)
 	restartApplicationMutex       sync.RWMutex
 	restartApplicationArgsForCall []struct {
 		appGUID string
 	}
 	restartApplicationReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	restartApplicationReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -106,13 +106,13 @@ func (fake *FakeV3PushVersionActor) CloudControllerAPIVersionReturnsOnCall(i int
 	}{result1}
 }
 
-func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v3action.NOAAClient) (<-chan *v3action.LogMessage, <-chan error, v3action.Warnings, error) {
+func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v7action.NOAAClient) (<-chan *v7action.LogMessage, <-chan error, v7action.Warnings, error) {
 	fake.getStreamingLogsForApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getStreamingLogsForApplicationByNameAndSpaceReturnsOnCall[len(fake.getStreamingLogsForApplicationByNameAndSpaceArgsForCall)]
 	fake.getStreamingLogsForApplicationByNameAndSpaceArgsForCall = append(fake.getStreamingLogsForApplicationByNameAndSpaceArgsForCall, struct {
 		appName   string
 		spaceGUID string
-		client    v3action.NOAAClient
+		client    v7action.NOAAClient
 	}{appName, spaceGUID, client})
 	fake.recordInvocation("GetStreamingLogsForApplicationByNameAndSpace", []interface{}{appName, spaceGUID, client})
 	fake.getStreamingLogsForApplicationByNameAndSpaceMutex.Unlock()
@@ -131,46 +131,46 @@ func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpace
 	return len(fake.getStreamingLogsForApplicationByNameAndSpaceArgsForCall)
 }
 
-func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpaceArgsForCall(i int) (string, string, v3action.NOAAClient) {
+func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpaceArgsForCall(i int) (string, string, v7action.NOAAClient) {
 	fake.getStreamingLogsForApplicationByNameAndSpaceMutex.RLock()
 	defer fake.getStreamingLogsForApplicationByNameAndSpaceMutex.RUnlock()
 	return fake.getStreamingLogsForApplicationByNameAndSpaceArgsForCall[i].appName, fake.getStreamingLogsForApplicationByNameAndSpaceArgsForCall[i].spaceGUID, fake.getStreamingLogsForApplicationByNameAndSpaceArgsForCall[i].client
 }
 
-func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpaceReturns(result1 <-chan *v3action.LogMessage, result2 <-chan error, result3 v3action.Warnings, result4 error) {
+func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpaceReturns(result1 <-chan *v7action.LogMessage, result2 <-chan error, result3 v7action.Warnings, result4 error) {
 	fake.GetStreamingLogsForApplicationByNameAndSpaceStub = nil
 	fake.getStreamingLogsForApplicationByNameAndSpaceReturns = struct {
-		result1 <-chan *v3action.LogMessage
+		result1 <-chan *v7action.LogMessage
 		result2 <-chan error
-		result3 v3action.Warnings
+		result3 v7action.Warnings
 		result4 error
 	}{result1, result2, result3, result4}
 }
 
-func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpaceReturnsOnCall(i int, result1 <-chan *v3action.LogMessage, result2 <-chan error, result3 v3action.Warnings, result4 error) {
+func (fake *FakeV3PushVersionActor) GetStreamingLogsForApplicationByNameAndSpaceReturnsOnCall(i int, result1 <-chan *v7action.LogMessage, result2 <-chan error, result3 v7action.Warnings, result4 error) {
 	fake.GetStreamingLogsForApplicationByNameAndSpaceStub = nil
 	if fake.getStreamingLogsForApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.getStreamingLogsForApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 <-chan *v3action.LogMessage
+			result1 <-chan *v7action.LogMessage
 			result2 <-chan error
-			result3 v3action.Warnings
+			result3 v7action.Warnings
 			result4 error
 		})
 	}
 	fake.getStreamingLogsForApplicationByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 <-chan *v3action.LogMessage
+		result1 <-chan *v7action.LogMessage
 		result2 <-chan error
-		result3 v3action.Warnings
+		result3 v7action.Warnings
 		result4 error
 	}{result1, result2, result3, result4}
 }
 
-func (fake *FakeV3PushVersionActor) PollStart(appGUID string, warningsChannel chan<- v3action.Warnings) error {
+func (fake *FakeV3PushVersionActor) PollStart(appGUID string, warningsChannel chan<- v7action.Warnings) error {
 	fake.pollStartMutex.Lock()
 	ret, specificReturn := fake.pollStartReturnsOnCall[len(fake.pollStartArgsForCall)]
 	fake.pollStartArgsForCall = append(fake.pollStartArgsForCall, struct {
 		appGUID         string
-		warningsChannel chan<- v3action.Warnings
+		warningsChannel chan<- v7action.Warnings
 	}{appGUID, warningsChannel})
 	fake.recordInvocation("PollStart", []interface{}{appGUID, warningsChannel})
 	fake.pollStartMutex.Unlock()
@@ -189,7 +189,7 @@ func (fake *FakeV3PushVersionActor) PollStartCallCount() int {
 	return len(fake.pollStartArgsForCall)
 }
 
-func (fake *FakeV3PushVersionActor) PollStartArgsForCall(i int) (string, chan<- v3action.Warnings) {
+func (fake *FakeV3PushVersionActor) PollStartArgsForCall(i int) (string, chan<- v7action.Warnings) {
 	fake.pollStartMutex.RLock()
 	defer fake.pollStartMutex.RUnlock()
 	return fake.pollStartArgsForCall[i].appGUID, fake.pollStartArgsForCall[i].warningsChannel
@@ -214,7 +214,7 @@ func (fake *FakeV3PushVersionActor) PollStartReturnsOnCall(i int, result1 error)
 	}{result1}
 }
 
-func (fake *FakeV3PushVersionActor) RestartApplication(appGUID string) (v3action.Warnings, error) {
+func (fake *FakeV3PushVersionActor) RestartApplication(appGUID string) (v7action.Warnings, error) {
 	fake.restartApplicationMutex.Lock()
 	ret, specificReturn := fake.restartApplicationReturnsOnCall[len(fake.restartApplicationArgsForCall)]
 	fake.restartApplicationArgsForCall = append(fake.restartApplicationArgsForCall, struct {
@@ -243,24 +243,24 @@ func (fake *FakeV3PushVersionActor) RestartApplicationArgsForCall(i int) string 
 	return fake.restartApplicationArgsForCall[i].appGUID
 }
 
-func (fake *FakeV3PushVersionActor) RestartApplicationReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3PushVersionActor) RestartApplicationReturns(result1 v7action.Warnings, result2 error) {
 	fake.RestartApplicationStub = nil
 	fake.restartApplicationReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeV3PushVersionActor) RestartApplicationReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3PushVersionActor) RestartApplicationReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.RestartApplicationStub = nil
 	if fake.restartApplicationReturnsOnCall == nil {
 		fake.restartApplicationReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.restartApplicationReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

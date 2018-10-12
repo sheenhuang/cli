@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,48 +18,48 @@ type FakeV3RestartActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	GetApplicationByNameAndSpaceStub        func(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
+	GetApplicationByNameAndSpaceStub        func(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
 	getApplicationByNameAndSpaceMutex       sync.RWMutex
 	getApplicationByNameAndSpaceArgsForCall []struct {
 		appName   string
 		spaceGUID string
 	}
 	getApplicationByNameAndSpaceReturns struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
-	StartApplicationStub        func(appGUID string) (v3action.Application, v3action.Warnings, error)
+	StartApplicationStub        func(appGUID string) (v7action.Application, v7action.Warnings, error)
 	startApplicationMutex       sync.RWMutex
 	startApplicationArgsForCall []struct {
 		appGUID string
 	}
 	startApplicationReturns struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	startApplicationReturnsOnCall map[int]struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
-	StopApplicationStub        func(appGUID string) (v3action.Warnings, error)
+	StopApplicationStub        func(appGUID string) (v7action.Warnings, error)
 	stopApplicationMutex       sync.RWMutex
 	stopApplicationArgsForCall []struct {
 		appGUID string
 	}
 	stopApplicationReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	stopApplicationReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -106,7 +106,7 @@ func (fake *FakeV3RestartActor) CloudControllerAPIVersionReturnsOnCall(i int, re
 	}{result1}
 }
 
-func (fake *FakeV3RestartActor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeV3RestartActor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error) {
 	fake.getApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationByNameAndSpaceReturnsOnCall[len(fake.getApplicationByNameAndSpaceArgsForCall)]
 	fake.getApplicationByNameAndSpaceArgsForCall = append(fake.getApplicationByNameAndSpaceArgsForCall, struct {
@@ -136,32 +136,32 @@ func (fake *FakeV3RestartActor) GetApplicationByNameAndSpaceArgsForCall(i int) (
 	return fake.getApplicationByNameAndSpaceArgsForCall[i].appName, fake.getApplicationByNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3RestartActor) GetApplicationByNameAndSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3RestartActor) GetApplicationByNameAndSpaceReturns(result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	fake.getApplicationByNameAndSpaceReturns = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3RestartActor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3RestartActor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	if fake.getApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Application
-			result2 v3action.Warnings
+			result1 v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3RestartActor) StartApplication(appGUID string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeV3RestartActor) StartApplication(appGUID string) (v7action.Application, v7action.Warnings, error) {
 	fake.startApplicationMutex.Lock()
 	ret, specificReturn := fake.startApplicationReturnsOnCall[len(fake.startApplicationArgsForCall)]
 	fake.startApplicationArgsForCall = append(fake.startApplicationArgsForCall, struct {
@@ -190,32 +190,32 @@ func (fake *FakeV3RestartActor) StartApplicationArgsForCall(i int) string {
 	return fake.startApplicationArgsForCall[i].appGUID
 }
 
-func (fake *FakeV3RestartActor) StartApplicationReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3RestartActor) StartApplicationReturns(result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.StartApplicationStub = nil
 	fake.startApplicationReturns = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3RestartActor) StartApplicationReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3RestartActor) StartApplicationReturnsOnCall(i int, result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.StartApplicationStub = nil
 	if fake.startApplicationReturnsOnCall == nil {
 		fake.startApplicationReturnsOnCall = make(map[int]struct {
-			result1 v3action.Application
-			result2 v3action.Warnings
+			result1 v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.startApplicationReturnsOnCall[i] = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3RestartActor) StopApplication(appGUID string) (v3action.Warnings, error) {
+func (fake *FakeV3RestartActor) StopApplication(appGUID string) (v7action.Warnings, error) {
 	fake.stopApplicationMutex.Lock()
 	ret, specificReturn := fake.stopApplicationReturnsOnCall[len(fake.stopApplicationArgsForCall)]
 	fake.stopApplicationArgsForCall = append(fake.stopApplicationArgsForCall, struct {
@@ -244,24 +244,24 @@ func (fake *FakeV3RestartActor) StopApplicationArgsForCall(i int) string {
 	return fake.stopApplicationArgsForCall[i].appGUID
 }
 
-func (fake *FakeV3RestartActor) StopApplicationReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3RestartActor) StopApplicationReturns(result1 v7action.Warnings, result2 error) {
 	fake.StopApplicationStub = nil
 	fake.stopApplicationReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeV3RestartActor) StopApplicationReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3RestartActor) StopApplicationReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.StopApplicationStub = nil
 	if fake.stopApplicationReturnsOnCall == nil {
 		fake.stopApplicationReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.stopApplicationReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

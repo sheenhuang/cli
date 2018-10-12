@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/command/commandfakes"
@@ -105,11 +105,11 @@ var _ = Describe("tasks Command", func() {
 			When("provided a valid application name", func() {
 				BeforeEach(func() {
 					fakeActor.GetApplicationByNameAndSpaceReturns(
-						v3action.Application{GUID: "some-app-guid"},
-						v3action.Warnings{"get-application-warning-1", "get-application-warning-2"},
+						v7action.Application{GUID: "some-app-guid"},
+						v7action.Warnings{"get-application-warning-1", "get-application-warning-2"},
 						nil)
 					fakeActor.GetApplicationTasksReturns(
-						[]v3action.Task{
+						[]v7action.Task{
 							{
 								GUID:       "task-3-guid",
 								SequenceID: 3,
@@ -135,7 +135,7 @@ var _ = Describe("tasks Command", func() {
 								Command:    "some-command",
 							},
 						},
-						v3action.Warnings{"get-tasks-warning-1"},
+						v7action.Warnings{"get-tasks-warning-1"},
 						nil)
 				})
 
@@ -150,7 +150,7 @@ var _ = Describe("tasks Command", func() {
 					Expect(fakeActor.GetApplicationTasksCallCount()).To(Equal(1))
 					guid, order := fakeActor.GetApplicationTasksArgsForCall(0)
 					Expect(guid).To(Equal("some-app-guid"))
-					Expect(order).To(Equal(v3action.Descending))
+					Expect(order).To(Equal(v7action.Descending))
 
 					Expect(testUI.Out).To(Say("Getting tasks for app some-app-name in org some-org / space some-space as some-user..."))
 					Expect(testUI.Out).To(Say("OK"))
@@ -167,7 +167,7 @@ var _ = Describe("tasks Command", func() {
 				When("the tasks' command fields are returned as empty strings", func() {
 					BeforeEach(func() {
 						fakeActor.GetApplicationTasksReturns(
-							[]v3action.Task{
+							[]v7action.Task{
 								{
 									GUID:       "task-2-guid",
 									SequenceID: 2,
@@ -185,7 +185,7 @@ var _ = Describe("tasks Command", func() {
 									Command:    "",
 								},
 							},
-							v3action.Warnings{"get-tasks-warning-1"},
+							v7action.Warnings{"get-tasks-warning-1"},
 							nil)
 					})
 
@@ -199,7 +199,7 @@ var _ = Describe("tasks Command", func() {
 
 				When("there are no tasks associated with the application", func() {
 					BeforeEach(func() {
-						fakeActor.GetApplicationTasksReturns([]v3action.Task{}, nil, nil)
+						fakeActor.GetApplicationTasksReturns([]v7action.Task{}, nil, nil)
 					})
 
 					It("outputs an empty table", func() {
@@ -223,7 +223,7 @@ var _ = Describe("tasks Command", func() {
 							expectedErr = errors.New("request-error")
 							returnedErr = ccerror.RequestError{Err: expectedErr}
 							fakeActor.GetApplicationByNameAndSpaceReturns(
-								v3action.Application{GUID: "some-app-guid"},
+								v7action.Application{GUID: "some-app-guid"},
 								nil,
 								returnedErr)
 						})
@@ -239,11 +239,11 @@ var _ = Describe("tasks Command", func() {
 						BeforeEach(func() {
 							returnedErr = ccerror.UnverifiedServerError{URL: "some-url"}
 							fakeActor.GetApplicationByNameAndSpaceReturns(
-								v3action.Application{GUID: "some-app-guid"},
+								v7action.Application{GUID: "some-app-guid"},
 								nil,
 								nil)
 							fakeActor.GetApplicationTasksReturns(
-								[]v3action.Task{},
+								[]v7action.Task{},
 								nil,
 								returnedErr)
 						})
@@ -261,8 +261,8 @@ var _ = Describe("tasks Command", func() {
 						BeforeEach(func() {
 							expectedErr = errors.New("bananapants")
 							fakeActor.GetApplicationByNameAndSpaceReturns(
-								v3action.Application{GUID: "some-app-guid"},
-								v3action.Warnings{"get-application-warning-1", "get-application-warning-2"},
+								v7action.Application{GUID: "some-app-guid"},
+								v7action.Warnings{"get-application-warning-1", "get-application-warning-2"},
 								expectedErr)
 						})
 
@@ -280,12 +280,12 @@ var _ = Describe("tasks Command", func() {
 						BeforeEach(func() {
 							expectedErr = errors.New("bananapants??")
 							fakeActor.GetApplicationByNameAndSpaceReturns(
-								v3action.Application{GUID: "some-app-guid"},
-								v3action.Warnings{"get-application-warning-1", "get-application-warning-2"},
+								v7action.Application{GUID: "some-app-guid"},
+								v7action.Warnings{"get-application-warning-1", "get-application-warning-2"},
 								nil)
 							fakeActor.GetApplicationTasksReturns(
 								nil,
-								v3action.Warnings{"get-tasks-warning-1", "get-tasks-warning-2"},
+								v7action.Warnings{"get-tasks-warning-1", "get-tasks-warning-2"},
 								expectedErr)
 						})
 

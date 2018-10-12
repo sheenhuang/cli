@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/v3/shared"
@@ -13,8 +13,8 @@ import (
 //go:generate counterfeiter . RunTaskActor
 
 type RunTaskActor interface {
-	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
-	RunTask(appGUID string, task v3action.Task) (v3action.Task, v3action.Warnings, error)
+	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
+	RunTask(appGUID string, task v7action.Task) (v7action.Task, v7action.Warnings, error)
 }
 
 type RunTaskCommand struct {
@@ -40,7 +40,7 @@ func (cmd *RunTaskCommand) Setup(config command.Config, ui command.UI) error {
 	if err != nil {
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, nil, nil)
+	cmd.Actor = v7action.NewActor(client, config, nil, nil)
 
 	return nil
 }
@@ -71,7 +71,7 @@ func (cmd RunTaskCommand) Execute(args []string) error {
 		"CurrentUser": user.Name,
 	})
 
-	inputTask := v3action.Task{
+	inputTask := v7action.Task{
 		Command: cmd.RequiredArgs.Command,
 	}
 

@@ -5,46 +5,46 @@ import (
 	"sync"
 
 	"code.cloudfoundry.org/cli/actor/cfnetworkingaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 )
 
 type FakeV3Actor struct {
-	GetApplicationByNameAndSpaceStub        func(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
+	GetApplicationByNameAndSpaceStub        func(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
 	getApplicationByNameAndSpaceMutex       sync.RWMutex
 	getApplicationByNameAndSpaceArgsForCall []struct {
 		appName   string
 		spaceGUID string
 	}
 	getApplicationByNameAndSpaceReturns struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
-	GetApplicationsBySpaceStub        func(spaceGUID string) ([]v3action.Application, v3action.Warnings, error)
+	GetApplicationsBySpaceStub        func(spaceGUID string) ([]v7action.Application, v7action.Warnings, error)
 	getApplicationsBySpaceMutex       sync.RWMutex
 	getApplicationsBySpaceArgsForCall []struct {
 		spaceGUID string
 	}
 	getApplicationsBySpaceReturns struct {
-		result1 []v3action.Application
-		result2 v3action.Warnings
+		result1 []v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationsBySpaceReturnsOnCall map[int]struct {
-		result1 []v3action.Application
-		result2 v3action.Warnings
+		result1 []v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeV3Actor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeV3Actor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error) {
 	fake.getApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationByNameAndSpaceReturnsOnCall[len(fake.getApplicationByNameAndSpaceArgsForCall)]
 	fake.getApplicationByNameAndSpaceArgsForCall = append(fake.getApplicationByNameAndSpaceArgsForCall, struct {
@@ -74,32 +74,32 @@ func (fake *FakeV3Actor) GetApplicationByNameAndSpaceArgsForCall(i int) (string,
 	return fake.getApplicationByNameAndSpaceArgsForCall[i].appName, fake.getApplicationByNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturns(result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	fake.getApplicationByNameAndSpaceReturns = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	if fake.getApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Application
-			result2 v3action.Warnings
+			result1 v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetApplicationsBySpace(spaceGUID string) ([]v3action.Application, v3action.Warnings, error) {
+func (fake *FakeV3Actor) GetApplicationsBySpace(spaceGUID string) ([]v7action.Application, v7action.Warnings, error) {
 	fake.getApplicationsBySpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationsBySpaceReturnsOnCall[len(fake.getApplicationsBySpaceArgsForCall)]
 	fake.getApplicationsBySpaceArgsForCall = append(fake.getApplicationsBySpaceArgsForCall, struct {
@@ -128,27 +128,27 @@ func (fake *FakeV3Actor) GetApplicationsBySpaceArgsForCall(i int) string {
 	return fake.getApplicationsBySpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3Actor) GetApplicationsBySpaceReturns(result1 []v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationsBySpaceReturns(result1 []v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationsBySpaceStub = nil
 	fake.getApplicationsBySpaceReturns = struct {
-		result1 []v3action.Application
-		result2 v3action.Warnings
+		result1 []v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetApplicationsBySpaceReturnsOnCall(i int, result1 []v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationsBySpaceReturnsOnCall(i int, result1 []v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationsBySpaceStub = nil
 	if fake.getApplicationsBySpaceReturnsOnCall == nil {
 		fake.getApplicationsBySpaceReturnsOnCall = make(map[int]struct {
-			result1 []v3action.Application
-			result2 v3action.Warnings
+			result1 []v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationsBySpaceReturnsOnCall[i] = struct {
-		result1 []v3action.Application
-		result2 v3action.Warnings
+		result1 []v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

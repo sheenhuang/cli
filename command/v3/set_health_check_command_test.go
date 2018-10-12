@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -102,7 +102,7 @@ var _ = Describe("set-health-check Command", func() {
 
 		BeforeEach(func() {
 			expectedErr = actionerror.ApplicationNotFoundError{Name: app}
-			fakeActor.SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(v3action.Application{}, v3action.Warnings{"warning-1", "warning-2"}, expectedErr)
+			fakeActor.SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(v7action.Application{}, v7action.Warnings{"warning-1", "warning-2"}, expectedErr)
 		})
 
 		It("returns the error and prints warnings", func() {
@@ -118,10 +118,10 @@ var _ = Describe("set-health-check Command", func() {
 	When("application is started", func() {
 		BeforeEach(func() {
 			fakeActor.SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(
-				v3action.Application{
+				v7action.Application{
 					State: constant.ApplicationStarted,
 				},
-				v3action.Warnings{"warning-1", "warning-2"},
+				v7action.Warnings{"warning-1", "warning-2"},
 				nil)
 		})
 
@@ -148,10 +148,10 @@ var _ = Describe("set-health-check Command", func() {
 	When("app is not started", func() {
 		BeforeEach(func() {
 			fakeActor.SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(
-				v3action.Application{
+				v7action.Application{
 					State: constant.ApplicationStopped,
 				},
-				v3action.Warnings{"warning-1", "warning-2"},
+				v7action.Warnings{"warning-1", "warning-2"},
 				nil)
 		})
 

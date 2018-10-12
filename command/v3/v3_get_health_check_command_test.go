@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
@@ -121,7 +121,7 @@ var _ = Describe("v3-get-health-check Command", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			expectedErr = actionerror.ApplicationNotFoundError{Name: app}
-			fakeActor.GetApplicationProcessHealthChecksByNameAndSpaceReturns(nil, v3action.Warnings{"warning-1", "warning-2"}, expectedErr)
+			fakeActor.GetApplicationProcessHealthChecksByNameAndSpaceReturns(nil, v7action.Warnings{"warning-1", "warning-2"}, expectedErr)
 		})
 
 		It("returns the error and prints warnings", func() {
@@ -139,8 +139,8 @@ var _ = Describe("v3-get-health-check Command", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			fakeActor.GetApplicationProcessHealthChecksByNameAndSpaceReturns(
-				[]v3action.ProcessHealthCheck{},
-				v3action.Warnings{"warning-1", "warning-2"},
+				[]v7action.ProcessHealthCheck{},
+				v7action.Warnings{"warning-1", "warning-2"},
 				nil)
 		})
 
@@ -161,12 +161,12 @@ var _ = Describe("v3-get-health-check Command", func() {
 	When("app has processes", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
-			appProcessHealthChecks := []v3action.ProcessHealthCheck{
+			appProcessHealthChecks := []v7action.ProcessHealthCheck{
 				{ProcessType: constant.ProcessTypeWeb, HealthCheckType: "http", Endpoint: "/foo", InvocationTimeout: 10},
 				{ProcessType: "queue", HealthCheckType: "port", Endpoint: "", InvocationTimeout: 0},
 				{ProcessType: "timer", HealthCheckType: "process", Endpoint: "", InvocationTimeout: 5},
 			}
-			fakeActor.GetApplicationProcessHealthChecksByNameAndSpaceReturns(appProcessHealthChecks, v3action.Warnings{"warning-1", "warning-2"}, nil)
+			fakeActor.GetApplicationProcessHealthChecksByNameAndSpaceReturns(appProcessHealthChecks, v7action.Warnings{"warning-1", "warning-2"}, nil)
 		})
 
 		It("prints the health check type of each process and warnings", func() {

@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2v3action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
@@ -122,8 +122,8 @@ var _ = Describe("app Command", func() {
 		When("no errors occur", func() {
 			BeforeEach(func() {
 				fakeActor.GetApplicationByNameAndSpaceReturns(
-					v3action.Application{GUID: "some-guid"},
-					v3action.Warnings{"warning-1", "warning-2"},
+					v7action.Application{GUID: "some-guid"},
+					v7action.Warnings{"warning-1", "warning-2"},
 					nil)
 			})
 
@@ -145,8 +145,8 @@ var _ = Describe("app Command", func() {
 			When("the error is translatable", func() {
 				BeforeEach(func() {
 					fakeActor.GetApplicationByNameAndSpaceReturns(
-						v3action.Application{},
-						v3action.Warnings{"warning-1", "warning-2"},
+						v7action.Application{},
+						v7action.Warnings{"warning-1", "warning-2"},
 						actionerror.ApplicationNotFoundError{Name: "some-app"})
 				})
 
@@ -164,8 +164,8 @@ var _ = Describe("app Command", func() {
 				BeforeEach(func() {
 					expectedErr = errors.New("get app summary error")
 					fakeActor.GetApplicationByNameAndSpaceReturns(
-						v3action.Application{},
-						v3action.Warnings{"warning-1", "warning-2"},
+						v7action.Application{},
+						v7action.Warnings{"warning-1", "warning-2"},
 						expectedErr)
 				})
 
@@ -203,14 +203,14 @@ var _ = Describe("app Command", func() {
 			BeforeEach(func() {
 				fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 				summary := v2v3action.ApplicationSummary{
-					ApplicationSummary: v3action.ApplicationSummary{
-						Application: v3action.Application{
+					ApplicationSummary: v7action.ApplicationSummary{
+						Application: v7action.Application{
 							Name:  "some-app",
 							State: constant.ApplicationStarted,
 						},
-						CurrentDroplet: v3action.Droplet{
+						CurrentDroplet: v7action.Droplet{
 							Stack: "cflinuxfs2",
-							Buildpacks: []v3action.Buildpack{
+							Buildpacks: []v7action.Buildpack{
 								{
 									Name:         "ruby_buildpack",
 									DetectOutput: "some-detect-output",
@@ -221,15 +221,15 @@ var _ = Describe("app Command", func() {
 								},
 							},
 						},
-						ProcessSummaries: v3action.ProcessSummaries{
+						ProcessSummaries: v7action.ProcessSummaries{
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type:    constant.ProcessTypeWeb,
 									Command: "some-command-1",
 								},
 							},
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type:    "console",
 									Command: "some-command-2",
 								},

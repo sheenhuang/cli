@@ -2,13 +2,13 @@ package shared
 
 import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 )
 
-func PollStage(dropletStream <-chan v3action.Droplet, warningsStream <-chan v3action.Warnings, errStream <-chan error, logStream <-chan *v3action.LogMessage, logErrStream <-chan error, ui command.UI) (v3action.Droplet, error) {
+func PollStage(dropletStream <-chan v7action.Droplet, warningsStream <-chan v7action.Warnings, errStream <-chan error, logStream <-chan *v7action.LogMessage, logErrStream <-chan error, ui command.UI) (v7action.Droplet, error) {
 	var closedBuildStream, closedWarningsStream, closedErrStream bool
-	var droplet v3action.Droplet
+	var droplet v7action.Droplet
 
 	for {
 		select {
@@ -47,7 +47,7 @@ func PollStage(dropletStream <-chan v3action.Droplet, warningsStream <-chan v3ac
 				closedErrStream = true
 				break
 			}
-			return v3action.Droplet{}, err
+			return v7action.Droplet{}, err
 		}
 		if closedBuildStream && closedWarningsStream && closedErrStream {
 			return droplet, nil

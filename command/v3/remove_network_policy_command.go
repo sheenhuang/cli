@@ -6,7 +6,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/cfnetworkingaction"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -49,7 +49,7 @@ func (cmd *RemoveNetworkPolicyCommand) Setup(config command.Config, ui command.U
 		return err
 	}
 
-	v3Actor := v3action.NewActor(client, config, nil, nil)
+	v3Actor := v7action.NewActor(client, config, nil, nil)
 	networkingClient, err := shared.NewNetworkingClient(client.NetworkPolicyV1(), config, uaa, ui)
 	if err != nil {
 		return err

@@ -2,7 +2,7 @@ package v3
 
 import (
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -19,7 +19,7 @@ type SharedSSHActor interface {
 //go:generate counterfeiter . SSHActor
 
 type SSHActor interface {
-	GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndex(appName string, spaceGUID string, processType string, processIndex uint) (v3action.SSHAuthentication, v3action.Warnings, error)
+	GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndex(appName string, spaceGUID string, processType string, processIndex uint) (v7action.SSHAuthentication, v7action.Warnings, error)
 }
 
 type SSHCommand struct {
@@ -58,7 +58,7 @@ func (cmd *SSHCommand) Setup(config command.Config, ui command.UI) error {
 		return err
 	}
 
-	cmd.Actor = v3action.NewActor(ccClient, config, sharedActor, uaaClient)
+	cmd.Actor = v7action.NewActor(ccClient, config, sharedActor, uaaClient)
 
 	cmd.SSHClient = clissh.NewDefaultSecureShell()
 

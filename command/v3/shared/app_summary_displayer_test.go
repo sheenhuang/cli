@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/command/commandfakes"
@@ -61,20 +61,20 @@ var _ = Describe("app summary displayer", func() {
 		When("getting the app summary succeeds", func() {
 			When("the app has instances", func() {
 				BeforeEach(func() {
-					appSummary := v3action.ApplicationSummary{
-						Application: v3action.Application{
+					appSummary := v7action.ApplicationSummary{
+						Application: v7action.Application{
 							GUID:  "some-app-guid",
 							State: constant.ApplicationStarted,
 						},
-						ProcessSummaries: v3action.ProcessSummaries{
+						ProcessSummaries: v7action.ProcessSummaries{
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type:       "console",
 									MemoryInMB: types.NullUint64{Value: 16, IsSet: true},
 									DiskInMB:   types.NullUint64{Value: 512, IsSet: true},
 								},
-								InstanceDetails: []v3action.ProcessInstance{
-									v3action.ProcessInstance{
+								InstanceDetails: []v7action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index:       0,
 										State:       constant.ProcessInstanceRunning,
 										MemoryUsage: 1000000,
@@ -86,13 +86,13 @@ var _ = Describe("app summary displayer", func() {
 								},
 							},
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type:       constant.ProcessTypeWeb,
 									MemoryInMB: types.NullUint64{Value: 32, IsSet: true},
 									DiskInMB:   types.NullUint64{Value: 1024, IsSet: true},
 								},
-								InstanceDetails: []v3action.ProcessInstance{
-									v3action.ProcessInstance{
+								InstanceDetails: []v7action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index:       0,
 										State:       constant.ProcessInstanceRunning,
 										MemoryUsage: 1000000,
@@ -101,7 +101,7 @@ var _ = Describe("app summary displayer", func() {
 										DiskQuota:   2000000,
 										Uptime:      int(time.Now().Sub(time.Unix(267321600, 0)).Seconds()),
 									},
-									v3action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index:       1,
 										State:       constant.ProcessInstanceRunning,
 										MemoryUsage: 2000000,
@@ -110,7 +110,7 @@ var _ = Describe("app summary displayer", func() {
 										DiskQuota:   4000000,
 										Uptime:      int(time.Now().Sub(time.Unix(330480000, 0)).Seconds()),
 									},
-									v3action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index:       2,
 										State:       constant.ProcessInstanceRunning,
 										MemoryUsage: 3000000,
@@ -126,7 +126,7 @@ var _ = Describe("app summary displayer", func() {
 
 					fakeActor.GetApplicationSummaryByNameAndSpaceReturns(
 						appSummary,
-						v3action.Warnings{"get-app-summary-warning"},
+						v7action.Warnings{"get-app-summary-warning"},
 						nil)
 				})
 
@@ -245,15 +245,15 @@ var _ = Describe("app summary displayer", func() {
 
 			When("the app has no instances", func() {
 				BeforeEach(func() {
-					appSummary := v3action.ApplicationSummary{
-						Application: v3action.Application{
+					appSummary := v7action.ApplicationSummary{
+						Application: v7action.Application{
 							GUID: "some-app-guid",
 						},
 					}
 
 					fakeActor.GetApplicationSummaryByNameAndSpaceReturns(
 						appSummary,
-						v3action.Warnings{"get-app-summary-warning"},
+						v7action.Warnings{"get-app-summary-warning"},
 						nil)
 					fakeV2Actor.GetApplicationInstancesWithStatsByApplicationReturns(nil, v2action.Warnings{"some-instance-stats-warning"}, nil)
 				})
@@ -268,17 +268,17 @@ var _ = Describe("app summary displayer", func() {
 
 			When("the app is stopped", func() {
 				BeforeEach(func() {
-					appSummary := v3action.ApplicationSummary{
-						Application: v3action.Application{
+					appSummary := v7action.ApplicationSummary{
+						Application: v7action.Application{
 							GUID:  "some-app-guid",
 							State: constant.ApplicationStopped,
 						},
-						ProcessSummaries: v3action.ProcessSummaries{{}},
+						ProcessSummaries: v7action.ProcessSummaries{{}},
 					}
 
 					fakeActor.GetApplicationSummaryByNameAndSpaceReturns(
 						appSummary,
-						v3action.Warnings{"get-app-summary-warning"},
+						v7action.Warnings{"get-app-summary-warning"},
 						nil)
 					fakeV2Actor.GetApplicationInstancesWithStatsByApplicationReturns(nil, v2action.Warnings{"some-instance-stats-warning"}, nil)
 				})
@@ -295,8 +295,8 @@ var _ = Describe("app summary displayer", func() {
 		When("getting the app summary fails", func() {
 			BeforeEach(func() {
 				fakeActor.GetApplicationSummaryByNameAndSpaceReturns(
-					v3action.ApplicationSummary{},
-					v3action.Warnings{"get-app-summary-warning"},
+					v7action.ApplicationSummary{},
+					v7action.Warnings{"get-app-summary-warning"},
 					errors.New("some-app-summary-error"),
 				)
 			})

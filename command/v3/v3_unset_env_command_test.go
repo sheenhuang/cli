@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -111,7 +111,7 @@ var _ = Describe("v3-unset-env Command", func() {
 
 			When("unsetting the environment variable succeeds", func() {
 				BeforeEach(func() {
-					fakeActor.UnsetEnvironmentVariableByApplicationNameAndSpaceReturns(v3action.Warnings{"set-warning-1", "set-warning-2"}, nil)
+					fakeActor.UnsetEnvironmentVariableByApplicationNameAndSpaceReturns(v7action.Warnings{"set-warning-1", "set-warning-2"}, nil)
 				})
 
 				It("sets the environment variable and value pair", func() {
@@ -134,7 +134,7 @@ var _ = Describe("v3-unset-env Command", func() {
 
 			When("unsetting the environment returns an EnvironmentVariableNotSetError", func() {
 				BeforeEach(func() {
-					fakeActor.UnsetEnvironmentVariableByApplicationNameAndSpaceReturns(v3action.Warnings{"unset-warning-1", "unset-warning-2"}, actionerror.EnvironmentVariableNotSetError{EnvironmentVariableName: "some-key"})
+					fakeActor.UnsetEnvironmentVariableByApplicationNameAndSpaceReturns(v7action.Warnings{"unset-warning-1", "unset-warning-2"}, actionerror.EnvironmentVariableNotSetError{EnvironmentVariableName: "some-key"})
 				})
 
 				It("displays okay and the error", func() {
@@ -150,7 +150,7 @@ var _ = Describe("v3-unset-env Command", func() {
 				var expectedErr error
 				BeforeEach(func() {
 					expectedErr = errors.New("some-error")
-					fakeActor.UnsetEnvironmentVariableByApplicationNameAndSpaceReturns(v3action.Warnings{"get-warning-1", "get-warning-2"}, expectedErr)
+					fakeActor.UnsetEnvironmentVariableByApplicationNameAndSpaceReturns(v7action.Warnings{"get-warning-1", "get-warning-2"}, expectedErr)
 				})
 
 				It("returns the error", func() {

@@ -5,27 +5,27 @@ import (
 	"sync"
 
 	"code.cloudfoundry.org/cli/actor/v2v3action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 )
 
 type FakeV3Actor struct {
-	GetApplicationByNameAndSpaceStub        func(string, string) (v3action.Application, v3action.Warnings, error)
+	GetApplicationByNameAndSpaceStub        func(string, string) (v7action.Application, v7action.Warnings, error)
 	getApplicationByNameAndSpaceMutex       sync.RWMutex
 	getApplicationByNameAndSpaceArgsForCall []struct {
 		arg1 string
 		arg2 string
 	}
 	getApplicationByNameAndSpaceReturns struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
-	GetApplicationSummaryByNameAndSpaceStub        func(appName string, spaceGUID string, withObfuscatedValues bool) (v3action.ApplicationSummary, v3action.Warnings, error)
+	GetApplicationSummaryByNameAndSpaceStub        func(appName string, spaceGUID string, withObfuscatedValues bool) (v7action.ApplicationSummary, v7action.Warnings, error)
 	getApplicationSummaryByNameAndSpaceMutex       sync.RWMutex
 	getApplicationSummaryByNameAndSpaceArgsForCall []struct {
 		appName              string
@@ -33,58 +33,58 @@ type FakeV3Actor struct {
 		withObfuscatedValues bool
 	}
 	getApplicationSummaryByNameAndSpaceReturns struct {
-		result1 v3action.ApplicationSummary
-		result2 v3action.Warnings
+		result1 v7action.ApplicationSummary
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationSummaryByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.ApplicationSummary
-		result2 v3action.Warnings
+		result1 v7action.ApplicationSummary
+		result2 v7action.Warnings
 		result3 error
 	}
-	GetOrganizationByNameStub        func(orgName string) (v3action.Organization, v3action.Warnings, error)
+	GetOrganizationByNameStub        func(orgName string) (v7action.Organization, v7action.Warnings, error)
 	getOrganizationByNameMutex       sync.RWMutex
 	getOrganizationByNameArgsForCall []struct {
 		orgName string
 	}
 	getOrganizationByNameReturns struct {
-		result1 v3action.Organization
-		result2 v3action.Warnings
+		result1 v7action.Organization
+		result2 v7action.Warnings
 		result3 error
 	}
 	getOrganizationByNameReturnsOnCall map[int]struct {
-		result1 v3action.Organization
-		result2 v3action.Warnings
+		result1 v7action.Organization
+		result2 v7action.Warnings
 		result3 error
 	}
-	ShareServiceInstanceToSpacesStub        func(serviceInstanceGUID string, spaceGUIDs []string) (v3action.RelationshipList, v3action.Warnings, error)
+	ShareServiceInstanceToSpacesStub        func(serviceInstanceGUID string, spaceGUIDs []string) (v7action.RelationshipList, v7action.Warnings, error)
 	shareServiceInstanceToSpacesMutex       sync.RWMutex
 	shareServiceInstanceToSpacesArgsForCall []struct {
 		serviceInstanceGUID string
 		spaceGUIDs          []string
 	}
 	shareServiceInstanceToSpacesReturns struct {
-		result1 v3action.RelationshipList
-		result2 v3action.Warnings
+		result1 v7action.RelationshipList
+		result2 v7action.Warnings
 		result3 error
 	}
 	shareServiceInstanceToSpacesReturnsOnCall map[int]struct {
-		result1 v3action.RelationshipList
-		result2 v3action.Warnings
+		result1 v7action.RelationshipList
+		result2 v7action.Warnings
 		result3 error
 	}
-	UnshareServiceInstanceByServiceInstanceAndSpaceStub        func(serviceInstanceGUID string, spaceGUID string) (v3action.Warnings, error)
+	UnshareServiceInstanceByServiceInstanceAndSpaceStub        func(serviceInstanceGUID string, spaceGUID string) (v7action.Warnings, error)
 	unshareServiceInstanceByServiceInstanceAndSpaceMutex       sync.RWMutex
 	unshareServiceInstanceByServiceInstanceAndSpaceArgsForCall []struct {
 		serviceInstanceGUID string
 		spaceGUID           string
 	}
 	unshareServiceInstanceByServiceInstanceAndSpaceReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	unshareServiceInstanceByServiceInstanceAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	CloudControllerAPIVersionStub        func() string
@@ -100,7 +100,7 @@ type FakeV3Actor struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeV3Actor) GetApplicationByNameAndSpace(arg1 string, arg2 string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeV3Actor) GetApplicationByNameAndSpace(arg1 string, arg2 string) (v7action.Application, v7action.Warnings, error) {
 	fake.getApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationByNameAndSpaceReturnsOnCall[len(fake.getApplicationByNameAndSpaceArgsForCall)]
 	fake.getApplicationByNameAndSpaceArgsForCall = append(fake.getApplicationByNameAndSpaceArgsForCall, struct {
@@ -130,32 +130,32 @@ func (fake *FakeV3Actor) GetApplicationByNameAndSpaceArgsForCall(i int) (string,
 	return fake.getApplicationByNameAndSpaceArgsForCall[i].arg1, fake.getApplicationByNameAndSpaceArgsForCall[i].arg2
 }
 
-func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturns(result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	fake.getApplicationByNameAndSpaceReturns = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	if fake.getApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Application
-			result2 v3action.Warnings
+			result1 v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v3action.ApplicationSummary, v3action.Warnings, error) {
+func (fake *FakeV3Actor) GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v7action.ApplicationSummary, v7action.Warnings, error) {
 	fake.getApplicationSummaryByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationSummaryByNameAndSpaceReturnsOnCall[len(fake.getApplicationSummaryByNameAndSpaceArgsForCall)]
 	fake.getApplicationSummaryByNameAndSpaceArgsForCall = append(fake.getApplicationSummaryByNameAndSpaceArgsForCall, struct {
@@ -186,32 +186,32 @@ func (fake *FakeV3Actor) GetApplicationSummaryByNameAndSpaceArgsForCall(i int) (
 	return fake.getApplicationSummaryByNameAndSpaceArgsForCall[i].appName, fake.getApplicationSummaryByNameAndSpaceArgsForCall[i].spaceGUID, fake.getApplicationSummaryByNameAndSpaceArgsForCall[i].withObfuscatedValues
 }
 
-func (fake *FakeV3Actor) GetApplicationSummaryByNameAndSpaceReturns(result1 v3action.ApplicationSummary, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationSummaryByNameAndSpaceReturns(result1 v7action.ApplicationSummary, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationSummaryByNameAndSpaceStub = nil
 	fake.getApplicationSummaryByNameAndSpaceReturns = struct {
-		result1 v3action.ApplicationSummary
-		result2 v3action.Warnings
+		result1 v7action.ApplicationSummary
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetApplicationSummaryByNameAndSpaceReturnsOnCall(i int, result1 v3action.ApplicationSummary, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetApplicationSummaryByNameAndSpaceReturnsOnCall(i int, result1 v7action.ApplicationSummary, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationSummaryByNameAndSpaceStub = nil
 	if fake.getApplicationSummaryByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationSummaryByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.ApplicationSummary
-			result2 v3action.Warnings
+			result1 v7action.ApplicationSummary
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationSummaryByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.ApplicationSummary
-		result2 v3action.Warnings
+		result1 v7action.ApplicationSummary
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetOrganizationByName(orgName string) (v3action.Organization, v3action.Warnings, error) {
+func (fake *FakeV3Actor) GetOrganizationByName(orgName string) (v7action.Organization, v7action.Warnings, error) {
 	fake.getOrganizationByNameMutex.Lock()
 	ret, specificReturn := fake.getOrganizationByNameReturnsOnCall[len(fake.getOrganizationByNameArgsForCall)]
 	fake.getOrganizationByNameArgsForCall = append(fake.getOrganizationByNameArgsForCall, struct {
@@ -240,32 +240,32 @@ func (fake *FakeV3Actor) GetOrganizationByNameArgsForCall(i int) string {
 	return fake.getOrganizationByNameArgsForCall[i].orgName
 }
 
-func (fake *FakeV3Actor) GetOrganizationByNameReturns(result1 v3action.Organization, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetOrganizationByNameReturns(result1 v7action.Organization, result2 v7action.Warnings, result3 error) {
 	fake.GetOrganizationByNameStub = nil
 	fake.getOrganizationByNameReturns = struct {
-		result1 v3action.Organization
-		result2 v3action.Warnings
+		result1 v7action.Organization
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) GetOrganizationByNameReturnsOnCall(i int, result1 v3action.Organization, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) GetOrganizationByNameReturnsOnCall(i int, result1 v7action.Organization, result2 v7action.Warnings, result3 error) {
 	fake.GetOrganizationByNameStub = nil
 	if fake.getOrganizationByNameReturnsOnCall == nil {
 		fake.getOrganizationByNameReturnsOnCall = make(map[int]struct {
-			result1 v3action.Organization
-			result2 v3action.Warnings
+			result1 v7action.Organization
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getOrganizationByNameReturnsOnCall[i] = struct {
-		result1 v3action.Organization
-		result2 v3action.Warnings
+		result1 v7action.Organization
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) ShareServiceInstanceToSpaces(serviceInstanceGUID string, spaceGUIDs []string) (v3action.RelationshipList, v3action.Warnings, error) {
+func (fake *FakeV3Actor) ShareServiceInstanceToSpaces(serviceInstanceGUID string, spaceGUIDs []string) (v7action.RelationshipList, v7action.Warnings, error) {
 	var spaceGUIDsCopy []string
 	if spaceGUIDs != nil {
 		spaceGUIDsCopy = make([]string, len(spaceGUIDs))
@@ -300,32 +300,32 @@ func (fake *FakeV3Actor) ShareServiceInstanceToSpacesArgsForCall(i int) (string,
 	return fake.shareServiceInstanceToSpacesArgsForCall[i].serviceInstanceGUID, fake.shareServiceInstanceToSpacesArgsForCall[i].spaceGUIDs
 }
 
-func (fake *FakeV3Actor) ShareServiceInstanceToSpacesReturns(result1 v3action.RelationshipList, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) ShareServiceInstanceToSpacesReturns(result1 v7action.RelationshipList, result2 v7action.Warnings, result3 error) {
 	fake.ShareServiceInstanceToSpacesStub = nil
 	fake.shareServiceInstanceToSpacesReturns = struct {
-		result1 v3action.RelationshipList
-		result2 v3action.Warnings
+		result1 v7action.RelationshipList
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) ShareServiceInstanceToSpacesReturnsOnCall(i int, result1 v3action.RelationshipList, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3Actor) ShareServiceInstanceToSpacesReturnsOnCall(i int, result1 v7action.RelationshipList, result2 v7action.Warnings, result3 error) {
 	fake.ShareServiceInstanceToSpacesStub = nil
 	if fake.shareServiceInstanceToSpacesReturnsOnCall == nil {
 		fake.shareServiceInstanceToSpacesReturnsOnCall = make(map[int]struct {
-			result1 v3action.RelationshipList
-			result2 v3action.Warnings
+			result1 v7action.RelationshipList
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.shareServiceInstanceToSpacesReturnsOnCall[i] = struct {
-		result1 v3action.RelationshipList
-		result2 v3action.Warnings
+		result1 v7action.RelationshipList
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3Actor) UnshareServiceInstanceByServiceInstanceAndSpace(serviceInstanceGUID string, spaceGUID string) (v3action.Warnings, error) {
+func (fake *FakeV3Actor) UnshareServiceInstanceByServiceInstanceAndSpace(serviceInstanceGUID string, spaceGUID string) (v7action.Warnings, error) {
 	fake.unshareServiceInstanceByServiceInstanceAndSpaceMutex.Lock()
 	ret, specificReturn := fake.unshareServiceInstanceByServiceInstanceAndSpaceReturnsOnCall[len(fake.unshareServiceInstanceByServiceInstanceAndSpaceArgsForCall)]
 	fake.unshareServiceInstanceByServiceInstanceAndSpaceArgsForCall = append(fake.unshareServiceInstanceByServiceInstanceAndSpaceArgsForCall, struct {
@@ -355,24 +355,24 @@ func (fake *FakeV3Actor) UnshareServiceInstanceByServiceInstanceAndSpaceArgsForC
 	return fake.unshareServiceInstanceByServiceInstanceAndSpaceArgsForCall[i].serviceInstanceGUID, fake.unshareServiceInstanceByServiceInstanceAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3Actor) UnshareServiceInstanceByServiceInstanceAndSpaceReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3Actor) UnshareServiceInstanceByServiceInstanceAndSpaceReturns(result1 v7action.Warnings, result2 error) {
 	fake.UnshareServiceInstanceByServiceInstanceAndSpaceStub = nil
 	fake.unshareServiceInstanceByServiceInstanceAndSpaceReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeV3Actor) UnshareServiceInstanceByServiceInstanceAndSpaceReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeV3Actor) UnshareServiceInstanceByServiceInstanceAndSpaceReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.UnshareServiceInstanceByServiceInstanceAndSpaceStub = nil
 	if fake.unshareServiceInstanceByServiceInstanceAndSpaceReturnsOnCall == nil {
 		fake.unshareServiceInstanceByServiceInstanceAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.unshareServiceInstanceByServiceInstanceAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

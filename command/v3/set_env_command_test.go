@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/v3"
@@ -94,7 +94,7 @@ var _ = Describe("set-env Command", func() {
 
 			When("setting the environment succeeds", func() {
 				BeforeEach(func() {
-					fakeActor.SetEnvironmentVariableByApplicationNameAndSpaceReturns(v3action.Warnings{"set-warning-1", "set-warning-2"}, nil)
+					fakeActor.SetEnvironmentVariableByApplicationNameAndSpaceReturns(v7action.Warnings{"set-warning-1", "set-warning-2"}, nil)
 				})
 
 				It("sets the environment variable and value pair", func() {
@@ -120,7 +120,7 @@ var _ = Describe("set-env Command", func() {
 				var expectedErr error
 				BeforeEach(func() {
 					expectedErr = errors.New("some-error")
-					fakeActor.SetEnvironmentVariableByApplicationNameAndSpaceReturns(v3action.Warnings{"get-warning-1", "get-warning-2"}, expectedErr)
+					fakeActor.SetEnvironmentVariableByApplicationNameAndSpaceReturns(v7action.Warnings{"get-warning-1", "get-warning-2"}, expectedErr)
 				})
 
 				It("returns the error", func() {

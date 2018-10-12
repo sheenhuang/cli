@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -17,8 +17,8 @@ import (
 
 type V3CreatePackageActor interface {
 	CloudControllerAPIVersion() string
-	CreateDockerPackageByApplicationNameAndSpace(appName string, spaceGUID string, dockerImageCredentials v3action.DockerImageCredentials) (v3action.Package, v3action.Warnings, error)
-	CreateAndUploadBitsPackageByApplicationNameAndSpace(appName string, spaceGUID string, bitsPath string) (v3action.Package, v3action.Warnings, error)
+	CreateDockerPackageByApplicationNameAndSpace(appName string, spaceGUID string, dockerImageCredentials v7action.DockerImageCredentials) (v7action.Package, v7action.Warnings, error)
+	CreateAndUploadBitsPackageByApplicationNameAndSpace(appName string, spaceGUID string, bitsPath string) (v7action.Package, v7action.Warnings, error)
 }
 
 type V3CreatePackageCommand struct {
@@ -49,7 +49,7 @@ func (cmd *V3CreatePackageCommand) Setup(config command.Config, ui command.UI) e
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, sharedActor, nil)
+	cmd.Actor = v7action.NewActor(client, config, sharedActor, nil)
 
 	cmd.PackageDisplayer = shared.NewPackageDisplayer(cmd.UI, cmd.Config)
 
@@ -82,11 +82,11 @@ func (cmd V3CreatePackageCommand) Execute(args []string) error {
 	}
 
 	var (
-		pkg      v3action.Package
-		warnings v3action.Warnings
+		pkg      v7action.Package
+		warnings v7action.Warnings
 	)
 	if isDockerImage {
-		pkg, warnings, err = cmd.Actor.CreateDockerPackageByApplicationNameAndSpace(cmd.RequiredArgs.AppName, cmd.Config.TargetedSpace().GUID, v3action.DockerImageCredentials{Path: cmd.DockerImage.Path})
+		pkg, warnings, err = cmd.Actor.CreateDockerPackageByApplicationNameAndSpace(cmd.RequiredArgs.AppName, cmd.Config.TargetedSpace().GUID, v7action.DockerImageCredentials{Path: cmd.DockerImage.Path})
 	} else {
 		pkg, warnings, err = cmd.Actor.CreateAndUploadBitsPackageByApplicationNameAndSpace(cmd.RequiredArgs.AppName, cmd.Config.TargetedSpace().GUID, string(cmd.AppPath))
 	}

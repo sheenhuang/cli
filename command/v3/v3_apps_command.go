@@ -6,7 +6,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -20,7 +20,7 @@ import (
 
 type V3AppsActor interface {
 	CloudControllerAPIVersion() string
-	GetApplicationsWithProcessesBySpace(spaceGUID string) ([]v3action.ApplicationWithProcessSummary, v3action.Warnings, error)
+	GetApplicationsWithProcessesBySpace(spaceGUID string) ([]v7action.ApplicationWithProcessSummary, v7action.Warnings, error)
 }
 
 type V3AppsCommand struct {
@@ -46,7 +46,7 @@ func (cmd *V3AppsCommand) Setup(config command.Config, ui command.UI) error {
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 
 	ccClientV2, uaaClientV2, err := sharedV2.NewClients(config, ui, true)
 	if err != nil {

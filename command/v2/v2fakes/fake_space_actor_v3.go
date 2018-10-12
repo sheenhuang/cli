@@ -4,7 +4,7 @@ package v2fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v2"
 )
 
@@ -18,20 +18,20 @@ type FakeSpaceActorV3 struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	GetEffectiveIsolationSegmentBySpaceStub        func(spaceGUID string, orgDefaultIsolationSegmentGUID string) (v3action.IsolationSegment, v3action.Warnings, error)
+	GetEffectiveIsolationSegmentBySpaceStub        func(spaceGUID string, orgDefaultIsolationSegmentGUID string) (v7action.IsolationSegment, v7action.Warnings, error)
 	getEffectiveIsolationSegmentBySpaceMutex       sync.RWMutex
 	getEffectiveIsolationSegmentBySpaceArgsForCall []struct {
 		spaceGUID                      string
 		orgDefaultIsolationSegmentGUID string
 	}
 	getEffectiveIsolationSegmentBySpaceReturns struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}
 	getEffectiveIsolationSegmentBySpaceReturnsOnCall map[int]struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
@@ -78,7 +78,7 @@ func (fake *FakeSpaceActorV3) CloudControllerAPIVersionReturnsOnCall(i int, resu
 	}{result1}
 }
 
-func (fake *FakeSpaceActorV3) GetEffectiveIsolationSegmentBySpace(spaceGUID string, orgDefaultIsolationSegmentGUID string) (v3action.IsolationSegment, v3action.Warnings, error) {
+func (fake *FakeSpaceActorV3) GetEffectiveIsolationSegmentBySpace(spaceGUID string, orgDefaultIsolationSegmentGUID string) (v7action.IsolationSegment, v7action.Warnings, error) {
 	fake.getEffectiveIsolationSegmentBySpaceMutex.Lock()
 	ret, specificReturn := fake.getEffectiveIsolationSegmentBySpaceReturnsOnCall[len(fake.getEffectiveIsolationSegmentBySpaceArgsForCall)]
 	fake.getEffectiveIsolationSegmentBySpaceArgsForCall = append(fake.getEffectiveIsolationSegmentBySpaceArgsForCall, struct {
@@ -108,27 +108,27 @@ func (fake *FakeSpaceActorV3) GetEffectiveIsolationSegmentBySpaceArgsForCall(i i
 	return fake.getEffectiveIsolationSegmentBySpaceArgsForCall[i].spaceGUID, fake.getEffectiveIsolationSegmentBySpaceArgsForCall[i].orgDefaultIsolationSegmentGUID
 }
 
-func (fake *FakeSpaceActorV3) GetEffectiveIsolationSegmentBySpaceReturns(result1 v3action.IsolationSegment, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSpaceActorV3) GetEffectiveIsolationSegmentBySpaceReturns(result1 v7action.IsolationSegment, result2 v7action.Warnings, result3 error) {
 	fake.GetEffectiveIsolationSegmentBySpaceStub = nil
 	fake.getEffectiveIsolationSegmentBySpaceReturns = struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeSpaceActorV3) GetEffectiveIsolationSegmentBySpaceReturnsOnCall(i int, result1 v3action.IsolationSegment, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSpaceActorV3) GetEffectiveIsolationSegmentBySpaceReturnsOnCall(i int, result1 v7action.IsolationSegment, result2 v7action.Warnings, result3 error) {
 	fake.GetEffectiveIsolationSegmentBySpaceStub = nil
 	if fake.getEffectiveIsolationSegmentBySpaceReturnsOnCall == nil {
 		fake.getEffectiveIsolationSegmentBySpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.IsolationSegment
-			result2 v3action.Warnings
+			result1 v7action.IsolationSegment
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getEffectiveIsolationSegmentBySpaceReturnsOnCall[i] = struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

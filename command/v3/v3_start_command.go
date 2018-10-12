@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -17,8 +17,8 @@ import (
 
 type V3StartActor interface {
 	CloudControllerAPIVersion() string
-	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
-	StartApplication(appGUID string) (v3action.Application, v3action.Warnings, error)
+	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
+	StartApplication(appGUID string) (v7action.Application, v7action.Warnings, error)
 }
 
 type V3StartCommand struct {
@@ -44,7 +44,7 @@ func (cmd *V3StartCommand) Setup(config command.Config, ui command.UI) error {
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 
 	return nil
 }

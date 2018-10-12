@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	. "code.cloudfoundry.org/cli/command/v2"
@@ -183,7 +183,7 @@ var _ = Describe("org Command", func() {
 				When("something", func() {
 					BeforeEach(func() {
 						fakeActorV3.GetIsolationSegmentsByOrganizationReturns(
-							[]v3action.IsolationSegment{
+							[]v7action.IsolationSegment{
 								{
 									Name: "isolation-segment-1",
 									GUID: "default-isolation-segment-guid",
@@ -192,7 +192,7 @@ var _ = Describe("org Command", func() {
 									GUID: "some-other-isolation-segment-guid",
 								},
 							},
-							v3action.Warnings{"warning-3", "warning-4"},
+							v7action.Warnings{"warning-3", "warning-4"},
 							nil)
 					})
 
@@ -230,7 +230,7 @@ var _ = Describe("org Command", func() {
 						expectedErr = errors.New("get org iso segs error")
 						fakeActorV3.GetIsolationSegmentsByOrganizationReturns(
 							nil,
-							v3action.Warnings{"get iso seg warning"},
+							v7action.Warnings{"get iso seg warning"},
 							expectedErr)
 					})
 

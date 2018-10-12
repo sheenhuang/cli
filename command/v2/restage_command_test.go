@@ -8,7 +8,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
 	"code.cloudfoundry.org/cli/actor/v2v3action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv2/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
@@ -501,13 +501,13 @@ var _ = Describe("Restage Command", func() {
 						BeforeEach(func() {
 							fakeApplicationSummaryActor.CloudControllerV3APIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 
-							v3ApplicationSummary := v3action.ApplicationSummary{
-								Application: v3action.Application{
+							v3ApplicationSummary := v7action.ApplicationSummary{
+								Application: v7action.Application{
 									Name: "some-app",
 								},
-								ProcessSummaries: v3action.ProcessSummaries{
+								ProcessSummaries: v7action.ProcessSummaries{
 									{
-										Process: v3action.Process{
+										Process: v7action.Process{
 											Type:       "aba",
 											Command:    "some-command-1",
 											MemoryInMB: types.NullUint64{Value: 32, IsSet: true},
@@ -515,7 +515,7 @@ var _ = Describe("Restage Command", func() {
 										},
 									},
 									{
-										Process: v3action.Process{
+										Process: v7action.Process{
 											Type:       "console",
 											Command:    "some-command-2",
 											MemoryInMB: types.NullUint64{Value: 16, IsSet: true},

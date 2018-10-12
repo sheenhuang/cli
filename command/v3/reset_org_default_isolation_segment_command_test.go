@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -137,7 +137,7 @@ var _ = Describe("reset-org-default-isolation-segment Command", func() {
 
 				When("the reset succeeds", func() {
 					BeforeEach(func() {
-						fakeActor.ResetOrganizationDefaultIsolationSegmentReturns(v3action.Warnings{"warning-3", "warning-4"}, nil)
+						fakeActor.ResetOrganizationDefaultIsolationSegmentReturns(v7action.Warnings{"warning-3", "warning-4"}, nil)
 					})
 
 					It("displays the header and okay", func() {
@@ -165,7 +165,7 @@ var _ = Describe("reset-org-default-isolation-segment Command", func() {
 					var expectedErr error
 					BeforeEach(func() {
 						expectedErr = errors.New("some error")
-						fakeActor.ResetOrganizationDefaultIsolationSegmentReturns(v3action.Warnings{"warning-3", "warning-4"}, expectedErr)
+						fakeActor.ResetOrganizationDefaultIsolationSegmentReturns(v7action.Warnings{"warning-3", "warning-4"}, expectedErr)
 					})
 
 					It("returns the warnings and error", func() {

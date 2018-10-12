@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
@@ -97,7 +97,7 @@ var _ = Describe("v3-create-app Command", func() {
 
 		When("the create is successful", func() {
 			BeforeEach(func() {
-				fakeActor.CreateApplicationInSpaceReturns(v3action.Application{}, v3action.Warnings{"I am a warning", "I am also a warning"}, nil)
+				fakeActor.CreateApplicationInSpaceReturns(v7action.Application{}, v7action.Warnings{"I am a warning", "I am also a warning"}, nil)
 			})
 
 			It("displays the header and ok", func() {
@@ -112,7 +112,7 @@ var _ = Describe("v3-create-app Command", func() {
 				Expect(fakeActor.CreateApplicationInSpaceCallCount()).To(Equal(1))
 
 				createApp, createSpaceGUID := fakeActor.CreateApplicationInSpaceArgsForCall(0)
-				Expect(createApp).To(Equal(v3action.Application{
+				Expect(createApp).To(Equal(v7action.Application{
 					Name: app,
 				}))
 				Expect(createSpaceGUID).To(Equal("some-space-guid"))
@@ -129,7 +129,7 @@ var _ = Describe("v3-create-app Command", func() {
 					Expect(fakeActor.CreateApplicationInSpaceCallCount()).To(Equal(1))
 
 					createApp, createSpaceGUID := fakeActor.CreateApplicationInSpaceArgsForCall(0)
-					Expect(createApp).To(Equal(v3action.Application{
+					Expect(createApp).To(Equal(v7action.Application{
 						Name:          app,
 						LifecycleType: constant.AppLifecycleTypeDocker,
 					}))
@@ -144,7 +144,7 @@ var _ = Describe("v3-create-app Command", func() {
 
 				BeforeEach(func() {
 					expectedErr = errors.New("I am an error")
-					fakeActor.CreateApplicationInSpaceReturns(v3action.Application{}, v3action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
+					fakeActor.CreateApplicationInSpaceReturns(v7action.Application{}, v7action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
 				})
 
 				It("displays the header and error", func() {
@@ -159,7 +159,7 @@ var _ = Describe("v3-create-app Command", func() {
 
 			Context("due to an ApplicationAlreadyExistsError", func() {
 				BeforeEach(func() {
-					fakeActor.CreateApplicationInSpaceReturns(v3action.Application{}, v3action.Warnings{"I am a warning", "I am also a warning"}, actionerror.ApplicationAlreadyExistsError{})
+					fakeActor.CreateApplicationInSpaceReturns(v7action.Application{}, v7action.Warnings{"I am a warning", "I am also a warning"}, actionerror.ApplicationAlreadyExistsError{})
 				})
 
 				It("displays the header and ok", func() {

@@ -8,7 +8,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
 	"code.cloudfoundry.org/cli/actor/v2v3action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -102,7 +102,7 @@ func (cmd *PushCommand) Setup(config command.Config, ui command.UI) error {
 	}
 
 	v2Actor := v2action.NewActor(ccClient, uaaClient, config)
-	v3Actor := v3action.NewActor(ccClientV3, config, sharedActor, nil)
+	v3Actor := v7action.NewActor(ccClientV3, config, sharedActor, nil)
 
 	cmd.RestartActor = v2Actor
 	cmd.Actor = pushaction.NewActor(v2Actor, v3Actor, sharedActor)

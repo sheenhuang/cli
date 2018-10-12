@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -18,7 +18,7 @@ import (
 
 type CreateIsolationSegmentActor interface {
 	CloudControllerAPIVersion() string
-	CreateIsolationSegmentByName(isolationSegment v3action.IsolationSegment) (v3action.Warnings, error)
+	CreateIsolationSegmentByName(isolationSegment v7action.IsolationSegment) (v7action.Warnings, error)
 }
 
 type CreateIsolationSegmentCommand struct {
@@ -45,7 +45,7 @@ func (cmd *CreateIsolationSegmentCommand) Setup(config command.Config, ui comman
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, nil, nil)
+	cmd.Actor = v7action.NewActor(client, config, nil, nil)
 
 	return nil
 }
@@ -71,7 +71,7 @@ func (cmd CreateIsolationSegmentCommand) Execute(args []string) error {
 		"CurrentUser": user.Name,
 	})
 
-	warnings, err := cmd.Actor.CreateIsolationSegmentByName(v3action.IsolationSegment{
+	warnings, err := cmd.Actor.CreateIsolationSegmentByName(v7action.IsolationSegment{
 		Name: cmd.RequiredArgs.IsolationSegmentName,
 	})
 	cmd.UI.DisplayWarnings(warnings)

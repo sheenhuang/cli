@@ -2,7 +2,7 @@ package v3
 
 import (
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/v3/shared"
@@ -12,7 +12,7 @@ import (
 
 type SetEnvActor interface {
 	CloudControllerAPIVersion() string
-	SetEnvironmentVariableByApplicationNameAndSpace(appName string, spaceGUID string, envPair v3action.EnvironmentVariablePair) (v3action.Warnings, error)
+	SetEnvironmentVariableByApplicationNameAndSpace(appName string, spaceGUID string, envPair v7action.EnvironmentVariablePair) (v7action.Warnings, error)
 }
 
 type SetEnvCommand struct {
@@ -35,7 +35,7 @@ func (cmd *SetEnvCommand) Setup(config command.Config, ui command.UI) error {
 	if err != nil {
 		return err
 	}
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 
 	return nil
 }
@@ -63,7 +63,7 @@ func (cmd SetEnvCommand) Execute(args []string) error {
 	warnings, err := cmd.Actor.SetEnvironmentVariableByApplicationNameAndSpace(
 		appName,
 		cmd.Config.TargetedSpace().GUID,
-		v3action.EnvironmentVariablePair{
+		v7action.EnvironmentVariablePair{
 			Key:   cmd.RequiredArgs.EnvironmentVariableName,
 			Value: string(cmd.RequiredArgs.EnvironmentVariableValue),
 		})

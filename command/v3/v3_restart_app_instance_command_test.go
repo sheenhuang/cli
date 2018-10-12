@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -119,7 +119,7 @@ var _ = Describe("v3-restart-app-instance Command", func() {
 
 		When("restarting the specified instance returns an error", func() {
 			BeforeEach(func() {
-				fakeActor.DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns(v3action.Warnings{"some-warning"}, errors.New("some-error"))
+				fakeActor.DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns(v7action.Warnings{"some-warning"}, errors.New("some-error"))
 			})
 
 			It("displays all warnings and returns the error", func() {
@@ -132,7 +132,7 @@ var _ = Describe("v3-restart-app-instance Command", func() {
 
 		When("restarting the specified instance succeeds", func() {
 			BeforeEach(func() {
-				fakeActor.DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns(v3action.Warnings{"some-warning"}, nil)
+				fakeActor.DeleteInstanceByApplicationNameSpaceProcessTypeAndIndexReturns(v7action.Warnings{"some-warning"}, nil)
 			})
 
 			It("deletes application process instance", func() {

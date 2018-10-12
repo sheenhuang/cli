@@ -7,8 +7,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/pushaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
-	"code.cloudfoundry.org/cli/actor/v3action/v3actionfakes"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -62,13 +61,13 @@ func FillInValues(tuples []Step, state pushaction.PushState) func(pushaction.Pus
 }
 
 type LogEvent struct {
-	Log   *v3action.LogMessage
+	Log   *v7action.LogMessage
 	Error error
 }
 
-func ReturnLogs(logevents []LogEvent, passedWarnings v3action.Warnings, passedError error) func(appName string, spaceGUID string, client v3action.NOAAClient) (<-chan *v3action.LogMessage, <-chan error, v3action.Warnings, error) {
-	return func(appName string, spaceGUID string, client v3action.NOAAClient) (<-chan *v3action.LogMessage, <-chan error, v3action.Warnings, error) {
-		logStream := make(chan *v3action.LogMessage)
+func ReturnLogs(logevents []LogEvent, passedWarnings v7action.Warnings, passedError error) func(appName string, spaceGUID string, client v7action.NOAAClient) (<-chan *v7action.LogMessage, <-chan error, v7action.Warnings, error) {
+	return func(appName string, spaceGUID string, client v7action.NOAAClient) (<-chan *v7action.LogMessage, <-chan error, v7action.Warnings, error) {
+		logStream := make(chan *v7action.LogMessage)
 		errStream := make(chan error)
 		go func() {
 			defer close(logStream)
@@ -97,7 +96,7 @@ var _ = Describe("v3-push Command", func() {
 		fakeActor        *v3fakes.FakeV3PushActor
 		fakeVersionActor *v3fakes.FakeV3PushVersionActor
 		fakeProgressBar  *v3fakes.FakeProgressBar
-		fakeNOAAClient   *v3actionfakes.FakeNOAAClient
+		fakeNOAAClient   *v3fakes.FakeNOAAClient
 		binaryName       string
 		executeErr       error
 
@@ -114,7 +113,7 @@ var _ = Describe("v3-push Command", func() {
 		fakeActor = new(v3fakes.FakeV3PushActor)
 		fakeVersionActor = new(v3fakes.FakeV3PushVersionActor)
 		fakeProgressBar = new(v3fakes.FakeProgressBar)
-		fakeNOAAClient = new(v3actionfakes.FakeNOAAClient)
+		fakeNOAAClient = new(v3fakes.FakeNOAAClient)
 
 		binaryName = "faceman"
 		fakeConfig.BinaryNameReturns(binaryName)
@@ -213,7 +212,7 @@ var _ = Describe("v3-push Command", func() {
 						fakeActor.ConceptualizeReturns(
 							[]pushaction.PushState{
 								{
-									Application: v3action.Application{Name: appName},
+									Application: v7action.Application{Name: appName},
 								},
 							},
 							pushaction.Warnings{"some-warning-1"}, nil)
@@ -302,11 +301,11 @@ var _ = Describe("v3-push Command", func() {
 							BeforeEach(func() {
 								fakeVersionActor.GetStreamingLogsForApplicationByNameAndSpaceStub = ReturnLogs(
 									[]LogEvent{
-										{Log: v3action.NewLogMessage("log-message-1", 1, time.Now(), v3action.StagingLog, "source-instance")},
-										{Log: v3action.NewLogMessage("log-message-2", 1, time.Now(), v3action.StagingLog, "source-instance")},
-										{Log: v3action.NewLogMessage("log-message-3", 1, time.Now(), "potato", "source-instance")},
+										{Log: v7action.NewLogMessage("log-message-1", 1, time.Now(), v7action.StagingLog, "source-instance")},
+										{Log: v7action.NewLogMessage("log-message-2", 1, time.Now(), v7action.StagingLog, "source-instance")},
+										{Log: v7action.NewLogMessage("log-message-3", 1, time.Now(), "potato", "source-instance")},
 									},
-									v3action.Warnings{"log-warning-1", "log-warning-2"},
+									v7action.Warnings{"log-warning-1", "log-warning-2"},
 									nil,
 								)
 							})
@@ -334,9 +333,9 @@ var _ = Describe("v3-push Command", func() {
 									[]LogEvent{
 										{Error: errors.New("some-random-err")},
 										{Error: actionerror.NOAATimeoutError{}},
-										{Log: v3action.NewLogMessage("log-message-1", 1, time.Now(), v3action.StagingLog, "source-instance")},
+										{Log: v7action.NewLogMessage("log-message-1", 1, time.Now(), v7action.StagingLog, "source-instance")},
 									},
-									v3action.Warnings{"log-warning-1", "log-warning-2"},
+									v7action.Warnings{"log-warning-1", "log-warning-2"},
 									nil,
 								)
 							})
@@ -358,7 +357,7 @@ var _ = Describe("v3-push Command", func() {
 						BeforeEach(func() {
 							fakeActor.ActualizeStub = FillInValues([]Step{
 								{},
-							}, pushaction.PushState{Application: v3action.Application{GUID: "potato"}})
+							}, pushaction.PushState{Application: v7action.Application{GUID: "potato"}})
 						})
 
 						// It("outputs flavor text prior to generating app configuration", func() {
@@ -366,7 +365,7 @@ var _ = Describe("v3-push Command", func() {
 
 						When("restarting the app succeeds", func() {
 							BeforeEach(func() {
-								fakeVersionActor.RestartApplicationReturns(v3action.Warnings{"some-restart-warning"}, nil)
+								fakeVersionActor.RestartApplicationReturns(v7action.Warnings{"some-restart-warning"}, nil)
 							})
 
 							It("restarts the app and displays warnings", func() {
@@ -378,8 +377,8 @@ var _ = Describe("v3-push Command", func() {
 
 							When("polling the restart succeeds", func() {
 								BeforeEach(func() {
-									fakeVersionActor.PollStartStub = func(appGUID string, warnings chan<- v3action.Warnings) error {
-										warnings <- v3action.Warnings{"some-poll-warning-1", "some-poll-warning-2"}
+									fakeVersionActor.PollStartStub = func(appGUID string, warnings chan<- v7action.Warnings) error {
+										warnings <- v7action.Warnings{"some-poll-warning-1", "some-poll-warning-2"}
 										return nil
 									}
 								})
@@ -394,8 +393,8 @@ var _ = Describe("v3-push Command", func() {
 
 							When("polling the start fails", func() {
 								BeforeEach(func() {
-									fakeVersionActor.PollStartStub = func(appGUID string, warnings chan<- v3action.Warnings) error {
-										warnings <- v3action.Warnings{"some-poll-warning-1", "some-poll-warning-2"}
+									fakeVersionActor.PollStartStub = func(appGUID string, warnings chan<- v7action.Warnings) error {
+										warnings <- v7action.Warnings{"some-poll-warning-1", "some-poll-warning-2"}
 										return errors.New("some-error")
 									}
 								})
@@ -424,7 +423,7 @@ var _ = Describe("v3-push Command", func() {
 
 						When("restarting the app fails", func() {
 							BeforeEach(func() {
-								fakeVersionActor.RestartApplicationReturns(v3action.Warnings{"some-restart-warning"}, errors.New("restart failure"))
+								fakeVersionActor.RestartApplicationReturns(v7action.Warnings{"some-restart-warning"}, errors.New("restart failure"))
 							})
 
 							It("returns an error and any warnings", func() {

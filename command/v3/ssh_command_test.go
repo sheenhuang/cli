@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -82,17 +82,17 @@ var _ = Describe("ssh Command", func() {
 			})
 
 			When("getting the secure shell authentication information succeeds", func() {
-				var sshAuth v3action.SSHAuthentication
+				var sshAuth v7action.SSHAuthentication
 
 				BeforeEach(func() {
-					sshAuth = v3action.SSHAuthentication{
+					sshAuth = v7action.SSHAuthentication{
 						Endpoint:           "some-endpoint",
 						HostKeyFingerprint: "some-fingerprint",
 						Passcode:           "some-passcode",
 						Username:           "some-username",
 					}
 
-					fakeActor.GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns(sshAuth, v3action.Warnings{"some-warnings"}, nil)
+					fakeActor.GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns(sshAuth, v7action.Warnings{"some-warnings"}, nil)
 				})
 
 				When("executing the secure shell succeeds", func() {
@@ -173,7 +173,7 @@ var _ = Describe("ssh Command", func() {
 
 			When("getting the secure shell authentication fails", func() {
 				BeforeEach(func() {
-					fakeActor.GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns(v3action.SSHAuthentication{}, v3action.Warnings{"some-warnings"}, errors.New("some-error"))
+					fakeActor.GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns(v7action.SSHAuthentication{}, v7action.Warnings{"some-warnings"}, errors.New("some-error"))
 				})
 
 				It("returns the error and displays all warnings", func() {

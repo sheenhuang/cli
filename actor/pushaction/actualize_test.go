@@ -8,7 +8,7 @@ import (
 	. "code.cloudfoundry.org/cli/actor/pushaction"
 	"code.cloudfoundry.org/cli/actor/pushaction/pushactionfakes"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 
 	. "github.com/onsi/ginkgo"
@@ -102,7 +102,7 @@ var _ = Describe("Actualize", func() {
 
 		fakeProgressBar = new(pushactionfakes.FakeProgressBar)
 		state = PushState{
-			Application: v3action.Application{
+			Application: v7action.Application{
 				Name: "some-app",
 			},
 			SpaceGUID: "some-space-guid",
@@ -128,7 +128,7 @@ var _ = Describe("Actualize", func() {
 
 				Eventually(stateStream).Should(Receive(MatchFields(IgnoreExtras,
 					Fields{
-						"Application": Equal(v3action.Application{
+						"Application": Equal(v7action.Application{
 							Name: "some-app",
 							GUID: "some-app-guid",
 						}),
@@ -140,15 +140,15 @@ var _ = Describe("Actualize", func() {
 
 		When("the application does not exist", func() {
 			When("the creation is successful", func() {
-				var expectedApp v3action.Application
+				var expectedApp v7action.Application
 
 				BeforeEach(func() {
-					expectedApp = v3action.Application{
+					expectedApp = v7action.Application{
 						GUID: "some-app-guid",
 						Name: "some-app",
 					}
 
-					fakeV3Actor.CreateApplicationInSpaceReturns(expectedApp, v3action.Warnings{"some-app-warnings"}, nil)
+					fakeV3Actor.CreateApplicationInSpaceReturns(expectedApp, v7action.Warnings{"some-app-warnings"}, nil)
 				})
 
 				It("returns an app created event, warnings, and updated state", func() {
@@ -174,7 +174,7 @@ var _ = Describe("Actualize", func() {
 				BeforeEach(func() {
 					expectedErr = errors.New("SPICY!!")
 
-					fakeV3Actor.CreateApplicationInSpaceReturns(v3action.Application{}, v3action.Warnings{"some-app-warnings"}, expectedErr)
+					fakeV3Actor.CreateApplicationInSpaceReturns(v7action.Application{}, v7action.Warnings{"some-app-warnings"}, expectedErr)
 				})
 
 				It("returns warnings and error", func() {
@@ -189,7 +189,7 @@ var _ = Describe("Actualize", func() {
 		When("app bits are provided", func() {
 			BeforeEach(func() {
 				state = PushState{
-					Application: v3action.Application{
+					Application: v7action.Application{
 						Name: "some-app",
 						GUID: "some-app-guid",
 					},
@@ -229,7 +229,7 @@ var _ = Describe("Actualize", func() {
 
 				When("the package creation is successful", func() {
 					BeforeEach(func() {
-						fakeV3Actor.CreateBitsPackageByApplicationReturns(v3action.Package{GUID: "some-guid"}, v3action.Warnings{"some-create-package-warning"}, nil)
+						fakeV3Actor.CreateBitsPackageByApplicationReturns(v7action.Package{GUID: "some-guid"}, v7action.Warnings{"some-create-package-warning"}, nil)
 					})
 
 					It("reads the archive", func() {
@@ -249,7 +249,7 @@ var _ = Describe("Actualize", func() {
 							Eventually(fakeV3Actor.UploadBitsPackageCallCount).Should(Equal(1))
 							pkg, resource, _, size := fakeV3Actor.UploadBitsPackageArgsForCall(0)
 
-							Expect(pkg).To(Equal(v3action.Package{GUID: "some-guid"}))
+							Expect(pkg).To(Equal(v7action.Package{GUID: "some-guid"}))
 							Expect(resource).To(ConsistOf(sharedaction.Resource{
 								Filename: "some-matched-filename",
 								Size:     6,
@@ -259,7 +259,7 @@ var _ = Describe("Actualize", func() {
 
 						When("the upload is successful", func() {
 							BeforeEach(func() {
-								fakeV3Actor.UploadBitsPackageReturns(v3action.Package{GUID: "some-guid"}, v3action.Warnings{"some-upload-package-warning"}, nil)
+								fakeV3Actor.UploadBitsPackageReturns(v7action.Package{GUID: "some-guid"}, v7action.Warnings{"some-upload-package-warning"}, nil)
 							})
 
 							It("returns an upload complete event and warnings", func() {
@@ -274,7 +274,7 @@ var _ = Describe("Actualize", func() {
 
 									BeforeEach(func() {
 										someErr = errors.New("I AM A BANANA")
-										fakeV3Actor.UploadBitsPackageReturns(v3action.Package{}, v3action.Warnings{"upload-warnings-1", "upload-warnings-2"}, ccerror.PipeSeekError{Err: someErr})
+										fakeV3Actor.UploadBitsPackageReturns(v7action.Package{}, v7action.Warnings{"upload-warnings-1", "upload-warnings-2"}, ccerror.PipeSeekError{Err: someErr})
 									})
 
 									It("should send a RetryUpload event and retry uploading", func() {
@@ -299,7 +299,7 @@ var _ = Describe("Actualize", func() {
 
 								When("the upload error is not a retryable error", func() {
 									BeforeEach(func() {
-										fakeV3Actor.UploadBitsPackageReturns(v3action.Package{}, v3action.Warnings{"upload-warnings-1", "upload-warnings-2"}, errors.New("dios mio"))
+										fakeV3Actor.UploadBitsPackageReturns(v7action.Package{}, v7action.Warnings{"upload-warnings-1", "upload-warnings-2"}, errors.New("dios mio"))
 									})
 
 									It("sends warnings and errors, then stops", func() {
@@ -326,7 +326,7 @@ var _ = Describe("Actualize", func() {
 
 					When("the package creation errors", func() {
 						BeforeEach(func() {
-							fakeV3Actor.CreateBitsPackageByApplicationReturns(v3action.Package{}, v3action.Warnings{"package-creation-warning"}, errors.New("the bits!"))
+							fakeV3Actor.CreateBitsPackageByApplicationReturns(v7action.Package{}, v7action.Warnings{"package-creation-warning"}, errors.New("the bits!"))
 						})
 
 						It("it returns errors and warnings", func() {
@@ -356,7 +356,7 @@ var _ = Describe("Actualize", func() {
 	Describe("polling package", func() {
 		When("the the polling is succesful", func() {
 			BeforeEach(func() {
-				fakeV3Actor.PollPackageReturns(v3action.Package{}, v3action.Warnings{"some-poll-package-warning"}, nil)
+				fakeV3Actor.PollPackageReturns(v7action.Package{}, v7action.Warnings{"some-poll-package-warning"}, nil)
 			})
 
 			It("returns warnings", func() {
@@ -371,7 +371,7 @@ var _ = Describe("Actualize", func() {
 
 			BeforeEach(func() {
 				someErr = errors.New("I AM A BANANA")
-				fakeV3Actor.PollPackageReturns(v3action.Package{}, v3action.Warnings{"some-poll-package-warning"}, someErr)
+				fakeV3Actor.PollPackageReturns(v7action.Package{}, v7action.Warnings{"some-poll-package-warning"}, someErr)
 			})
 
 			It("returns errors and warnings", func() {
@@ -384,7 +384,7 @@ var _ = Describe("Actualize", func() {
 
 	Describe("staging package", func() {
 		BeforeEach(func() {
-			fakeV3Actor.PollPackageReturns(v3action.Package{GUID: "some-pkg-guid"}, nil, nil)
+			fakeV3Actor.PollPackageReturns(v7action.Package{GUID: "some-pkg-guid"}, nil, nil)
 		})
 
 		It("stages the application using the package guid", func() {
@@ -395,7 +395,7 @@ var _ = Describe("Actualize", func() {
 
 		When("staging is successful", func() {
 			BeforeEach(func() {
-				fakeV3Actor.StageApplicationPackageReturns(v3action.Build{GUID: "some-build-guid"}, v3action.Warnings{"some-staging-warning"}, nil)
+				fakeV3Actor.StageApplicationPackageReturns(v7action.Build{GUID: "some-build-guid"}, v7action.Warnings{"some-staging-warning"}, nil)
 			})
 
 			It("returns a polling build event and warnings", func() {
@@ -407,7 +407,7 @@ var _ = Describe("Actualize", func() {
 
 		When("staging errors", func() {
 			BeforeEach(func() {
-				fakeV3Actor.StageApplicationPackageReturns(v3action.Build{}, v3action.Warnings{"some-staging-warning"}, errors.New("ahhh, i failed"))
+				fakeV3Actor.StageApplicationPackageReturns(v7action.Build{}, v7action.Warnings{"some-staging-warning"}, errors.New("ahhh, i failed"))
 			})
 
 			It("returns errors and warnings", func() {
@@ -421,7 +421,7 @@ var _ = Describe("Actualize", func() {
 	Describe("polling build", func() {
 		When("the the polling is succesful", func() {
 			BeforeEach(func() {
-				fakeV3Actor.PollBuildReturns(v3action.Droplet{}, v3action.Warnings{"some-poll-build-warning"}, nil)
+				fakeV3Actor.PollBuildReturns(v7action.Droplet{}, v7action.Warnings{"some-poll-build-warning"}, nil)
 			})
 
 			It("returns a staging complete event and warnings", func() {
@@ -436,7 +436,7 @@ var _ = Describe("Actualize", func() {
 
 			BeforeEach(func() {
 				someErr = errors.New("I AM A BANANA")
-				fakeV3Actor.PollBuildReturns(v3action.Droplet{}, v3action.Warnings{"some-poll-build-warning"}, someErr)
+				fakeV3Actor.PollBuildReturns(v7action.Droplet{}, v7action.Warnings{"some-poll-build-warning"}, someErr)
 			})
 
 			It("returns errors and warnings", func() {
@@ -450,7 +450,7 @@ var _ = Describe("Actualize", func() {
 	Describe("setting droplet", func() {
 		When("setting the droplet is successful", func() {
 			BeforeEach(func() {
-				fakeV3Actor.SetApplicationDropletReturns(v3action.Warnings{"some-set-droplet-warning"}, nil)
+				fakeV3Actor.SetApplicationDropletReturns(v7action.Warnings{"some-set-droplet-warning"}, nil)
 			})
 
 			It("returns a SetDropletComplete event and warnings", func() {
@@ -462,7 +462,7 @@ var _ = Describe("Actualize", func() {
 
 		When("setting the droplet errors", func() {
 			BeforeEach(func() {
-				fakeV3Actor.SetApplicationDropletReturns(v3action.Warnings{"some-set-droplet-warning"}, errors.New("the climate is arid"))
+				fakeV3Actor.SetApplicationDropletReturns(v7action.Warnings{"some-set-droplet-warning"}, errors.New("the climate is arid"))
 			})
 
 			It("returns an error and warnings", func() {

@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -29,7 +29,7 @@ type SpaceActor interface {
 
 type SpaceActorV3 interface {
 	CloudControllerAPIVersion() string
-	GetEffectiveIsolationSegmentBySpace(spaceGUID string, orgDefaultIsolationSegmentGUID string) (v3action.IsolationSegment, v3action.Warnings, error)
+	GetEffectiveIsolationSegmentBySpace(spaceGUID string, orgDefaultIsolationSegmentGUID string) (v7action.IsolationSegment, v7action.Warnings, error)
 }
 
 type SpaceCommand struct {
@@ -63,7 +63,7 @@ func (cmd *SpaceCommand) Setup(config command.Config, ui command.UI) error {
 			return err
 		}
 	} else {
-		cmd.ActorV3 = v3action.NewActor(ccClientV3, config, nil, nil)
+		cmd.ActorV3 = v7action.NewActor(ccClientV3, config, nil, nil)
 	}
 
 	return nil

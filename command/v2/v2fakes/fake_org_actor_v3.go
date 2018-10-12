@@ -4,24 +4,24 @@ package v2fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v2"
 )
 
 type FakeOrgActorV3 struct {
-	GetIsolationSegmentsByOrganizationStub        func(orgName string) ([]v3action.IsolationSegment, v3action.Warnings, error)
+	GetIsolationSegmentsByOrganizationStub        func(orgName string) ([]v7action.IsolationSegment, v7action.Warnings, error)
 	getIsolationSegmentsByOrganizationMutex       sync.RWMutex
 	getIsolationSegmentsByOrganizationArgsForCall []struct {
 		orgName string
 	}
 	getIsolationSegmentsByOrganizationReturns struct {
-		result1 []v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 []v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}
 	getIsolationSegmentsByOrganizationReturnsOnCall map[int]struct {
-		result1 []v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 []v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}
 	CloudControllerAPIVersionStub        func() string
@@ -37,7 +37,7 @@ type FakeOrgActorV3 struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeOrgActorV3) GetIsolationSegmentsByOrganization(orgName string) ([]v3action.IsolationSegment, v3action.Warnings, error) {
+func (fake *FakeOrgActorV3) GetIsolationSegmentsByOrganization(orgName string) ([]v7action.IsolationSegment, v7action.Warnings, error) {
 	fake.getIsolationSegmentsByOrganizationMutex.Lock()
 	ret, specificReturn := fake.getIsolationSegmentsByOrganizationReturnsOnCall[len(fake.getIsolationSegmentsByOrganizationArgsForCall)]
 	fake.getIsolationSegmentsByOrganizationArgsForCall = append(fake.getIsolationSegmentsByOrganizationArgsForCall, struct {
@@ -66,27 +66,27 @@ func (fake *FakeOrgActorV3) GetIsolationSegmentsByOrganizationArgsForCall(i int)
 	return fake.getIsolationSegmentsByOrganizationArgsForCall[i].orgName
 }
 
-func (fake *FakeOrgActorV3) GetIsolationSegmentsByOrganizationReturns(result1 []v3action.IsolationSegment, result2 v3action.Warnings, result3 error) {
+func (fake *FakeOrgActorV3) GetIsolationSegmentsByOrganizationReturns(result1 []v7action.IsolationSegment, result2 v7action.Warnings, result3 error) {
 	fake.GetIsolationSegmentsByOrganizationStub = nil
 	fake.getIsolationSegmentsByOrganizationReturns = struct {
-		result1 []v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 []v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeOrgActorV3) GetIsolationSegmentsByOrganizationReturnsOnCall(i int, result1 []v3action.IsolationSegment, result2 v3action.Warnings, result3 error) {
+func (fake *FakeOrgActorV3) GetIsolationSegmentsByOrganizationReturnsOnCall(i int, result1 []v7action.IsolationSegment, result2 v7action.Warnings, result3 error) {
 	fake.GetIsolationSegmentsByOrganizationStub = nil
 	if fake.getIsolationSegmentsByOrganizationReturnsOnCall == nil {
 		fake.getIsolationSegmentsByOrganizationReturnsOnCall = make(map[int]struct {
-			result1 []v3action.IsolationSegment
-			result2 v3action.Warnings
+			result1 []v7action.IsolationSegment
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getIsolationSegmentsByOrganizationReturnsOnCall[i] = struct {
-		result1 []v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 []v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

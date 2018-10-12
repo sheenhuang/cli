@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -96,7 +96,7 @@ var _ = Describe("disable-org-isolation Command", func() {
 
 		When("revoking is successful", func() {
 			BeforeEach(func() {
-				fakeActor.DeleteIsolationSegmentOrganizationByNameReturns(v3action.Warnings{"warning 1", "warning 2"}, nil)
+				fakeActor.DeleteIsolationSegmentOrganizationByNameReturns(v7action.Warnings{"warning 1", "warning 2"}, nil)
 			})
 
 			It("Isolation segnment is revoked from org", func() {
@@ -118,7 +118,7 @@ var _ = Describe("disable-org-isolation Command", func() {
 
 			BeforeEach(func() {
 				expectedErr = errors.New("ZOMG")
-				fakeActor.DeleteIsolationSegmentOrganizationByNameReturns(v3action.Warnings{"warning 1", "warning 2"}, expectedErr)
+				fakeActor.DeleteIsolationSegmentOrganizationByNameReturns(v7action.Warnings{"warning 1", "warning 2"}, expectedErr)
 			})
 
 			It("returns the error", func() {

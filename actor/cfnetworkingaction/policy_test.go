@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	. "code.cloudfoundry.org/cli/actor/cfnetworkingaction"
 	"code.cloudfoundry.org/cli/actor/cfnetworkingaction/cfnetworkingactionfakes"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -26,13 +26,13 @@ var _ = Describe("Policy", func() {
 		fakeV3Actor = new(cfnetworkingactionfakes.FakeV3Actor)
 		fakeNetworkingClient = new(cfnetworkingactionfakes.FakeNetworkingClient)
 
-		fakeV3Actor.GetApplicationByNameAndSpaceStub = func(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+		fakeV3Actor.GetApplicationByNameAndSpaceStub = func(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error) {
 			if appName == "appA" {
-				return v3action.Application{GUID: "appAGUID"}, []string{"v3ActorWarningA"}, nil
+				return v7action.Application{GUID: "appAGUID"}, []string{"v3ActorWarningA"}, nil
 			} else if appName == "appB" {
-				return v3action.Application{GUID: "appBGUID"}, []string{"v3ActorWarningB"}, nil
+				return v7action.Application{GUID: "appBGUID"}, []string{"v3ActorWarningB"}, nil
 			}
-			return v3action.Application{}, nil, nil
+			return v7action.Application{}, nil, nil
 		}
 
 		actor = NewActor(fakeNetworkingClient, fakeV3Actor)
@@ -82,7 +82,7 @@ var _ = Describe("Policy", func() {
 
 		When("getting the source app fails ", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3action.Application{}, []string{"v3ActorWarningA"}, errors.New("banana"))
+				fakeV3Actor.GetApplicationByNameAndSpaceReturns(v7action.Application{}, []string{"v3ActorWarningA"}, errors.New("banana"))
 			})
 			It("returns a sensible error", func() {
 				Expect(warnings).To(Equal(Warnings([]string{"v3ActorWarningA"})))
@@ -92,11 +92,11 @@ var _ = Describe("Policy", func() {
 
 		When("getting the destination app fails ", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationByNameAndSpaceStub = func(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+				fakeV3Actor.GetApplicationByNameAndSpaceStub = func(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error) {
 					if appName == "appB" {
-						return v3action.Application{}, []string{"v3ActorWarningB"}, errors.New("banana")
+						return v7action.Application{}, []string{"v3ActorWarningB"}, errors.New("banana")
 					}
-					return v3action.Application{}, []string{"v3ActorWarningA"}, nil
+					return v7action.Application{}, []string{"v3ActorWarningA"}, nil
 				}
 			})
 			It("returns a sensible error", func() {
@@ -160,8 +160,8 @@ var _ = Describe("Policy", func() {
 				},
 			}}, nil)
 
-			fakeV3Actor.GetApplicationsBySpaceStub = func(_ string) ([]v3action.Application, v3action.Warnings, error) {
-				return []v3action.Application{
+			fakeV3Actor.GetApplicationsBySpaceStub = func(_ string) ([]v7action.Application, v7action.Warnings, error) {
+				return []v7action.Application{
 					{
 						Name: "appA",
 						GUID: "appAGUID",
@@ -213,7 +213,7 @@ var _ = Describe("Policy", func() {
 
 		When("getting the applications fails", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationsBySpaceReturns([]v3action.Application{}, []string{"GetApplicationsBySpaceWarning"}, errors.New("banana"))
+				fakeV3Actor.GetApplicationsBySpaceReturns([]v7action.Application{}, []string{"GetApplicationsBySpaceWarning"}, errors.New("banana"))
 			})
 
 			It("returns a sensible error", func() {
@@ -225,11 +225,11 @@ var _ = Describe("Policy", func() {
 
 		When("getting the source app fails ", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationByNameAndSpaceStub = func(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+				fakeV3Actor.GetApplicationByNameAndSpaceStub = func(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error) {
 					if appName == "appA" {
-						return v3action.Application{}, []string{"v3ActorWarningA"}, errors.New("banana")
+						return v7action.Application{}, []string{"v3ActorWarningA"}, errors.New("banana")
 					}
-					return v3action.Application{}, []string{"v3ActorWarningB"}, nil
+					return v7action.Application{}, []string{"v3ActorWarningB"}, nil
 				}
 
 				srcApp = "appA"
@@ -296,8 +296,8 @@ var _ = Describe("Policy", func() {
 				},
 			}}, nil)
 
-			fakeV3Actor.GetApplicationsBySpaceStub = func(_ string) ([]v3action.Application, v3action.Warnings, error) {
-				return []v3action.Application{
+			fakeV3Actor.GetApplicationsBySpaceStub = func(_ string) ([]v7action.Application, v7action.Warnings, error) {
+				return []v7action.Application{
 					{
 						Name: "appA",
 						GUID: "appAGUID",
@@ -344,7 +344,7 @@ var _ = Describe("Policy", func() {
 
 		When("getting the applications fails", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationsBySpaceReturns([]v3action.Application{}, []string{"GetApplicationsBySpaceWarning"}, errors.New("banana"))
+				fakeV3Actor.GetApplicationsBySpaceReturns([]v7action.Application{}, []string{"GetApplicationsBySpaceWarning"}, errors.New("banana"))
 			})
 
 			It("returns a sensible error", func() {
@@ -438,7 +438,7 @@ var _ = Describe("Policy", func() {
 
 		When("getting the source app fails ", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3action.Application{}, []string{"v3ActorWarningA"}, errors.New("banana"))
+				fakeV3Actor.GetApplicationByNameAndSpaceReturns(v7action.Application{}, []string{"v3ActorWarningA"}, errors.New("banana"))
 			})
 			It("returns a sensible error", func() {
 				Expect(warnings).To(Equal(Warnings([]string{"v3ActorWarningA"})))
@@ -448,8 +448,8 @@ var _ = Describe("Policy", func() {
 
 		When("getting the destination app fails ", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationByNameAndSpaceReturnsOnCall(0, v3action.Application{}, []string{"v3ActorWarningA"}, nil)
-				fakeV3Actor.GetApplicationByNameAndSpaceReturnsOnCall(1, v3action.Application{}, []string{"v3ActorWarningB"}, errors.New("banana"))
+				fakeV3Actor.GetApplicationByNameAndSpaceReturnsOnCall(0, v7action.Application{}, []string{"v3ActorWarningA"}, nil)
+				fakeV3Actor.GetApplicationByNameAndSpaceReturnsOnCall(1, v7action.Application{}, []string{"v3ActorWarningB"}, errors.New("banana"))
 			})
 
 			It("returns a sensible error", func() {

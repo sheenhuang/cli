@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/pushaction"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -18,6 +18,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 )
+
+//go:generate counterfeiter . NOAAClient
+
+type NOAAClient interface {
+	v7action.NOAAClient
+}
 
 //go:generate counterfeiter . ProgressBar
 
@@ -38,9 +44,9 @@ type V3PushActor interface {
 
 type V3PushVersionActor interface {
 	CloudControllerAPIVersion() string
-	GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v3action.NOAAClient) (<-chan *v3action.LogMessage, <-chan error, v3action.Warnings, error)
-	PollStart(appGUID string, warningsChannel chan<- v3action.Warnings) error
-	RestartApplication(appGUID string) (v3action.Warnings, error)
+	GetStreamingLogsForApplicationByNameAndSpace(appName string, spaceGUID string, client v7action.NOAAClient) (<-chan *v7action.LogMessage, <-chan error, v7action.Warnings, error)
+	PollStart(appGUID string, warningsChannel chan<- v7action.Warnings) error
+	RestartApplication(appGUID string) (v7action.Warnings, error)
 }
 
 type V3PushCommand struct {
@@ -75,7 +81,7 @@ type V3PushCommand struct {
 
 	UI                  command.UI
 	Config              command.Config
-	NOAAClient          v3action.NOAAClient
+	NOAAClient          NOAAClient
 	Actor               V3PushActor
 	VersionActor        V3PushVersionActor
 	SharedActor         command.SharedActor
@@ -103,7 +109,7 @@ func (cmd *V3PushCommand) Setup(config command.Config, ui command.UI) error {
 	if err != nil {
 		return err
 	}
-	v3Actor := v3action.NewActor(ccClient, config, sharedActor, uaaClient)
+	v3Actor := v7action.NewActor(ccClient, config, sharedActor, uaaClient)
 	cmd.VersionActor = v3Actor
 
 	ccClientV2, uaaClientV2, err := sharedV2.NewClients(config, ui, true)
@@ -179,7 +185,7 @@ func (cmd V3PushCommand) Execute(args []string) error {
 			return err
 		}
 
-		pollWarnings := make(chan v3action.Warnings)
+		pollWarnings := make(chan v7action.Warnings)
 		done := make(chan bool)
 		go func() {
 			for {
@@ -300,7 +306,7 @@ func (cmd V3PushCommand) processEvent(appName string, event pushaction.Event) bo
 	return false
 }
 
-func (cmd V3PushCommand) getLogs(logStream <-chan *v3action.LogMessage, errStream <-chan error) {
+func (cmd V3PushCommand) getLogs(logStream <-chan *v7action.LogMessage, errStream <-chan error) {
 	for {
 		select {
 		case logMessage, open := <-logStream:

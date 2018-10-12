@@ -4,12 +4,21 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
 type FakeSetHealthCheckActor struct {
-	SetApplicationProcessHealthCheckTypeByNameAndSpaceStub        func(appName string, spaceGUID string, healthCheckType string, httpEndpoint string, processType string, invocationTimeout int) (v3action.Application, v3action.Warnings, error)
+	CloudControllerAPIVersionStub        func() string
+	cloudControllerAPIVersionMutex       sync.RWMutex
+	cloudControllerAPIVersionArgsForCall []struct{}
+	cloudControllerAPIVersionReturns     struct {
+		result1 string
+	}
+	cloudControllerAPIVersionReturnsOnCall map[int]struct {
+		result1 string
+	}
+	SetApplicationProcessHealthCheckTypeByNameAndSpaceStub        func(appName string, spaceGUID string, healthCheckType string, httpEndpoint string, processType string, invocationTimeout int) (v7action.Application, v7action.Warnings, error)
 	setApplicationProcessHealthCheckTypeByNameAndSpaceMutex       sync.RWMutex
 	setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall []struct {
 		appName           string
@@ -20,20 +29,60 @@ type FakeSetHealthCheckActor struct {
 		invocationTimeout int
 	}
 	setApplicationProcessHealthCheckTypeByNameAndSpaceReturns struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	setApplicationProcessHealthCheckTypeByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameAndSpace(appName string, spaceGUID string, healthCheckType string, httpEndpoint string, processType string, invocationTimeout int) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeSetHealthCheckActor) CloudControllerAPIVersion() string {
+	fake.cloudControllerAPIVersionMutex.Lock()
+	ret, specificReturn := fake.cloudControllerAPIVersionReturnsOnCall[len(fake.cloudControllerAPIVersionArgsForCall)]
+	fake.cloudControllerAPIVersionArgsForCall = append(fake.cloudControllerAPIVersionArgsForCall, struct{}{})
+	fake.recordInvocation("CloudControllerAPIVersion", []interface{}{})
+	fake.cloudControllerAPIVersionMutex.Unlock()
+	if fake.CloudControllerAPIVersionStub != nil {
+		return fake.CloudControllerAPIVersionStub()
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fake.cloudControllerAPIVersionReturns.result1
+}
+
+func (fake *FakeSetHealthCheckActor) CloudControllerAPIVersionCallCount() int {
+	fake.cloudControllerAPIVersionMutex.RLock()
+	defer fake.cloudControllerAPIVersionMutex.RUnlock()
+	return len(fake.cloudControllerAPIVersionArgsForCall)
+}
+
+func (fake *FakeSetHealthCheckActor) CloudControllerAPIVersionReturns(result1 string) {
+	fake.CloudControllerAPIVersionStub = nil
+	fake.cloudControllerAPIVersionReturns = struct {
+		result1 string
+	}{result1}
+}
+
+func (fake *FakeSetHealthCheckActor) CloudControllerAPIVersionReturnsOnCall(i int, result1 string) {
+	fake.CloudControllerAPIVersionStub = nil
+	if fake.cloudControllerAPIVersionReturnsOnCall == nil {
+		fake.cloudControllerAPIVersionReturnsOnCall = make(map[int]struct {
+			result1 string
+		})
+	}
+	fake.cloudControllerAPIVersionReturnsOnCall[i] = struct {
+		result1 string
+	}{result1}
+}
+
+func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameAndSpace(appName string, spaceGUID string, healthCheckType string, httpEndpoint string, processType string, invocationTimeout int) (v7action.Application, v7action.Warnings, error) {
 	fake.setApplicationProcessHealthCheckTypeByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.setApplicationProcessHealthCheckTypeByNameAndSpaceReturnsOnCall[len(fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall)]
 	fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall = append(fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall, struct {
@@ -67,27 +116,27 @@ func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameA
 	return fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall[i].appName, fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall[i].spaceGUID, fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall[i].healthCheckType, fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall[i].httpEndpoint, fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall[i].processType, fake.setApplicationProcessHealthCheckTypeByNameAndSpaceArgsForCall[i].invocationTimeout
 }
 
-func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameAndSpaceReturns(result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.SetApplicationProcessHealthCheckTypeByNameAndSpaceStub = nil
 	fake.setApplicationProcessHealthCheckTypeByNameAndSpaceReturns = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameAndSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameAndSpaceReturnsOnCall(i int, result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.SetApplicationProcessHealthCheckTypeByNameAndSpaceStub = nil
 	if fake.setApplicationProcessHealthCheckTypeByNameAndSpaceReturnsOnCall == nil {
 		fake.setApplicationProcessHealthCheckTypeByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Application
-			result2 v3action.Warnings
+			result1 v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.setApplicationProcessHealthCheckTypeByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
@@ -95,6 +144,8 @@ func (fake *FakeSetHealthCheckActor) SetApplicationProcessHealthCheckTypeByNameA
 func (fake *FakeSetHealthCheckActor) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.cloudControllerAPIVersionMutex.RLock()
+	defer fake.cloudControllerAPIVersionMutex.RUnlock()
 	fake.setApplicationProcessHealthCheckTypeByNameAndSpaceMutex.RLock()
 	defer fake.setApplicationProcessHealthCheckTypeByNameAndSpaceMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}

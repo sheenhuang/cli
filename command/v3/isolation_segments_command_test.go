@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -88,7 +88,7 @@ var _ = Describe("isolation-segments Command", func() {
 			When("there are isolation segments", func() {
 				BeforeEach(func() {
 					fakeActor.GetIsolationSegmentSummariesReturns(
-						[]v3action.IsolationSegmentSummary{
+						[]v7action.IsolationSegmentSummary{
 							{
 								Name:         "some-iso-1",
 								EntitledOrgs: []string{},
@@ -102,7 +102,7 @@ var _ = Describe("isolation-segments Command", func() {
 								EntitledOrgs: []string{"some-org-1", "some-org-2"},
 							},
 						},
-						v3action.Warnings{"warning-1", "warning-2"},
+						v7action.Warnings{"warning-1", "warning-2"},
 						nil,
 					)
 				})
@@ -127,7 +127,7 @@ var _ = Describe("isolation-segments Command", func() {
 			When("there are no isolation segments", func() {
 				BeforeEach(func() {
 					fakeActor.GetIsolationSegmentSummariesReturns(
-						[]v3action.IsolationSegmentSummary{},
+						[]v7action.IsolationSegmentSummary{},
 						nil,
 						nil,
 					)
@@ -149,8 +149,8 @@ var _ = Describe("isolation-segments Command", func() {
 			BeforeEach(func() {
 				expectedError = errors.New("some-error")
 				fakeActor.GetIsolationSegmentSummariesReturns(
-					[]v3action.IsolationSegmentSummary{},
-					v3action.Warnings{"warning-1", "warning-2"},
+					[]v7action.IsolationSegmentSummary{},
+					v7action.Warnings{"warning-1", "warning-2"},
 					expectedError,
 				)
 			})

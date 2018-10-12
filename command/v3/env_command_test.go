@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	. "code.cloudfoundry.org/cli/command/v3"
 	"code.cloudfoundry.org/cli/command/v3/v3fakes"
@@ -89,14 +89,14 @@ var _ = Describe("env Command", func() {
 
 			When("getting the environment returns env vars for all groups", func() {
 				BeforeEach(func() {
-					envGroups := v3action.EnvironmentVariableGroups{
+					envGroups := v7action.EnvironmentVariableGroups{
 						System:               map[string]interface{}{"system-name": map[string]interface{}{"mysql": []string{"system-value"}}},
 						Application:          map[string]interface{}{"application-name": "application-value"},
 						EnvironmentVariables: map[string]interface{}{"user-name": "user-value"},
 						Running:              map[string]interface{}{"running-name": "running-value"},
 						Staging:              map[string]interface{}{"staging-name": "staging-value"},
 					}
-					fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(envGroups, v3action.Warnings{"get-warning-1", "get-warning-2"}, nil)
+					fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(envGroups, v7action.Warnings{"get-warning-1", "get-warning-2"}, nil)
 				})
 
 				It("displays the environment variable and value pair", func() {
@@ -132,7 +132,7 @@ var _ = Describe("env Command", func() {
 
 				Describe("sorting of non-json environment variables", func() {
 					BeforeEach(func() {
-						envGroups := v3action.EnvironmentVariableGroups{
+						envGroups := v7action.EnvironmentVariableGroups{
 							System:      map[string]interface{}{},
 							Application: map[string]interface{}{},
 							EnvironmentVariables: map[string]interface{}{
@@ -151,7 +151,7 @@ var _ = Describe("env Command", func() {
 								"golf":  "1",
 							},
 						}
-						fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(envGroups, v3action.Warnings{"get-warning-1", "get-warning-2"}, nil)
+						fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(envGroups, v7action.Warnings{"get-warning-1", "get-warning-2"}, nil)
 					})
 
 					It("sorts the EnvironmentVariables alphabetically", func() {
@@ -182,14 +182,14 @@ var _ = Describe("env Command", func() {
 
 			When("getting the environment returns empty env vars for all groups", func() {
 				BeforeEach(func() {
-					envGroups := v3action.EnvironmentVariableGroups{
+					envGroups := v7action.EnvironmentVariableGroups{
 						System:               map[string]interface{}{},
 						Application:          map[string]interface{}{},
 						EnvironmentVariables: map[string]interface{}{},
 						Running:              map[string]interface{}{},
 						Staging:              map[string]interface{}{},
 					}
-					fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(envGroups, v3action.Warnings{"get-warning-1", "get-warning-2"}, nil)
+					fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(envGroups, v7action.Warnings{"get-warning-1", "get-warning-2"}, nil)
 				})
 
 				It("displays helpful messages", func() {
@@ -220,7 +220,7 @@ var _ = Describe("env Command", func() {
 				var expectedErr error
 				BeforeEach(func() {
 					expectedErr = errors.New("some-error")
-					fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(v3action.EnvironmentVariableGroups{}, v3action.Warnings{"get-warning-1", "get-warning-2"}, expectedErr)
+					fakeActor.GetEnvironmentVariablesByApplicationNameAndSpaceReturns(v7action.EnvironmentVariableGroups{}, v7action.Warnings{"get-warning-1", "get-warning-2"}, expectedErr)
 				})
 
 				It("returns the error", func() {

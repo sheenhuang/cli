@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	. "code.cloudfoundry.org/cli/command/v3/shared"
 	"code.cloudfoundry.org/cli/util/ui"
 
@@ -16,13 +16,13 @@ import (
 
 var _ = Describe("V3PollStage", func() {
 	var (
-		returnedDroplet       v3action.Droplet
+		returnedDroplet       v7action.Droplet
 		executeErr            error
 		testUI                *ui.UI
-		dropletStream         chan v3action.Droplet
-		warningsStream        chan v3action.Warnings
+		dropletStream         chan v7action.Droplet
+		warningsStream        chan v7action.Warnings
 		errStream             chan error
-		logStream             chan *v3action.LogMessage
+		logStream             chan *v7action.LogMessage
 		logErrStream          chan error
 		closeStreams          func()
 		writeEventsAsync      func(func())
@@ -61,14 +61,14 @@ var _ = Describe("V3PollStage", func() {
 	BeforeEach(func() {
 		// reset assertion variables
 		executeErr = nil
-		returnedDroplet = v3action.Droplet{}
+		returnedDroplet = v7action.Droplet{}
 
 		// create new channels
 		testUI = ui.NewTestUI(nil, NewBuffer(), NewBuffer())
-		dropletStream = make(chan v3action.Droplet)
-		warningsStream = make(chan v3action.Warnings)
+		dropletStream = make(chan v7action.Droplet)
+		warningsStream = make(chan v7action.Warnings)
 		errStream = make(chan error)
-		logStream = make(chan *v3action.LogMessage)
+		logStream = make(chan *v7action.LogMessage)
 		logErrStream = make(chan error)
 
 		finishedWritingEvents = make(chan bool)
@@ -86,7 +86,7 @@ var _ = Describe("V3PollStage", func() {
 	When("the droplet stream contains a droplet GUID", func() {
 		BeforeEach(func() {
 			writeEventsAsync(func() {
-				dropletStream <- v3action.Droplet{GUID: "droplet-guid"}
+				dropletStream <- v7action.Droplet{GUID: "droplet-guid"}
 			})
 		})
 
@@ -101,14 +101,14 @@ var _ = Describe("V3PollStage", func() {
 	When("the warnings stream contains warnings", func() {
 		BeforeEach(func() {
 			writeEventsAsync(func() {
-				warningsStream <- v3action.Warnings{"warning-1", "warning-2"}
+				warningsStream <- v7action.Warnings{"warning-1", "warning-2"}
 			})
 		})
 
 		It("displays the warnings", func() {
 			executePollStage(func() {
 				Expect(executeErr).ToNot(HaveOccurred())
-				Expect(returnedDroplet).To(Equal(v3action.Droplet{}))
+				Expect(returnedDroplet).To(Equal(v7action.Droplet{}))
 			})
 
 			Eventually(testUI.Err).Should(Say("warning-1"))
@@ -120,14 +120,14 @@ var _ = Describe("V3PollStage", func() {
 		Context("and the message is a staging message", func() {
 			BeforeEach(func() {
 				writeEventsAsync(func() {
-					logStream <- v3action.NewLogMessage("some-log-message", 1, time.Now(), v3action.StagingLog, "1")
+					logStream <- v7action.NewLogMessage("some-log-message", 1, time.Now(), v7action.StagingLog, "1")
 				})
 			})
 
 			It("prints the log message", func() {
 				executePollStage(func() {
 					Expect(executeErr).ToNot(HaveOccurred())
-					Expect(returnedDroplet).To(Equal(v3action.Droplet{}))
+					Expect(returnedDroplet).To(Equal(v7action.Droplet{}))
 				})
 				Eventually(testUI.Out).Should(Say("some-log-message"))
 			})
@@ -136,14 +136,14 @@ var _ = Describe("V3PollStage", func() {
 		Context("and the message is not a staging message", func() {
 			BeforeEach(func() {
 				writeEventsAsync(func() {
-					logStream <- v3action.NewLogMessage("some-log-message", 1, time.Now(), "RUN", "1")
+					logStream <- v7action.NewLogMessage("some-log-message", 1, time.Now(), "RUN", "1")
 				})
 			})
 
 			It("ignores the log message", func() {
 				executePollStage(func() {
 					Expect(executeErr).ToNot(HaveOccurred())
-					Expect(returnedDroplet).To(Equal(v3action.Droplet{}))
+					Expect(returnedDroplet).To(Equal(v7action.Droplet{}))
 				})
 				Consistently(testUI.Out).ShouldNot(Say("some-log-message"))
 			})
@@ -160,7 +160,7 @@ var _ = Describe("V3PollStage", func() {
 		It("returns the error without waiting for streams to be closed", func() {
 			executePollStage(func() {
 				Expect(executeErr).To(MatchError("some error"))
-				Expect(returnedDroplet).To(Equal(v3action.Droplet{}))
+				Expect(returnedDroplet).To(Equal(v7action.Droplet{}))
 			})
 		})
 	})
@@ -176,7 +176,7 @@ var _ = Describe("V3PollStage", func() {
 		It("displays the log errors as warnings", func() {
 			executePollStage(func() {
 				Expect(executeErr).ToNot(HaveOccurred())
-				Expect(returnedDroplet).To(Equal(v3action.Droplet{}))
+				Expect(returnedDroplet).To(Equal(v7action.Droplet{}))
 			})
 			Eventually(testUI.Err).Should(Say("timeout connecting to log server, no log will be shown"))
 			Eventually(testUI.Err).Should(Say("some-log-error"))

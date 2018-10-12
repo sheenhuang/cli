@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/v3/shared"
@@ -23,8 +23,8 @@ const (
 //go:generate counterfeiter . TasksActor
 
 type TasksActor interface {
-	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
-	GetApplicationTasks(appGUID string, sortOrder v3action.SortOrder) ([]v3action.Task, v3action.Warnings, error)
+	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
+	GetApplicationTasks(appGUID string, sortOrder v7action.SortOrder) ([]v7action.Task, v7action.Warnings, error)
 }
 
 type TasksCommand struct {
@@ -47,7 +47,7 @@ func (cmd *TasksCommand) Setup(config command.Config, ui command.UI) error {
 	if err != nil {
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, nil, nil)
+	cmd.Actor = v7action.NewActor(client, config, nil, nil)
 
 	return nil
 }
@@ -78,7 +78,7 @@ func (cmd TasksCommand) Execute(args []string) error {
 		"CurrentUser": user.Name,
 	})
 
-	tasks, warnings, err := cmd.Actor.GetApplicationTasks(application.GUID, v3action.Descending)
+	tasks, warnings, err := cmd.Actor.GetApplicationTasks(application.GUID, v7action.Descending)
 	cmd.UI.DisplayWarnings(warnings)
 	if err != nil {
 		return err

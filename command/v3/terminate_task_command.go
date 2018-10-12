@@ -2,7 +2,7 @@ package v3
 
 import (
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -12,9 +12,9 @@ import (
 //go:generate counterfeiter . TerminateTaskActor
 
 type TerminateTaskActor interface {
-	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
-	GetTaskBySequenceIDAndApplication(sequenceID int, appGUID string) (v3action.Task, v3action.Warnings, error)
-	TerminateTask(taskGUID string) (v3action.Task, v3action.Warnings, error)
+	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
+	GetTaskBySequenceIDAndApplication(sequenceID int, appGUID string) (v7action.Task, v7action.Warnings, error)
+	TerminateTask(taskGUID string) (v7action.Task, v7action.Warnings, error)
 }
 
 type TerminateTaskCommand struct {
@@ -37,7 +37,7 @@ func (cmd *TerminateTaskCommand) Setup(config command.Config, ui command.UI) err
 	if err != nil {
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, nil, nil)
+	cmd.Actor = v7action.NewActor(client, config, nil, nil)
 
 	return nil
 }

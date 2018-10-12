@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -93,7 +93,7 @@ var _ = Describe("enable-org-isolation Command", func() {
 
 		When("the enable is successful", func() {
 			BeforeEach(func() {
-				fakeActor.EntitleIsolationSegmentToOrganizationByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, nil)
+				fakeActor.EntitleIsolationSegmentToOrganizationByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, nil)
 			})
 
 			It("displays the header and ok", func() {
@@ -119,7 +119,7 @@ var _ = Describe("enable-org-isolation Command", func() {
 
 				BeforeEach(func() {
 					expectedErr = errors.New("I am an error")
-					fakeActor.EntitleIsolationSegmentToOrganizationByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
+					fakeActor.EntitleIsolationSegmentToOrganizationByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
 				})
 
 				It("displays the header and error", func() {
@@ -134,7 +134,7 @@ var _ = Describe("enable-org-isolation Command", func() {
 
 			When("the isolation segment does not exist", func() {
 				BeforeEach(func() {
-					fakeActor.EntitleIsolationSegmentToOrganizationByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, actionerror.IsolationSegmentNotFoundError{Name: "segment1"})
+					fakeActor.EntitleIsolationSegmentToOrganizationByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, actionerror.IsolationSegmentNotFoundError{Name: "segment1"})
 				})
 
 				It("displays all warnings and the isolation segment not found error", func() {
@@ -147,7 +147,7 @@ var _ = Describe("enable-org-isolation Command", func() {
 			When("the organization does not exist", func() {
 				BeforeEach(func() {
 					fakeActor.EntitleIsolationSegmentToOrganizationByNameReturns(
-						v3action.Warnings{"I am a warning", "I am also a warning"},
+						v7action.Warnings{"I am a warning", "I am also a warning"},
 						actionerror.OrganizationNotFoundError{Name: "some-org"})
 				})
 

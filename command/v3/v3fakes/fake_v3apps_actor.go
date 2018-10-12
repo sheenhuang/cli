@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,19 +18,19 @@ type FakeV3AppsActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	GetApplicationsWithProcessesBySpaceStub        func(spaceGUID string) ([]v3action.ApplicationWithProcessSummary, v3action.Warnings, error)
+	GetApplicationsWithProcessesBySpaceStub        func(spaceGUID string) ([]v7action.ApplicationWithProcessSummary, v7action.Warnings, error)
 	getApplicationsWithProcessesBySpaceMutex       sync.RWMutex
 	getApplicationsWithProcessesBySpaceArgsForCall []struct {
 		spaceGUID string
 	}
 	getApplicationsWithProcessesBySpaceReturns struct {
-		result1 []v3action.ApplicationWithProcessSummary
-		result2 v3action.Warnings
+		result1 []v7action.ApplicationWithProcessSummary
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationsWithProcessesBySpaceReturnsOnCall map[int]struct {
-		result1 []v3action.ApplicationWithProcessSummary
-		result2 v3action.Warnings
+		result1 []v7action.ApplicationWithProcessSummary
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
@@ -77,7 +77,7 @@ func (fake *FakeV3AppsActor) CloudControllerAPIVersionReturnsOnCall(i int, resul
 	}{result1}
 }
 
-func (fake *FakeV3AppsActor) GetApplicationsWithProcessesBySpace(spaceGUID string) ([]v3action.ApplicationWithProcessSummary, v3action.Warnings, error) {
+func (fake *FakeV3AppsActor) GetApplicationsWithProcessesBySpace(spaceGUID string) ([]v7action.ApplicationWithProcessSummary, v7action.Warnings, error) {
 	fake.getApplicationsWithProcessesBySpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationsWithProcessesBySpaceReturnsOnCall[len(fake.getApplicationsWithProcessesBySpaceArgsForCall)]
 	fake.getApplicationsWithProcessesBySpaceArgsForCall = append(fake.getApplicationsWithProcessesBySpaceArgsForCall, struct {
@@ -106,27 +106,27 @@ func (fake *FakeV3AppsActor) GetApplicationsWithProcessesBySpaceArgsForCall(i in
 	return fake.getApplicationsWithProcessesBySpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3AppsActor) GetApplicationsWithProcessesBySpaceReturns(result1 []v3action.ApplicationWithProcessSummary, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3AppsActor) GetApplicationsWithProcessesBySpaceReturns(result1 []v7action.ApplicationWithProcessSummary, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationsWithProcessesBySpaceStub = nil
 	fake.getApplicationsWithProcessesBySpaceReturns = struct {
-		result1 []v3action.ApplicationWithProcessSummary
-		result2 v3action.Warnings
+		result1 []v7action.ApplicationWithProcessSummary
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3AppsActor) GetApplicationsWithProcessesBySpaceReturnsOnCall(i int, result1 []v3action.ApplicationWithProcessSummary, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3AppsActor) GetApplicationsWithProcessesBySpaceReturnsOnCall(i int, result1 []v7action.ApplicationWithProcessSummary, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationsWithProcessesBySpaceStub = nil
 	if fake.getApplicationsWithProcessesBySpaceReturnsOnCall == nil {
 		fake.getApplicationsWithProcessesBySpaceReturnsOnCall = make(map[int]struct {
-			result1 []v3action.ApplicationWithProcessSummary
-			result2 v3action.Warnings
+			result1 []v7action.ApplicationWithProcessSummary
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationsWithProcessesBySpaceReturnsOnCall[i] = struct {
-		result1 []v3action.ApplicationWithProcessSummary
-		result2 v3action.Warnings
+		result1 []v7action.ApplicationWithProcessSummary
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

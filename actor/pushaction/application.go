@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/types"
@@ -180,7 +180,7 @@ func (Actor) setBuildpack(config ApplicationConfig) types.FilteredString {
 
 func (actor Actor) updateBuildpacks(config ApplicationConfig, v2App v2action.Application) (Warnings, error) {
 	log.WithField("buildpacks", config.DesiredApplication.Buildpacks).Debug("updating with multiple buildpacks")
-	v3App := v3action.Application{
+	v3App := v7action.Application{
 		Name:                v2App.Name,
 		GUID:                v2App.GUID,
 		LifecycleBuildpacks: config.DesiredApplication.Buildpacks,

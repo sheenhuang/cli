@@ -3,11 +3,11 @@ package pushaction
 import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 )
 
 type PushState struct {
-	Application        v3action.Application
+	Application        v7action.Application
 	SpaceGUID          string
 	BitsPath           string
 	AllResources       []sharedaction.Resource
@@ -18,14 +18,14 @@ type PushState struct {
 
 func (actor Actor) Conceptualize(settings CommandLineSettings, spaceGUID string) ([]PushState, Warnings, error) {
 	var (
-		application v3action.Application
-		warnings    v3action.Warnings
+		application v7action.Application
+		warnings    v7action.Warnings
 		err         error
 	)
 
 	application, warnings, err = actor.V3Actor.GetApplicationByNameAndSpace(settings.Name, spaceGUID)
 	if _, ok := err.(actionerror.ApplicationNotFoundError); ok {
-		application = v3action.Application{
+		application = v7action.Application{
 			Name: settings.Name,
 		}
 	} else if err != nil {

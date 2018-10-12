@@ -4,32 +4,32 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
 type FakeEnvActor struct {
-	GetEnvironmentVariablesByApplicationNameAndSpaceStub        func(appName string, spaceGUID string) (v3action.EnvironmentVariableGroups, v3action.Warnings, error)
+	GetEnvironmentVariablesByApplicationNameAndSpaceStub        func(appName string, spaceGUID string) (v7action.EnvironmentVariableGroups, v7action.Warnings, error)
 	getEnvironmentVariablesByApplicationNameAndSpaceMutex       sync.RWMutex
 	getEnvironmentVariablesByApplicationNameAndSpaceArgsForCall []struct {
 		appName   string
 		spaceGUID string
 	}
 	getEnvironmentVariablesByApplicationNameAndSpaceReturns struct {
-		result1 v3action.EnvironmentVariableGroups
-		result2 v3action.Warnings
+		result1 v7action.EnvironmentVariableGroups
+		result2 v7action.Warnings
 		result3 error
 	}
 	getEnvironmentVariablesByApplicationNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.EnvironmentVariableGroups
-		result2 v3action.Warnings
+		result1 v7action.EnvironmentVariableGroups
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeEnvActor) GetEnvironmentVariablesByApplicationNameAndSpace(appName string, spaceGUID string) (v3action.EnvironmentVariableGroups, v3action.Warnings, error) {
+func (fake *FakeEnvActor) GetEnvironmentVariablesByApplicationNameAndSpace(appName string, spaceGUID string) (v7action.EnvironmentVariableGroups, v7action.Warnings, error) {
 	fake.getEnvironmentVariablesByApplicationNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getEnvironmentVariablesByApplicationNameAndSpaceReturnsOnCall[len(fake.getEnvironmentVariablesByApplicationNameAndSpaceArgsForCall)]
 	fake.getEnvironmentVariablesByApplicationNameAndSpaceArgsForCall = append(fake.getEnvironmentVariablesByApplicationNameAndSpaceArgsForCall, struct {
@@ -59,27 +59,27 @@ func (fake *FakeEnvActor) GetEnvironmentVariablesByApplicationNameAndSpaceArgsFo
 	return fake.getEnvironmentVariablesByApplicationNameAndSpaceArgsForCall[i].appName, fake.getEnvironmentVariablesByApplicationNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeEnvActor) GetEnvironmentVariablesByApplicationNameAndSpaceReturns(result1 v3action.EnvironmentVariableGroups, result2 v3action.Warnings, result3 error) {
+func (fake *FakeEnvActor) GetEnvironmentVariablesByApplicationNameAndSpaceReturns(result1 v7action.EnvironmentVariableGroups, result2 v7action.Warnings, result3 error) {
 	fake.GetEnvironmentVariablesByApplicationNameAndSpaceStub = nil
 	fake.getEnvironmentVariablesByApplicationNameAndSpaceReturns = struct {
-		result1 v3action.EnvironmentVariableGroups
-		result2 v3action.Warnings
+		result1 v7action.EnvironmentVariableGroups
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeEnvActor) GetEnvironmentVariablesByApplicationNameAndSpaceReturnsOnCall(i int, result1 v3action.EnvironmentVariableGroups, result2 v3action.Warnings, result3 error) {
+func (fake *FakeEnvActor) GetEnvironmentVariablesByApplicationNameAndSpaceReturnsOnCall(i int, result1 v7action.EnvironmentVariableGroups, result2 v7action.Warnings, result3 error) {
 	fake.GetEnvironmentVariablesByApplicationNameAndSpaceStub = nil
 	if fake.getEnvironmentVariablesByApplicationNameAndSpaceReturnsOnCall == nil {
 		fake.getEnvironmentVariablesByApplicationNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.EnvironmentVariableGroups
-			result2 v3action.Warnings
+			result1 v7action.EnvironmentVariableGroups
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getEnvironmentVariablesByApplicationNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.EnvironmentVariableGroups
-		result2 v3action.Warnings
+		result1 v7action.EnvironmentVariableGroups
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

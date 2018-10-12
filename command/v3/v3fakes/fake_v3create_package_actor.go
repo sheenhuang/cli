@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,24 +18,24 @@ type FakeV3CreatePackageActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	CreateDockerPackageByApplicationNameAndSpaceStub        func(appName string, spaceGUID string, dockerImageCredentials v3action.DockerImageCredentials) (v3action.Package, v3action.Warnings, error)
+	CreateDockerPackageByApplicationNameAndSpaceStub        func(appName string, spaceGUID string, dockerImageCredentials v7action.DockerImageCredentials) (v7action.Package, v7action.Warnings, error)
 	createDockerPackageByApplicationNameAndSpaceMutex       sync.RWMutex
 	createDockerPackageByApplicationNameAndSpaceArgsForCall []struct {
 		appName                string
 		spaceGUID              string
-		dockerImageCredentials v3action.DockerImageCredentials
+		dockerImageCredentials v7action.DockerImageCredentials
 	}
 	createDockerPackageByApplicationNameAndSpaceReturns struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}
 	createDockerPackageByApplicationNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}
-	CreateAndUploadBitsPackageByApplicationNameAndSpaceStub        func(appName string, spaceGUID string, bitsPath string) (v3action.Package, v3action.Warnings, error)
+	CreateAndUploadBitsPackageByApplicationNameAndSpaceStub        func(appName string, spaceGUID string, bitsPath string) (v7action.Package, v7action.Warnings, error)
 	createAndUploadBitsPackageByApplicationNameAndSpaceMutex       sync.RWMutex
 	createAndUploadBitsPackageByApplicationNameAndSpaceArgsForCall []struct {
 		appName   string
@@ -43,13 +43,13 @@ type FakeV3CreatePackageActor struct {
 		bitsPath  string
 	}
 	createAndUploadBitsPackageByApplicationNameAndSpaceReturns struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}
 	createAndUploadBitsPackageByApplicationNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
@@ -96,13 +96,13 @@ func (fake *FakeV3CreatePackageActor) CloudControllerAPIVersionReturnsOnCall(i i
 	}{result1}
 }
 
-func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpace(appName string, spaceGUID string, dockerImageCredentials v3action.DockerImageCredentials) (v3action.Package, v3action.Warnings, error) {
+func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpace(appName string, spaceGUID string, dockerImageCredentials v7action.DockerImageCredentials) (v7action.Package, v7action.Warnings, error) {
 	fake.createDockerPackageByApplicationNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.createDockerPackageByApplicationNameAndSpaceReturnsOnCall[len(fake.createDockerPackageByApplicationNameAndSpaceArgsForCall)]
 	fake.createDockerPackageByApplicationNameAndSpaceArgsForCall = append(fake.createDockerPackageByApplicationNameAndSpaceArgsForCall, struct {
 		appName                string
 		spaceGUID              string
-		dockerImageCredentials v3action.DockerImageCredentials
+		dockerImageCredentials v7action.DockerImageCredentials
 	}{appName, spaceGUID, dockerImageCredentials})
 	fake.recordInvocation("CreateDockerPackageByApplicationNameAndSpace", []interface{}{appName, spaceGUID, dockerImageCredentials})
 	fake.createDockerPackageByApplicationNameAndSpaceMutex.Unlock()
@@ -121,38 +121,38 @@ func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpa
 	return len(fake.createDockerPackageByApplicationNameAndSpaceArgsForCall)
 }
 
-func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpaceArgsForCall(i int) (string, string, v3action.DockerImageCredentials) {
+func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpaceArgsForCall(i int) (string, string, v7action.DockerImageCredentials) {
 	fake.createDockerPackageByApplicationNameAndSpaceMutex.RLock()
 	defer fake.createDockerPackageByApplicationNameAndSpaceMutex.RUnlock()
 	return fake.createDockerPackageByApplicationNameAndSpaceArgsForCall[i].appName, fake.createDockerPackageByApplicationNameAndSpaceArgsForCall[i].spaceGUID, fake.createDockerPackageByApplicationNameAndSpaceArgsForCall[i].dockerImageCredentials
 }
 
-func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpaceReturns(result1 v3action.Package, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpaceReturns(result1 v7action.Package, result2 v7action.Warnings, result3 error) {
 	fake.CreateDockerPackageByApplicationNameAndSpaceStub = nil
 	fake.createDockerPackageByApplicationNameAndSpaceReturns = struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpaceReturnsOnCall(i int, result1 v3action.Package, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3CreatePackageActor) CreateDockerPackageByApplicationNameAndSpaceReturnsOnCall(i int, result1 v7action.Package, result2 v7action.Warnings, result3 error) {
 	fake.CreateDockerPackageByApplicationNameAndSpaceStub = nil
 	if fake.createDockerPackageByApplicationNameAndSpaceReturnsOnCall == nil {
 		fake.createDockerPackageByApplicationNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Package
-			result2 v3action.Warnings
+			result1 v7action.Package
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.createDockerPackageByApplicationNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3CreatePackageActor) CreateAndUploadBitsPackageByApplicationNameAndSpace(appName string, spaceGUID string, bitsPath string) (v3action.Package, v3action.Warnings, error) {
+func (fake *FakeV3CreatePackageActor) CreateAndUploadBitsPackageByApplicationNameAndSpace(appName string, spaceGUID string, bitsPath string) (v7action.Package, v7action.Warnings, error) {
 	fake.createAndUploadBitsPackageByApplicationNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.createAndUploadBitsPackageByApplicationNameAndSpaceReturnsOnCall[len(fake.createAndUploadBitsPackageByApplicationNameAndSpaceArgsForCall)]
 	fake.createAndUploadBitsPackageByApplicationNameAndSpaceArgsForCall = append(fake.createAndUploadBitsPackageByApplicationNameAndSpaceArgsForCall, struct {
@@ -183,27 +183,27 @@ func (fake *FakeV3CreatePackageActor) CreateAndUploadBitsPackageByApplicationNam
 	return fake.createAndUploadBitsPackageByApplicationNameAndSpaceArgsForCall[i].appName, fake.createAndUploadBitsPackageByApplicationNameAndSpaceArgsForCall[i].spaceGUID, fake.createAndUploadBitsPackageByApplicationNameAndSpaceArgsForCall[i].bitsPath
 }
 
-func (fake *FakeV3CreatePackageActor) CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(result1 v3action.Package, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3CreatePackageActor) CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(result1 v7action.Package, result2 v7action.Warnings, result3 error) {
 	fake.CreateAndUploadBitsPackageByApplicationNameAndSpaceStub = nil
 	fake.createAndUploadBitsPackageByApplicationNameAndSpaceReturns = struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3CreatePackageActor) CreateAndUploadBitsPackageByApplicationNameAndSpaceReturnsOnCall(i int, result1 v3action.Package, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3CreatePackageActor) CreateAndUploadBitsPackageByApplicationNameAndSpaceReturnsOnCall(i int, result1 v7action.Package, result2 v7action.Warnings, result3 error) {
 	fake.CreateAndUploadBitsPackageByApplicationNameAndSpaceStub = nil
 	if fake.createAndUploadBitsPackageByApplicationNameAndSpaceReturnsOnCall == nil {
 		fake.createAndUploadBitsPackageByApplicationNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Package
-			result2 v3action.Warnings
+			result1 v7action.Package
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.createAndUploadBitsPackageByApplicationNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Package
-		result2 v3action.Warnings
+		result1 v7action.Package
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

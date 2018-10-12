@@ -3,13 +3,13 @@ package v2v3action
 import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 )
 
 type ApplicationSummary struct {
-	v3action.ApplicationSummary
+	v7action.ApplicationSummary
 	Routes                       v2action.Routes
 	ApplicationInstanceWithStats []v2action.ApplicationInstanceWithStats
 }

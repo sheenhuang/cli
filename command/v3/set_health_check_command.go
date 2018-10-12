@@ -2,7 +2,7 @@ package v3
 
 import (
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/v3/shared"
@@ -11,7 +11,8 @@ import (
 //go:generate counterfeiter . SetHealthCheckActor
 
 type SetHealthCheckActor interface {
-	SetApplicationProcessHealthCheckTypeByNameAndSpace(appName string, spaceGUID string, healthCheckType string, httpEndpoint string, processType string, invocationTimeout int) (v3action.Application, v3action.Warnings, error)
+	CloudControllerAPIVersion() string
+	SetApplicationProcessHealthCheckTypeByNameAndSpace(appName string, spaceGUID string, healthCheckType string, httpEndpoint string, processType string, invocationTimeout int) (v7action.Application, v7action.Warnings, error)
 }
 
 type SetHealthCheckCommand struct {
@@ -36,7 +37,7 @@ func (cmd *SetHealthCheckCommand) Setup(config command.Config, ui command.UI) er
 	if err != nil {
 		return err
 	}
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 
 	return nil
 }

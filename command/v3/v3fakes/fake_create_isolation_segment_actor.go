@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,17 +18,17 @@ type FakeCreateIsolationSegmentActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	CreateIsolationSegmentByNameStub        func(isolationSegment v3action.IsolationSegment) (v3action.Warnings, error)
+	CreateIsolationSegmentByNameStub        func(isolationSegment v7action.IsolationSegment) (v7action.Warnings, error)
 	createIsolationSegmentByNameMutex       sync.RWMutex
 	createIsolationSegmentByNameArgsForCall []struct {
-		isolationSegment v3action.IsolationSegment
+		isolationSegment v7action.IsolationSegment
 	}
 	createIsolationSegmentByNameReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	createIsolationSegmentByNameReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -75,11 +75,11 @@ func (fake *FakeCreateIsolationSegmentActor) CloudControllerAPIVersionReturnsOnC
 	}{result1}
 }
 
-func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByName(isolationSegment v3action.IsolationSegment) (v3action.Warnings, error) {
+func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByName(isolationSegment v7action.IsolationSegment) (v7action.Warnings, error) {
 	fake.createIsolationSegmentByNameMutex.Lock()
 	ret, specificReturn := fake.createIsolationSegmentByNameReturnsOnCall[len(fake.createIsolationSegmentByNameArgsForCall)]
 	fake.createIsolationSegmentByNameArgsForCall = append(fake.createIsolationSegmentByNameArgsForCall, struct {
-		isolationSegment v3action.IsolationSegment
+		isolationSegment v7action.IsolationSegment
 	}{isolationSegment})
 	fake.recordInvocation("CreateIsolationSegmentByName", []interface{}{isolationSegment})
 	fake.createIsolationSegmentByNameMutex.Unlock()
@@ -98,30 +98,30 @@ func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByNameCallCou
 	return len(fake.createIsolationSegmentByNameArgsForCall)
 }
 
-func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByNameArgsForCall(i int) v3action.IsolationSegment {
+func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByNameArgsForCall(i int) v7action.IsolationSegment {
 	fake.createIsolationSegmentByNameMutex.RLock()
 	defer fake.createIsolationSegmentByNameMutex.RUnlock()
 	return fake.createIsolationSegmentByNameArgsForCall[i].isolationSegment
 }
 
-func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByNameReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByNameReturns(result1 v7action.Warnings, result2 error) {
 	fake.CreateIsolationSegmentByNameStub = nil
 	fake.createIsolationSegmentByNameReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByNameReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeCreateIsolationSegmentActor) CreateIsolationSegmentByNameReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.CreateIsolationSegmentByNameStub = nil
 	if fake.createIsolationSegmentByNameReturnsOnCall == nil {
 		fake.createIsolationSegmentByNameReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.createIsolationSegmentByNameReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

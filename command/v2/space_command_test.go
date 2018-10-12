@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	. "code.cloudfoundry.org/cli/command/v2"
@@ -213,10 +213,10 @@ var _ = Describe("space Command", func() {
 						BeforeEach(func() {
 							fakeActorV3.CloudControllerAPIVersionReturns(ccversion.MinVersionIsolationSegmentV3)
 							fakeActorV3.GetEffectiveIsolationSegmentBySpaceReturns(
-								v3action.IsolationSegment{
+								v7action.IsolationSegment{
 									Name: "some-isolation-segment",
 								},
-								v3action.Warnings{"v3-warning-1", "v3-warning-2"},
+								v7action.Warnings{"v3-warning-1", "v3-warning-2"},
 								nil,
 							)
 						})
@@ -258,8 +258,8 @@ var _ = Describe("space Command", func() {
 							BeforeEach(func() {
 								expectedErr = errors.New("get isolation segment error")
 								fakeActorV3.GetEffectiveIsolationSegmentBySpaceReturns(
-									v3action.IsolationSegment{},
-									v3action.Warnings{"v3-warning-1", "v3-warning-2"},
+									v7action.IsolationSegment{},
+									v7action.Warnings{"v3-warning-1", "v3-warning-2"},
 									expectedErr)
 							})
 
@@ -274,8 +274,8 @@ var _ = Describe("space Command", func() {
 						Context("a NoRelationshipError", func() {
 							BeforeEach(func() {
 								fakeActorV3.GetEffectiveIsolationSegmentBySpaceReturns(
-									v3action.IsolationSegment{},
-									v3action.Warnings{"v3-warning-1", "v3-warning-2"},
+									v7action.IsolationSegment{},
+									v7action.Warnings{"v3-warning-1", "v3-warning-2"},
 									actionerror.NoRelationshipError{})
 							})
 

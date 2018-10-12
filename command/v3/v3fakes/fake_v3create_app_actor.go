@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,20 +18,20 @@ type FakeV3CreateAppActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	CreateApplicationInSpaceStub        func(app v3action.Application, spaceGUID string) (v3action.Application, v3action.Warnings, error)
+	CreateApplicationInSpaceStub        func(app v7action.Application, spaceGUID string) (v7action.Application, v7action.Warnings, error)
 	createApplicationInSpaceMutex       sync.RWMutex
 	createApplicationInSpaceArgsForCall []struct {
-		app       v3action.Application
+		app       v7action.Application
 		spaceGUID string
 	}
 	createApplicationInSpaceReturns struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	createApplicationInSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
@@ -78,11 +78,11 @@ func (fake *FakeV3CreateAppActor) CloudControllerAPIVersionReturnsOnCall(i int, 
 	}{result1}
 }
 
-func (fake *FakeV3CreateAppActor) CreateApplicationInSpace(app v3action.Application, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeV3CreateAppActor) CreateApplicationInSpace(app v7action.Application, spaceGUID string) (v7action.Application, v7action.Warnings, error) {
 	fake.createApplicationInSpaceMutex.Lock()
 	ret, specificReturn := fake.createApplicationInSpaceReturnsOnCall[len(fake.createApplicationInSpaceArgsForCall)]
 	fake.createApplicationInSpaceArgsForCall = append(fake.createApplicationInSpaceArgsForCall, struct {
-		app       v3action.Application
+		app       v7action.Application
 		spaceGUID string
 	}{app, spaceGUID})
 	fake.recordInvocation("CreateApplicationInSpace", []interface{}{app, spaceGUID})
@@ -102,33 +102,33 @@ func (fake *FakeV3CreateAppActor) CreateApplicationInSpaceCallCount() int {
 	return len(fake.createApplicationInSpaceArgsForCall)
 }
 
-func (fake *FakeV3CreateAppActor) CreateApplicationInSpaceArgsForCall(i int) (v3action.Application, string) {
+func (fake *FakeV3CreateAppActor) CreateApplicationInSpaceArgsForCall(i int) (v7action.Application, string) {
 	fake.createApplicationInSpaceMutex.RLock()
 	defer fake.createApplicationInSpaceMutex.RUnlock()
 	return fake.createApplicationInSpaceArgsForCall[i].app, fake.createApplicationInSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3CreateAppActor) CreateApplicationInSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3CreateAppActor) CreateApplicationInSpaceReturns(result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.CreateApplicationInSpaceStub = nil
 	fake.createApplicationInSpaceReturns = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3CreateAppActor) CreateApplicationInSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3CreateAppActor) CreateApplicationInSpaceReturnsOnCall(i int, result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.CreateApplicationInSpaceStub = nil
 	if fake.createApplicationInSpaceReturnsOnCall == nil {
 		fake.createApplicationInSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Application
-			result2 v3action.Warnings
+			result1 v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.createApplicationInSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,20 +18,20 @@ type FakeV3GetHealthCheckActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	GetApplicationProcessHealthChecksByNameAndSpaceStub        func(appName string, spaceGUID string) ([]v3action.ProcessHealthCheck, v3action.Warnings, error)
+	GetApplicationProcessHealthChecksByNameAndSpaceStub        func(appName string, spaceGUID string) ([]v7action.ProcessHealthCheck, v7action.Warnings, error)
 	getApplicationProcessHealthChecksByNameAndSpaceMutex       sync.RWMutex
 	getApplicationProcessHealthChecksByNameAndSpaceArgsForCall []struct {
 		appName   string
 		spaceGUID string
 	}
 	getApplicationProcessHealthChecksByNameAndSpaceReturns struct {
-		result1 []v3action.ProcessHealthCheck
-		result2 v3action.Warnings
+		result1 []v7action.ProcessHealthCheck
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationProcessHealthChecksByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 []v3action.ProcessHealthCheck
-		result2 v3action.Warnings
+		result1 []v7action.ProcessHealthCheck
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
@@ -78,7 +78,7 @@ func (fake *FakeV3GetHealthCheckActor) CloudControllerAPIVersionReturnsOnCall(i 
 	}{result1}
 }
 
-func (fake *FakeV3GetHealthCheckActor) GetApplicationProcessHealthChecksByNameAndSpace(appName string, spaceGUID string) ([]v3action.ProcessHealthCheck, v3action.Warnings, error) {
+func (fake *FakeV3GetHealthCheckActor) GetApplicationProcessHealthChecksByNameAndSpace(appName string, spaceGUID string) ([]v7action.ProcessHealthCheck, v7action.Warnings, error) {
 	fake.getApplicationProcessHealthChecksByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationProcessHealthChecksByNameAndSpaceReturnsOnCall[len(fake.getApplicationProcessHealthChecksByNameAndSpaceArgsForCall)]
 	fake.getApplicationProcessHealthChecksByNameAndSpaceArgsForCall = append(fake.getApplicationProcessHealthChecksByNameAndSpaceArgsForCall, struct {
@@ -108,27 +108,27 @@ func (fake *FakeV3GetHealthCheckActor) GetApplicationProcessHealthChecksByNameAn
 	return fake.getApplicationProcessHealthChecksByNameAndSpaceArgsForCall[i].appName, fake.getApplicationProcessHealthChecksByNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeV3GetHealthCheckActor) GetApplicationProcessHealthChecksByNameAndSpaceReturns(result1 []v3action.ProcessHealthCheck, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3GetHealthCheckActor) GetApplicationProcessHealthChecksByNameAndSpaceReturns(result1 []v7action.ProcessHealthCheck, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationProcessHealthChecksByNameAndSpaceStub = nil
 	fake.getApplicationProcessHealthChecksByNameAndSpaceReturns = struct {
-		result1 []v3action.ProcessHealthCheck
-		result2 v3action.Warnings
+		result1 []v7action.ProcessHealthCheck
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeV3GetHealthCheckActor) GetApplicationProcessHealthChecksByNameAndSpaceReturnsOnCall(i int, result1 []v3action.ProcessHealthCheck, result2 v3action.Warnings, result3 error) {
+func (fake *FakeV3GetHealthCheckActor) GetApplicationProcessHealthChecksByNameAndSpaceReturnsOnCall(i int, result1 []v7action.ProcessHealthCheck, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationProcessHealthChecksByNameAndSpaceStub = nil
 	if fake.getApplicationProcessHealthChecksByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationProcessHealthChecksByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 []v3action.ProcessHealthCheck
-			result2 v3action.Warnings
+			result1 []v7action.ProcessHealthCheck
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationProcessHealthChecksByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 []v3action.ProcessHealthCheck
-		result2 v3action.Warnings
+		result1 []v7action.ProcessHealthCheck
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

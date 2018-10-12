@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
@@ -118,7 +118,7 @@ var _ = Describe("v3-packages Command", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			expectedErr = ccerror.RequestError{}
-			fakeActor.GetApplicationPackagesReturns([]v3action.Package{}, v3action.Warnings{"warning-1", "warning-2"}, expectedErr)
+			fakeActor.GetApplicationPackagesReturns([]v7action.Package{}, v7action.Warnings{"warning-1", "warning-2"}, expectedErr)
 		})
 
 		It("returns the error and prints warnings", func() {
@@ -139,7 +139,7 @@ var _ = Describe("v3-packages Command", func() {
 			package1UTC = "2017-08-14T21:16:42Z"
 			package2UTC = "2017-08-16T00:18:24Z"
 
-			packages := []v3action.Package{
+			packages := []v7action.Package{
 				{
 					GUID:      "some-package-guid-1",
 					State:     constant.PackageReady,
@@ -151,7 +151,7 @@ var _ = Describe("v3-packages Command", func() {
 					CreatedAt: package2UTC,
 				},
 			}
-			fakeActor.GetApplicationPackagesReturns(packages, v3action.Warnings{"warning-1", "warning-2"}, nil)
+			fakeActor.GetApplicationPackagesReturns(packages, v7action.Warnings{"warning-1", "warning-2"}, nil)
 		})
 
 		It("prints the application packages and outputs warnings", func() {
@@ -180,7 +180,7 @@ var _ = Describe("v3-packages Command", func() {
 	When("getting the application packages returns no packages", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
-			fakeActor.GetApplicationPackagesReturns([]v3action.Package{}, v3action.Warnings{"warning-1", "warning-2"}, nil)
+			fakeActor.GetApplicationPackagesReturns([]v7action.Package{}, v7action.Warnings{"warning-1", "warning-2"}, nil)
 		})
 
 		It("displays there are no packages", func() {

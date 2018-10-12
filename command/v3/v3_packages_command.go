@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -20,7 +20,7 @@ import (
 
 type V3PackagesActor interface {
 	CloudControllerAPIVersion() string
-	GetApplicationPackages(appName string, spaceGUID string) ([]v3action.Package, v3action.Warnings, error)
+	GetApplicationPackages(appName string, spaceGUID string) ([]v7action.Package, v7action.Warnings, error)
 }
 
 type V3PackagesCommand struct {
@@ -46,7 +46,7 @@ func (cmd *V3PackagesCommand) Setup(config command.Config, ui command.UI) error 
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 
 	return nil
 }

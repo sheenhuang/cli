@@ -5,7 +5,7 @@ import (
 	"regexp"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -124,7 +124,7 @@ var _ = Describe("v3-apply-manifest Command", func() {
 		When("the parse is successful", func() {
 			BeforeEach(func() {
 				fakeActor.ApplyApplicationManifestReturns(
-					v3action.Warnings{"some-manifest-warning"},
+					v7action.Warnings{"some-manifest-warning"},
 					nil,
 				)
 			})

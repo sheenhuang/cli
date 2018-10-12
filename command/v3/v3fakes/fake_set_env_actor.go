@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,19 +18,19 @@ type FakeSetEnvActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	SetEnvironmentVariableByApplicationNameAndSpaceStub        func(appName string, spaceGUID string, envPair v3action.EnvironmentVariablePair) (v3action.Warnings, error)
+	SetEnvironmentVariableByApplicationNameAndSpaceStub        func(appName string, spaceGUID string, envPair v7action.EnvironmentVariablePair) (v7action.Warnings, error)
 	setEnvironmentVariableByApplicationNameAndSpaceMutex       sync.RWMutex
 	setEnvironmentVariableByApplicationNameAndSpaceArgsForCall []struct {
 		appName   string
 		spaceGUID string
-		envPair   v3action.EnvironmentVariablePair
+		envPair   v7action.EnvironmentVariablePair
 	}
 	setEnvironmentVariableByApplicationNameAndSpaceReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	setEnvironmentVariableByApplicationNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -77,13 +77,13 @@ func (fake *FakeSetEnvActor) CloudControllerAPIVersionReturnsOnCall(i int, resul
 	}{result1}
 }
 
-func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpace(appName string, spaceGUID string, envPair v3action.EnvironmentVariablePair) (v3action.Warnings, error) {
+func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpace(appName string, spaceGUID string, envPair v7action.EnvironmentVariablePair) (v7action.Warnings, error) {
 	fake.setEnvironmentVariableByApplicationNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.setEnvironmentVariableByApplicationNameAndSpaceReturnsOnCall[len(fake.setEnvironmentVariableByApplicationNameAndSpaceArgsForCall)]
 	fake.setEnvironmentVariableByApplicationNameAndSpaceArgsForCall = append(fake.setEnvironmentVariableByApplicationNameAndSpaceArgsForCall, struct {
 		appName   string
 		spaceGUID string
-		envPair   v3action.EnvironmentVariablePair
+		envPair   v7action.EnvironmentVariablePair
 	}{appName, spaceGUID, envPair})
 	fake.recordInvocation("SetEnvironmentVariableByApplicationNameAndSpace", []interface{}{appName, spaceGUID, envPair})
 	fake.setEnvironmentVariableByApplicationNameAndSpaceMutex.Unlock()
@@ -102,30 +102,30 @@ func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpaceCall
 	return len(fake.setEnvironmentVariableByApplicationNameAndSpaceArgsForCall)
 }
 
-func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpaceArgsForCall(i int) (string, string, v3action.EnvironmentVariablePair) {
+func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpaceArgsForCall(i int) (string, string, v7action.EnvironmentVariablePair) {
 	fake.setEnvironmentVariableByApplicationNameAndSpaceMutex.RLock()
 	defer fake.setEnvironmentVariableByApplicationNameAndSpaceMutex.RUnlock()
 	return fake.setEnvironmentVariableByApplicationNameAndSpaceArgsForCall[i].appName, fake.setEnvironmentVariableByApplicationNameAndSpaceArgsForCall[i].spaceGUID, fake.setEnvironmentVariableByApplicationNameAndSpaceArgsForCall[i].envPair
 }
 
-func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpaceReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpaceReturns(result1 v7action.Warnings, result2 error) {
 	fake.SetEnvironmentVariableByApplicationNameAndSpaceStub = nil
 	fake.setEnvironmentVariableByApplicationNameAndSpaceReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpaceReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeSetEnvActor) SetEnvironmentVariableByApplicationNameAndSpaceReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.SetEnvironmentVariableByApplicationNameAndSpaceStub = nil
 	if fake.setEnvironmentVariableByApplicationNameAndSpaceReturnsOnCall == nil {
 		fake.setEnvironmentVariableByApplicationNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.setEnvironmentVariableByApplicationNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

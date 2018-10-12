@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
 	"code.cloudfoundry.org/cli/actor/v2v3action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -60,7 +60,7 @@ func (cmd *ShareServiceCommand) Setup(config command.Config, ui command.UI) erro
 
 	cmd.Actor = v2v3action.NewActor(
 		v2action.NewActor(ccClientV2, uaaClientV2, config),
-		v3action.NewActor(ccClientV3, config, sharedActor, uaaClientV3),
+		v7action.NewActor(ccClientV3, config, sharedActor, uaaClientV3),
 	)
 
 	return nil

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
@@ -118,7 +118,7 @@ var _ = Describe("v3-droplets Command", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			expectedErr = ccerror.RequestError{}
-			fakeActor.GetApplicationDropletsReturns([]v3action.Droplet{}, v3action.Warnings{"warning-1", "warning-2"}, expectedErr)
+			fakeActor.GetApplicationDropletsReturns([]v7action.Droplet{}, v7action.Warnings{"warning-1", "warning-2"}, expectedErr)
 		})
 
 		It("returns the error and prints warnings", func() {
@@ -137,7 +137,7 @@ var _ = Describe("v3-droplets Command", func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			createdAtOne = "2017-08-14T21:16:42Z"
 			createdAtTwo = "2017-08-16T00:18:24Z"
-			droplets := []v3action.Droplet{
+			droplets := []v7action.Droplet{
 				{
 					GUID:      "some-droplet-guid-1",
 					State:     constant.DropletStaged,
@@ -149,7 +149,7 @@ var _ = Describe("v3-droplets Command", func() {
 					CreatedAt: createdAtTwo,
 				},
 			}
-			fakeActor.GetApplicationDropletsReturns(droplets, v3action.Warnings{"warning-1", "warning-2"}, nil)
+			fakeActor.GetApplicationDropletsReturns(droplets, v7action.Warnings{"warning-1", "warning-2"}, nil)
 		})
 
 		It("prints the application droplets and outputs warnings", func() {
@@ -180,7 +180,7 @@ var _ = Describe("v3-droplets Command", func() {
 	When("getting the application droplets returns no droplets", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
-			fakeActor.GetApplicationDropletsReturns([]v3action.Droplet{}, v3action.Warnings{"warning-1", "warning-2"}, nil)
+			fakeActor.GetApplicationDropletsReturns([]v7action.Droplet{}, v7action.Warnings{"warning-1", "warning-2"}, nil)
 		})
 
 		It("displays there are no droplets", func() {

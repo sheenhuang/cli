@@ -8,7 +8,7 @@ import (
 	. "code.cloudfoundry.org/cli/actor/pushaction"
 	"code.cloudfoundry.org/cli/actor/pushaction/pushactionfakes"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -55,15 +55,15 @@ var _ = Describe("Push State", func() {
 
 		Describe("application", func() {
 			When("the application exists", func() {
-				var app v3action.Application
+				var app v7action.Application
 
 				BeforeEach(func() {
-					app = v3action.Application{
+					app = v7action.Application{
 						GUID: "some-app-guid",
 						Name: "some-app-name",
 					}
 
-					fakeV3Actor.GetApplicationByNameAndSpaceReturns(app, v3action.Warnings{"some-app-warning"}, nil)
+					fakeV3Actor.GetApplicationByNameAndSpaceReturns(app, v7action.Warnings{"some-app-warning"}, nil)
 				})
 
 				It("uses the found app in the application state", func() {
@@ -86,7 +86,7 @@ var _ = Describe("Push State", func() {
 
 			When("the application does not exist", func() {
 				BeforeEach(func() {
-					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3action.Application{}, v3action.Warnings{"some-app-warning"}, actionerror.ApplicationNotFoundError{})
+					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v7action.Application{}, v7action.Warnings{"some-app-warning"}, actionerror.ApplicationNotFoundError{})
 				})
 
 				It("creates a new app in the application state", func() {
@@ -96,7 +96,7 @@ var _ = Describe("Push State", func() {
 
 					Expect(states[0]).To(MatchFields(IgnoreExtras,
 						Fields{
-							"Application": Equal(v3action.Application{
+							"Application": Equal(v7action.Application{
 								Name: "some-app-name",
 							}),
 							"SpaceGUID": Equal(spaceGUID),
@@ -109,7 +109,7 @@ var _ = Describe("Push State", func() {
 
 				BeforeEach(func() {
 					expectedErr = errors.New("some-error")
-					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3action.Application{}, v3action.Warnings{"some-app-warning"}, expectedErr)
+					fakeV3Actor.GetApplicationByNameAndSpaceReturns(v7action.Application{}, v7action.Warnings{"some-app-warning"}, expectedErr)
 				})
 
 				It("translates command line settings into a single push state", func() {

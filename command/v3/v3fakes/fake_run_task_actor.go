@@ -4,48 +4,48 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
 type FakeRunTaskActor struct {
-	GetApplicationByNameAndSpaceStub        func(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
+	GetApplicationByNameAndSpaceStub        func(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
 	getApplicationByNameAndSpaceMutex       sync.RWMutex
 	getApplicationByNameAndSpaceArgsForCall []struct {
 		appName   string
 		spaceGUID string
 	}
 	getApplicationByNameAndSpaceReturns struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
 	getApplicationByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}
-	RunTaskStub        func(appGUID string, task v3action.Task) (v3action.Task, v3action.Warnings, error)
+	RunTaskStub        func(appGUID string, task v7action.Task) (v7action.Task, v7action.Warnings, error)
 	runTaskMutex       sync.RWMutex
 	runTaskArgsForCall []struct {
 		appGUID string
-		task    v3action.Task
+		task    v7action.Task
 	}
 	runTaskReturns struct {
-		result1 v3action.Task
-		result2 v3action.Warnings
+		result1 v7action.Task
+		result2 v7action.Warnings
 		result3 error
 	}
 	runTaskReturnsOnCall map[int]struct {
-		result1 v3action.Task
-		result2 v3action.Warnings
+		result1 v7action.Task
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeRunTaskActor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error) {
+func (fake *FakeRunTaskActor) GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error) {
 	fake.getApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.getApplicationByNameAndSpaceReturnsOnCall[len(fake.getApplicationByNameAndSpaceArgsForCall)]
 	fake.getApplicationByNameAndSpaceArgsForCall = append(fake.getApplicationByNameAndSpaceArgsForCall, struct {
@@ -75,37 +75,37 @@ func (fake *FakeRunTaskActor) GetApplicationByNameAndSpaceArgsForCall(i int) (st
 	return fake.getApplicationByNameAndSpaceArgsForCall[i].appName, fake.getApplicationByNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeRunTaskActor) GetApplicationByNameAndSpaceReturns(result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeRunTaskActor) GetApplicationByNameAndSpaceReturns(result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	fake.getApplicationByNameAndSpaceReturns = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeRunTaskActor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Application, result2 v3action.Warnings, result3 error) {
+func (fake *FakeRunTaskActor) GetApplicationByNameAndSpaceReturnsOnCall(i int, result1 v7action.Application, result2 v7action.Warnings, result3 error) {
 	fake.GetApplicationByNameAndSpaceStub = nil
 	if fake.getApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.getApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Application
-			result2 v3action.Warnings
+			result1 v7action.Application
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getApplicationByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Application
-		result2 v3action.Warnings
+		result1 v7action.Application
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeRunTaskActor) RunTask(appGUID string, task v3action.Task) (v3action.Task, v3action.Warnings, error) {
+func (fake *FakeRunTaskActor) RunTask(appGUID string, task v7action.Task) (v7action.Task, v7action.Warnings, error) {
 	fake.runTaskMutex.Lock()
 	ret, specificReturn := fake.runTaskReturnsOnCall[len(fake.runTaskArgsForCall)]
 	fake.runTaskArgsForCall = append(fake.runTaskArgsForCall, struct {
 		appGUID string
-		task    v3action.Task
+		task    v7action.Task
 	}{appGUID, task})
 	fake.recordInvocation("RunTask", []interface{}{appGUID, task})
 	fake.runTaskMutex.Unlock()
@@ -124,33 +124,33 @@ func (fake *FakeRunTaskActor) RunTaskCallCount() int {
 	return len(fake.runTaskArgsForCall)
 }
 
-func (fake *FakeRunTaskActor) RunTaskArgsForCall(i int) (string, v3action.Task) {
+func (fake *FakeRunTaskActor) RunTaskArgsForCall(i int) (string, v7action.Task) {
 	fake.runTaskMutex.RLock()
 	defer fake.runTaskMutex.RUnlock()
 	return fake.runTaskArgsForCall[i].appGUID, fake.runTaskArgsForCall[i].task
 }
 
-func (fake *FakeRunTaskActor) RunTaskReturns(result1 v3action.Task, result2 v3action.Warnings, result3 error) {
+func (fake *FakeRunTaskActor) RunTaskReturns(result1 v7action.Task, result2 v7action.Warnings, result3 error) {
 	fake.RunTaskStub = nil
 	fake.runTaskReturns = struct {
-		result1 v3action.Task
-		result2 v3action.Warnings
+		result1 v7action.Task
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeRunTaskActor) RunTaskReturnsOnCall(i int, result1 v3action.Task, result2 v3action.Warnings, result3 error) {
+func (fake *FakeRunTaskActor) RunTaskReturnsOnCall(i int, result1 v7action.Task, result2 v7action.Warnings, result3 error) {
 	fake.RunTaskStub = nil
 	if fake.runTaskReturnsOnCall == nil {
 		fake.runTaskReturnsOnCall = make(map[int]struct {
-			result1 v3action.Task
-			result2 v3action.Warnings
+			result1 v7action.Task
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.runTaskReturnsOnCall[i] = struct {
-		result1 v3action.Task
-		result2 v3action.Warnings
+		result1 v7action.Task
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

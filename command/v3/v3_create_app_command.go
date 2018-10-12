@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
@@ -19,7 +19,7 @@ import (
 
 type V3CreateAppActor interface {
 	CloudControllerAPIVersion() string
-	CreateApplicationInSpace(app v3action.Application, spaceGUID string) (v3action.Application, v3action.Warnings, error)
+	CreateApplicationInSpace(app v7action.Application, spaceGUID string) (v7action.Application, v7action.Warnings, error)
 }
 
 type V3CreateAppCommand struct {
@@ -46,7 +46,7 @@ func (cmd *V3CreateAppCommand) Setup(config command.Config, ui command.UI) error
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, nil, nil)
+	cmd.Actor = v7action.NewActor(client, config, nil, nil)
 
 	return nil
 }
@@ -77,7 +77,7 @@ func (cmd V3CreateAppCommand) Execute(args []string) error {
 	})
 
 	_, warnings, err := cmd.Actor.CreateApplicationInSpace(
-		v3action.Application{
+		v7action.Application{
 			Name:          cmd.RequiredArgs.AppName,
 			LifecycleType: constant.AppLifecycleType(cmd.AppType),
 		},

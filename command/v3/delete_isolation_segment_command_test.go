@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -97,7 +97,7 @@ var _ = Describe("delete-isolation-segment Command", func() {
 			When("the iso segment exists", func() {
 				When("the delete is successful", func() {
 					BeforeEach(func() {
-						fakeActor.DeleteIsolationSegmentByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, nil)
+						fakeActor.DeleteIsolationSegmentByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, nil)
 					})
 
 					It("displays the header and ok", func() {
@@ -119,7 +119,7 @@ var _ = Describe("delete-isolation-segment Command", func() {
 
 					BeforeEach(func() {
 						expectedErr = errors.New("I am an error")
-						fakeActor.DeleteIsolationSegmentByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
+						fakeActor.DeleteIsolationSegmentByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
 					})
 
 					It("displays the header and error", func() {
@@ -135,7 +135,7 @@ var _ = Describe("delete-isolation-segment Command", func() {
 
 			When("the iso segment does not exist", func() {
 				BeforeEach(func() {
-					fakeActor.DeleteIsolationSegmentByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, actionerror.IsolationSegmentNotFoundError{})
+					fakeActor.DeleteIsolationSegmentByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, actionerror.IsolationSegmentNotFoundError{})
 				})
 
 				It("displays does not exist warning", func() {

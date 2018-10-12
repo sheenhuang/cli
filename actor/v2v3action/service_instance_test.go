@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/v2action"
 	. "code.cloudfoundry.org/cli/actor/v2v3action"
 	"code.cloudfoundry.org/cli/actor/v2v3action/v2v3actionfakes"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv2"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv2/constant"
 
@@ -115,10 +115,10 @@ var _ = Describe("Service Instance Actions", func() {
 									When("no errors occur sharing the service instance to this space", func() {
 										BeforeEach(func() {
 											fakeV3Actor.ShareServiceInstanceToSpacesReturns(
-												v3action.RelationshipList{
+												v7action.RelationshipList{
 													GUIDs: []string{"some-space-guid"},
 												},
-												v3action.Warnings{"share-service-instance-warning"},
+												v7action.Warnings{"share-service-instance-warning"},
 												nil)
 										})
 
@@ -163,8 +163,8 @@ var _ = Describe("Service Instance Actions", func() {
 										BeforeEach(func() {
 											expectedErr = errors.New("share service instance error")
 											fakeV3Actor.ShareServiceInstanceToSpacesReturns(
-												v3action.RelationshipList{},
-												v3action.Warnings{"share-service-instance-warning"},
+												v7action.RelationshipList{},
+												v7action.Warnings{"share-service-instance-warning"},
 												expectedErr)
 										})
 
@@ -403,8 +403,8 @@ var _ = Describe("Service Instance Actions", func() {
 							nil)
 
 						fakeV3Actor.ShareServiceInstanceToSpacesReturns(
-							v3action.RelationshipList{},
-							v3action.Warnings{"share-service-instance-warning"},
+							v7action.RelationshipList{},
+							v7action.Warnings{"share-service-instance-warning"},
 							errors.New("User-provided services cannot be shared"))
 					})
 
@@ -504,10 +504,10 @@ var _ = Describe("Service Instance Actions", func() {
 		When("no errors occur getting the org", func() {
 			BeforeEach(func() {
 				fakeV3Actor.GetOrganizationByNameReturns(
-					v3action.Organization{
+					v7action.Organization{
 						GUID: "some-org-guid",
 					},
-					v3action.Warnings{"get-org-warning"},
+					v7action.Warnings{"get-org-warning"},
 					nil)
 
 				fakeV2Actor.GetServiceInstanceByNameAndSpaceReturns(
@@ -558,10 +558,10 @@ var _ = Describe("Service Instance Actions", func() {
 					nil)
 
 				fakeV3Actor.ShareServiceInstanceToSpacesReturns(
-					v3action.RelationshipList{
+					v7action.RelationshipList{
 						GUIDs: []string{"some-space-guid"},
 					},
-					v3action.Warnings{"share-service-instance-warning"},
+					v7action.Warnings{"share-service-instance-warning"},
 					nil)
 			})
 
@@ -610,8 +610,8 @@ var _ = Describe("Service Instance Actions", func() {
 			BeforeEach(func() {
 				expectedErr = errors.New("get org error")
 				fakeV3Actor.GetOrganizationByNameReturns(
-					v3action.Organization{},
-					v3action.Warnings{"get-org-warning"},
+					v7action.Organization{},
+					v7action.Warnings{"get-org-warning"},
 					expectedErr)
 			})
 
@@ -676,7 +676,7 @@ var _ = Describe("Service Instance Actions", func() {
 				When("no errors occur unsharing the service instance", func() {
 					BeforeEach(func() {
 						fakeV3Actor.UnshareServiceInstanceByServiceInstanceAndSpaceReturns(
-							v3action.Warnings{"unshare-warning"},
+							v7action.Warnings{"unshare-warning"},
 							nil)
 					})
 
@@ -708,7 +708,7 @@ var _ = Describe("Service Instance Actions", func() {
 					BeforeEach(func() {
 						expectedErr = errors.New("unshare error")
 						fakeV3Actor.UnshareServiceInstanceByServiceInstanceAndSpaceReturns(
-							v3action.Warnings{"unshare-warning"},
+							v7action.Warnings{"unshare-warning"},
 							expectedErr)
 					})
 

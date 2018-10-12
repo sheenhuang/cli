@@ -4,7 +4,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -17,11 +17,11 @@ import (
 type ScaleActor interface {
 	shared.V3AppSummaryActor
 
-	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
-	ScaleProcessByApplication(appGUID string, process v3action.Process) (v3action.Warnings, error)
-	StopApplication(appGUID string) (v3action.Warnings, error)
-	StartApplication(appGUID string) (v3action.Application, v3action.Warnings, error)
-	PollStart(appGUID string, warnings chan<- v3action.Warnings) error
+	GetApplicationByNameAndSpace(appName string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
+	ScaleProcessByApplication(appGUID string, process v7action.Process) (v7action.Warnings, error)
+	StopApplication(appGUID string) (v7action.Warnings, error)
+	StartApplication(appGUID string) (v7action.Application, v7action.Warnings, error)
+	PollStart(appGUID string, warnings chan<- v7action.Warnings) error
 }
 
 type ScaleCommand struct {
@@ -51,7 +51,7 @@ func (cmd *ScaleCommand) Setup(config command.Config, ui command.UI) error {
 	if err != nil {
 		return err
 	}
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 
 	ccClientV2, _, err := sharedV2.NewClients(config, ui, false)
 	if err != nil {
@@ -99,7 +99,7 @@ func (cmd ScaleCommand) Execute(args []string) error {
 		return nil
 	}
 
-	pollWarnings := make(chan v3action.Warnings)
+	pollWarnings := make(chan v7action.Warnings)
 	done := make(chan bool)
 	go func() {
 		defer close(done)
@@ -155,7 +155,7 @@ func (cmd ScaleCommand) scaleProcess(appGUID string, username string) (bool, err
 		cmd.UI.DisplayNewline()
 	}
 
-	warnings, err := cmd.Actor.ScaleProcessByApplication(appGUID, v3action.Process{
+	warnings, err := cmd.Actor.ScaleProcessByApplication(appGUID, v7action.Process{
 		Type:       cmd.ProcessType,
 		Instances:  cmd.Instances.NullInt,
 		MemoryInMB: cmd.MemoryLimit.NullUint64,

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -17,7 +17,7 @@ import (
 //go:generate counterfeiter . ManifestParser
 
 type ManifestParser interface {
-	v3action.ManifestParser
+	v7action.ManifestParser
 	Parse(manifestPath string) error
 }
 
@@ -25,7 +25,7 @@ type ManifestParser interface {
 
 type V3ApplyManifestActor interface {
 	CloudControllerAPIVersion() string
-	ApplyApplicationManifest(parser v3action.ManifestParser, spaceGUID string) (v3action.Warnings, error)
+	ApplyApplicationManifest(parser v7action.ManifestParser, spaceGUID string) (v7action.Warnings, error)
 }
 
 type V3ApplyManifestCommand struct {
@@ -52,7 +52,7 @@ func (cmd *V3ApplyManifestCommand) Setup(config command.Config, ui command.UI) e
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(ccClient, config, nil, nil)
+	cmd.Actor = v7action.NewActor(ccClient, config, nil, nil)
 	cmd.Parser = manifestparser.NewParser()
 
 	return nil

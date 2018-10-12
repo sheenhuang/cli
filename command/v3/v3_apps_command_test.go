@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
@@ -120,7 +120,7 @@ var _ = Describe("v3-apps Command", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			expectedErr = ccerror.RequestError{}
-			fakeActor.GetApplicationsWithProcessesBySpaceReturns([]v3action.ApplicationWithProcessSummary{}, v3action.Warnings{"warning-1", "warning-2"}, expectedErr)
+			fakeActor.GetApplicationsWithProcessesBySpaceReturns([]v7action.ApplicationWithProcessSummary{}, v7action.Warnings{"warning-1", "warning-2"}, expectedErr)
 		})
 
 		It("returns the error and prints warnings", func() {
@@ -139,16 +139,16 @@ var _ = Describe("v3-apps Command", func() {
 		BeforeEach(func() {
 			fakeActor.CloudControllerAPIVersionReturns(ccversion.MinVersionApplicationFlowV3)
 			expectedErr = ccerror.RequestError{}
-			fakeActor.GetApplicationsWithProcessesBySpaceReturns([]v3action.ApplicationWithProcessSummary{
+			fakeActor.GetApplicationsWithProcessesBySpaceReturns([]v7action.ApplicationWithProcessSummary{
 				{
-					Application: v3action.Application{
+					Application: v7action.Application{
 						GUID:  "app-guid",
 						Name:  "some-app",
 						State: constant.ApplicationStarted,
 					},
-					ProcessSummaries: []v3action.ProcessSummary{{Process: v3action.Process{Type: "process-type"}}},
+					ProcessSummaries: []v7action.ProcessSummary{{Process: v7action.Process{Type: "process-type"}}},
 				},
-			}, v3action.Warnings{"warning-1", "warning-2"}, nil)
+			}, v7action.Warnings{"warning-1", "warning-2"}, nil)
 
 			fakeV2Actor.GetApplicationRoutesReturns([]v2action.Route{}, v2action.Warnings{"route-warning-1", "route-warning-2"}, expectedErr)
 		})
@@ -200,25 +200,25 @@ var _ = Describe("v3-apps Command", func() {
 
 		Context("with existing apps", func() {
 			BeforeEach(func() {
-				appSummaries := []v3action.ApplicationWithProcessSummary{
+				appSummaries := []v7action.ApplicationWithProcessSummary{
 					{
-						Application: v3action.Application{
+						Application: v7action.Application{
 							GUID:  "app-guid-1",
 							Name:  "some-app-1",
 							State: constant.ApplicationStarted,
 						},
-						ProcessSummaries: []v3action.ProcessSummary{
+						ProcessSummaries: []v7action.ProcessSummary{
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type: "console",
 								},
-								InstanceDetails: []v3action.ProcessInstance{},
+								InstanceDetails: []v7action.ProcessInstance{},
 							},
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type: "worker",
 								},
-								InstanceDetails: []v3action.ProcessInstance{
+								InstanceDetails: []v7action.ProcessInstance{
 									{
 										Index: 0,
 										State: constant.ProcessInstanceDown,
@@ -226,15 +226,15 @@ var _ = Describe("v3-apps Command", func() {
 								},
 							},
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type: constant.ProcessTypeWeb,
 								},
-								InstanceDetails: []v3action.ProcessInstance{
-									v3action.ProcessInstance{
+								InstanceDetails: []v7action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index: 0,
 										State: constant.ProcessInstanceRunning,
 									},
-									v3action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index: 1,
 										State: constant.ProcessInstanceRunning,
 									},
@@ -243,22 +243,22 @@ var _ = Describe("v3-apps Command", func() {
 						},
 					},
 					{
-						Application: v3action.Application{
+						Application: v7action.Application{
 							GUID:  "app-guid-2",
 							Name:  "some-app-2",
 							State: constant.ApplicationStopped,
 						},
-						ProcessSummaries: []v3action.ProcessSummary{
+						ProcessSummaries: []v7action.ProcessSummary{
 							{
-								Process: v3action.Process{
+								Process: v7action.Process{
 									Type: constant.ProcessTypeWeb,
 								},
-								InstanceDetails: []v3action.ProcessInstance{
-									v3action.ProcessInstance{
+								InstanceDetails: []v7action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index: 0,
 										State: constant.ProcessInstanceDown,
 									},
-									v3action.ProcessInstance{
+									v7action.ProcessInstance{
 										Index: 1,
 										State: constant.ProcessInstanceDown,
 									},
@@ -267,7 +267,7 @@ var _ = Describe("v3-apps Command", func() {
 						},
 					},
 				}
-				fakeActor.GetApplicationsWithProcessesBySpaceReturns(appSummaries, v3action.Warnings{"warning-1", "warning-2"}, nil)
+				fakeActor.GetApplicationsWithProcessesBySpaceReturns(appSummaries, v7action.Warnings{"warning-1", "warning-2"}, nil)
 			})
 
 			It("prints the application summary and outputs warnings", func() {
@@ -301,17 +301,17 @@ var _ = Describe("v3-apps Command", func() {
 
 		When("app does not have processes", func() {
 			BeforeEach(func() {
-				appSummaries := []v3action.ApplicationWithProcessSummary{
+				appSummaries := []v7action.ApplicationWithProcessSummary{
 					{
-						Application: v3action.Application{
+						Application: v7action.Application{
 							GUID:  "app-guid",
 							Name:  "some-app",
 							State: constant.ApplicationStarted,
 						},
-						ProcessSummaries: []v3action.ProcessSummary{},
+						ProcessSummaries: []v7action.ProcessSummary{},
 					},
 				}
-				fakeActor.GetApplicationsWithProcessesBySpaceReturns(appSummaries, v3action.Warnings{"warning"}, nil)
+				fakeActor.GetApplicationsWithProcessesBySpaceReturns(appSummaries, v7action.Warnings{"warning"}, nil)
 			})
 
 			It("it does not request or display routes information for app", func() {
@@ -333,7 +333,7 @@ var _ = Describe("v3-apps Command", func() {
 
 		Context("with no apps", func() {
 			BeforeEach(func() {
-				fakeActor.GetApplicationsWithProcessesBySpaceReturns([]v3action.ApplicationWithProcessSummary{}, v3action.Warnings{"warning-1", "warning-2"}, nil)
+				fakeActor.GetApplicationsWithProcessesBySpaceReturns([]v7action.ApplicationWithProcessSummary{}, v7action.Warnings{"warning-1", "warning-2"}, nil)
 			})
 
 			It("displays there are no apps", func() {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -17,7 +17,7 @@ import (
 
 type DisableOrgIsolationActor interface {
 	CloudControllerAPIVersion() string
-	DeleteIsolationSegmentOrganizationByName(isolationSegmentName string, orgName string) (v3action.Warnings, error)
+	DeleteIsolationSegmentOrganizationByName(isolationSegmentName string, orgName string) (v7action.Warnings, error)
 }
 type DisableOrgIsolationCommand struct {
 	RequiredArgs    flag.OrgIsolationArgs `positional-args:"yes"`
@@ -43,7 +43,7 @@ func (cmd *DisableOrgIsolationCommand) Setup(config command.Config, ui command.U
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, nil, nil)
+	cmd.Actor = v7action.NewActor(client, config, nil, nil)
 
 	return nil
 }

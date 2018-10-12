@@ -2,7 +2,7 @@ package v2v3action
 
 import (
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/actor/versioncheck"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/util/manifest"
@@ -13,7 +13,7 @@ type ManifestV2Actor interface {
 }
 
 type ManifestV3Actor interface {
-	GetApplicationByNameAndSpace(string, string) (v3action.Application, v3action.Warnings, error)
+	GetApplicationByNameAndSpace(string, string) (v7action.Application, v7action.Warnings, error)
 }
 
 func (actor *Actor) CreateApplicationManifestByNameAndSpace(appName string, appSpace string) (manifest.Application, Warnings, error) {

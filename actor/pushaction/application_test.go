@@ -7,7 +7,7 @@ import (
 	. "code.cloudfoundry.org/cli/actor/pushaction"
 	"code.cloudfoundry.org/cli/actor/pushaction/pushactionfakes"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/types"
@@ -302,12 +302,12 @@ var _ = Describe("Applications", func() {
 				})
 
 				When("the v3 update is successful", func() {
-					var submitApp v3action.Application
+					var submitApp v7action.Application
 
 					BeforeEach(func() {
 						updatedApplication = config.DesiredApplication.Application
 						updatedApplication.GUID = "yay-im-a-guid"
-						submitApp = v3action.Application{
+						submitApp = v7action.Application{
 							Name:                updatedApplication.Name,
 							GUID:                updatedApplication.GUID,
 							LifecycleBuildpacks: []string{"ruby", "java"},
@@ -315,7 +315,7 @@ var _ = Describe("Applications", func() {
 						}
 
 						fakeV2Actor.UpdateApplicationReturns(updatedApplication, v2action.Warnings{"v2-create-application-warnings"}, nil)
-						fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, nil)
+						fakeV3Actor.UpdateApplicationReturns(v7action.Application{}, v7action.Warnings{"v3-update-application-warnings"}, nil)
 					})
 
 					It("updates only the buildpacks in ccv3", func() {
@@ -332,7 +332,7 @@ var _ = Describe("Applications", func() {
 				When("the v3 update fails", func() {
 					BeforeEach(func() {
 						fakeV2Actor.UpdateApplicationReturns(v2action.Application{}, v2action.Warnings{"v2-create-application-warnings"}, nil)
-						fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, errors.New("boom"))
+						fakeV3Actor.UpdateApplicationReturns(v7action.Application{}, v7action.Warnings{"v3-update-application-warnings"}, errors.New("boom"))
 					})
 
 					It("raises an error", func() {
@@ -487,12 +487,12 @@ var _ = Describe("Applications", func() {
 				})
 
 				When("the v3 update is successful", func() {
-					var submitApp v3action.Application
+					var submitApp v7action.Application
 
 					BeforeEach(func() {
 						createdApplication = config.DesiredApplication.Application
 						createdApplication.GUID = "yay-im-a-guid"
-						submitApp = v3action.Application{
+						submitApp = v7action.Application{
 							Name:                createdApplication.Name,
 							GUID:                createdApplication.GUID,
 							LifecycleBuildpacks: []string{"ruby", "java"},
@@ -500,7 +500,7 @@ var _ = Describe("Applications", func() {
 						}
 
 						fakeV2Actor.CreateApplicationReturns(createdApplication, v2action.Warnings{"v2-create-application-warnings"}, nil)
-						fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, nil)
+						fakeV3Actor.UpdateApplicationReturns(v7action.Application{}, v7action.Warnings{"v3-update-application-warnings"}, nil)
 					})
 
 					It("updates only the buildpacks in ccv3", func() {
@@ -517,7 +517,7 @@ var _ = Describe("Applications", func() {
 				When("the v3 update fails", func() {
 					BeforeEach(func() {
 						fakeV2Actor.CreateApplicationReturns(v2action.Application{}, v2action.Warnings{"v2-create-application-warnings"}, nil)
-						fakeV3Actor.UpdateApplicationReturns(v3action.Application{}, v3action.Warnings{"v3-update-application-warnings"}, errors.New("boom"))
+						fakeV3Actor.UpdateApplicationReturns(v7action.Application{}, v7action.Warnings{"v3-update-application-warnings"}, errors.New("boom"))
 					})
 
 					It("raises an error", func() {
@@ -567,7 +567,7 @@ var _ = Describe("Applications", func() {
 			Describe("buildpacks", func() {
 				When("getting the app returns an API not found error", func() {
 					BeforeEach(func() {
-						fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3action.Application{}, v3action.Warnings{"some-v3-app-warning"}, ccerror.APINotFoundError{})
+						fakeV3Actor.GetApplicationByNameAndSpaceReturns(v7action.Application{}, v7action.Warnings{"some-v3-app-warning"}, ccerror.APINotFoundError{})
 					})
 
 					It("ignores the error and sets buildpacks to nil", func() {
@@ -580,7 +580,7 @@ var _ = Describe("Applications", func() {
 
 				When("getting the app returns a generic error", func() {
 					BeforeEach(func() {
-						fakeV3Actor.GetApplicationByNameAndSpaceReturns(v3action.Application{}, v3action.Warnings{"some-v3-app-warning"}, errors.New("some-generic-error"))
+						fakeV3Actor.GetApplicationByNameAndSpaceReturns(v7action.Application{}, v7action.Warnings{"some-v3-app-warning"}, errors.New("some-generic-error"))
 					})
 
 					It("returns the error and warnings", func() {
@@ -593,8 +593,8 @@ var _ = Describe("Applications", func() {
 				When("getting the app is successful", func() {
 					BeforeEach(func() {
 						fakeV3Actor.GetApplicationByNameAndSpaceReturns(
-							v3action.Application{LifecycleBuildpacks: []string{"buildpack-1", "buildpack-2"}},
-							v3action.Warnings{"some-v3-app-warning"},
+							v7action.Application{LifecycleBuildpacks: []string{"buildpack-1", "buildpack-2"}},
+							v7action.Warnings{"some-v3-app-warning"},
 							nil)
 					})
 

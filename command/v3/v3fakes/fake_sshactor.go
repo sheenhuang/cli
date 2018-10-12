@@ -4,12 +4,12 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
 type FakeSSHActor struct {
-	GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexStub        func(appName string, spaceGUID string, processType string, processIndex uint) (v3action.SSHAuthentication, v3action.Warnings, error)
+	GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexStub        func(appName string, spaceGUID string, processType string, processIndex uint) (v7action.SSHAuthentication, v7action.Warnings, error)
 	getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexMutex       sync.RWMutex
 	getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall []struct {
 		appName      string
@@ -18,20 +18,20 @@ type FakeSSHActor struct {
 		processIndex uint
 	}
 	getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns struct {
-		result1 v3action.SSHAuthentication
-		result2 v3action.Warnings
+		result1 v7action.SSHAuthentication
+		result2 v7action.Warnings
 		result3 error
 	}
 	getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall map[int]struct {
-		result1 v3action.SSHAuthentication
-		result2 v3action.Warnings
+		result1 v7action.SSHAuthentication
+		result2 v7action.Warnings
 		result3 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeSSHActor) GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndex(appName string, spaceGUID string, processType string, processIndex uint) (v3action.SSHAuthentication, v3action.Warnings, error) {
+func (fake *FakeSSHActor) GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndex(appName string, spaceGUID string, processType string, processIndex uint) (v7action.SSHAuthentication, v7action.Warnings, error) {
 	fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexMutex.Lock()
 	ret, specificReturn := fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall[len(fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall)]
 	fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall = append(fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall, struct {
@@ -63,27 +63,27 @@ func (fake *FakeSSHActor) GetSecureShellConfigurationByApplicationNameSpaceProce
 	return fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].appName, fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].spaceGUID, fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].processType, fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexArgsForCall[i].processIndex
 }
 
-func (fake *FakeSSHActor) GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns(result1 v3action.SSHAuthentication, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSSHActor) GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns(result1 v7action.SSHAuthentication, result2 v7action.Warnings, result3 error) {
 	fake.GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexStub = nil
 	fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturns = struct {
-		result1 v3action.SSHAuthentication
-		result2 v3action.Warnings
+		result1 v7action.SSHAuthentication
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeSSHActor) GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall(i int, result1 v3action.SSHAuthentication, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSSHActor) GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall(i int, result1 v7action.SSHAuthentication, result2 v7action.Warnings, result3 error) {
 	fake.GetSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexStub = nil
 	if fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall == nil {
 		fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall = make(map[int]struct {
-			result1 v3action.SSHAuthentication
-			result2 v3action.Warnings
+			result1 v7action.SSHAuthentication
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getSecureShellConfigurationByApplicationNameSpaceProcessTypeAndIndexReturnsOnCall[i] = struct {
-		result1 v3action.SSHAuthentication
-		result2 v3action.Warnings
+		result1 v7action.SSHAuthentication
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }

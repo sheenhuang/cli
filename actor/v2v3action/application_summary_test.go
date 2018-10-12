@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/v2action"
 	. "code.cloudfoundry.org/cli/actor/v2v3action"
 	"code.cloudfoundry.org/cli/actor/v2v3action/v2v3actionfakes"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 
@@ -81,28 +81,28 @@ var _ = Describe("Application Summary Actions", func() {
 		When("getting the V3 Application Summary is successful", func() {
 			Context("regardless of the application state", func() {
 				BeforeEach(func() {
-					v3Summary := v3action.ApplicationSummary{
-						Application: v3action.Application{
+					v3Summary := v7action.ApplicationSummary{
+						Application: v7action.Application{
 							GUID: "some-app-guid",
 						},
-						ProcessSummaries: v3action.ProcessSummaries{
-							{Process: v3action.Process{Type: "console"}},
-							{Process: v3action.Process{Type: constant.ProcessTypeWeb}},
+						ProcessSummaries: v7action.ProcessSummaries{
+							{Process: v7action.Process{Type: "console"}},
+							{Process: v7action.Process{Type: constant.ProcessTypeWeb}},
 						},
 					}
-					fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v3Summary, v3action.Warnings{"v3-summary-warning"}, nil)
+					fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v3Summary, v7action.Warnings{"v3-summary-warning"}, nil)
 				})
 
 				It("returns the v3 application summary with sorted processes and warnings", func() {
 					Expect(executeErr).ToNot(HaveOccurred())
 					Expect(warnings).To(ConsistOf("v3-summary-warning"))
-					Expect(summary.ApplicationSummary).To(Equal(v3action.ApplicationSummary{
-						Application: v3action.Application{
+					Expect(summary.ApplicationSummary).To(Equal(v7action.ApplicationSummary{
+						Application: v7action.Application{
 							GUID: "some-app-guid",
 						},
-						ProcessSummaries: v3action.ProcessSummaries{
-							{Process: v3action.Process{Type: constant.ProcessTypeWeb}},
-							{Process: v3action.Process{Type: "console"}},
+						ProcessSummaries: v7action.ProcessSummaries{
+							{Process: v7action.Process{Type: constant.ProcessTypeWeb}},
+							{Process: v7action.Process{Type: "console"}},
 						},
 					}))
 
@@ -164,13 +164,13 @@ var _ = Describe("Application Summary Actions", func() {
 
 			When("the application is running", func() {
 				BeforeEach(func() {
-					v3Summary := v3action.ApplicationSummary{
-						Application: v3action.Application{
+					v3Summary := v7action.ApplicationSummary{
+						Application: v7action.Application{
 							GUID:  "some-app-guid",
 							State: constant.ApplicationStarted,
 						},
 					}
-					fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v3Summary, v3action.Warnings{"v3-summary-warning"}, nil)
+					fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v3Summary, v7action.Warnings{"v3-summary-warning"}, nil)
 				})
 
 				When("getting the application instances with stats is successful", func() {
@@ -215,13 +215,13 @@ var _ = Describe("Application Summary Actions", func() {
 
 			When("the application is stopped", func() {
 				BeforeEach(func() {
-					v3Summary := v3action.ApplicationSummary{
-						Application: v3action.Application{
+					v3Summary := v7action.ApplicationSummary{
+						Application: v7action.Application{
 							GUID:  "some-app-guid",
 							State: constant.ApplicationStopped,
 						},
 					}
-					fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v3Summary, v3action.Warnings{"v3-summary-warning"}, nil)
+					fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v3Summary, v7action.Warnings{"v3-summary-warning"}, nil)
 				})
 
 				It("does not get application instances with stats", func() {
@@ -235,7 +235,7 @@ var _ = Describe("Application Summary Actions", func() {
 
 		When("getting the V3 Application Summary returns an error", func() {
 			BeforeEach(func() {
-				fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v3action.ApplicationSummary{}, v3action.Warnings{"v3-summary-warning"}, errors.New("CRAZY!"))
+				fakeV3Actor.GetApplicationSummaryByNameAndSpaceReturns(v7action.ApplicationSummary{}, v7action.Warnings{"v3-summary-warning"}, errors.New("CRAZY!"))
 			})
 
 			It("returns back error and warnings", func() {

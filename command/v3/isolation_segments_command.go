@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"code.cloudfoundry.org/cli/actor/sharedaction"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
@@ -18,7 +18,7 @@ import (
 
 type IsolationSegmentsActor interface {
 	CloudControllerAPIVersion() string
-	GetIsolationSegmentSummaries() ([]v3action.IsolationSegmentSummary, v3action.Warnings, error)
+	GetIsolationSegmentSummaries() ([]v7action.IsolationSegmentSummary, v7action.Warnings, error)
 }
 
 type IsolationSegmentsCommand struct {
@@ -45,7 +45,7 @@ func (cmd *IsolationSegmentsCommand) Setup(config command.Config, ui command.UI)
 
 		return err
 	}
-	cmd.Actor = v3action.NewActor(client, config, sharedActor, nil)
+	cmd.Actor = v7action.NewActor(client, config, sharedActor, nil)
 
 	return nil
 }

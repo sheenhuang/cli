@@ -7,7 +7,7 @@ import (
 
 	"code.cloudfoundry.org/bytefmt"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccerror"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/command"
@@ -31,7 +31,7 @@ type V2AppActor interface {
 //go:generate counterfeiter . V3AppSummaryActor
 
 type V3AppSummaryActor interface {
-	GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v3action.ApplicationSummary, v3action.Warnings, error)
+	GetApplicationSummaryByNameAndSpace(appName string, spaceGUID string, withObfuscatedValues bool) (v7action.ApplicationSummary, v7action.Warnings, error)
 }
 
 func (display AppSummaryDisplayer) DisplayAppInfo() error {
@@ -79,12 +79,12 @@ func (display AppSummaryDisplayer) DisplayAppProcessInfo() error {
 	return nil
 }
 
-func GetCreatedTime(summary v3action.ApplicationSummary) time.Time {
+func GetCreatedTime(summary v7action.ApplicationSummary) time.Time {
 	timestamp, _ := time.Parse(time.RFC3339, summary.CurrentDroplet.CreatedAt)
 	return timestamp
 }
 
-func (display AppSummaryDisplayer) displayAppTable(summary v3action.ApplicationSummary, routes v2action.Routes, appStats []v2action.ApplicationInstanceWithStats) {
+func (display AppSummaryDisplayer) displayAppTable(summary v7action.ApplicationSummary, routes v2action.Routes, appStats []v2action.ApplicationInstanceWithStats) {
 	var isoRow []string
 	if len(appStats) > 0 && len(appStats[0].IsolationSegment) > 0 {
 		isoRow = append(isoRow, display.UI.TranslateText("isolation segment:"), appStats[0].IsolationSegment)
@@ -112,7 +112,7 @@ func (display AppSummaryDisplayer) displayAppTable(summary v3action.ApplicationS
 	display.displayProcessTable(summary)
 }
 
-func (display AppSummaryDisplayer) displayAppInstancesTable(processSummary v3action.ProcessSummary) {
+func (display AppSummaryDisplayer) displayAppInstancesTable(processSummary v7action.ProcessSummary) {
 	display.UI.DisplayNewline()
 
 	// TODO: figure out how to align key-value output
@@ -159,7 +159,7 @@ func (display AppSummaryDisplayer) displayAppInstancesTable(processSummary v3act
 	display.UI.DisplayInstancesTableForApp(table)
 }
 
-func (display AppSummaryDisplayer) displayProcessTable(summary v3action.ApplicationSummary) {
+func (display AppSummaryDisplayer) displayProcessTable(summary v7action.ApplicationSummary) {
 	appHasARunningInstance := false
 
 	for processIdx := range summary.ProcessSummaries {
@@ -180,7 +180,7 @@ func (display AppSummaryDisplayer) displayProcessTable(summary v3action.Applicat
 	}
 }
 
-func (AppSummaryDisplayer) usageSummary(processSummaries v3action.ProcessSummaries) string {
+func (AppSummaryDisplayer) usageSummary(processSummaries v7action.ProcessSummaries) string {
 	var usageStrings []string
 	for _, summary := range processSummaries {
 		if summary.TotalInstanceCount() > 0 {
@@ -191,7 +191,7 @@ func (AppSummaryDisplayer) usageSummary(processSummaries v3action.ProcessSummari
 	return strings.Join(usageStrings, ", ")
 }
 
-func (AppSummaryDisplayer) buildpackNames(buildpacks []v3action.Buildpack) string {
+func (AppSummaryDisplayer) buildpackNames(buildpacks []v7action.Buildpack) string {
 	var names []string
 	for _, buildpack := range buildpacks {
 		if buildpack.DetectOutput != "" {
@@ -208,7 +208,7 @@ func (AppSummaryDisplayer) appInstanceDate(input time.Time) string {
 	return input.Local().Format("2006-01-02 15:04:05 PM")
 }
 
-func (AppSummaryDisplayer) processHasAnInstance(processSummary *v3action.ProcessSummary) bool {
+func (AppSummaryDisplayer) processHasAnInstance(processSummary *v7action.ProcessSummary) bool {
 	for instanceIdx := range processSummary.InstanceDetails {
 		if processSummary.InstanceDetails[instanceIdx].State != constant.ProcessInstanceDown {
 			return true
@@ -218,7 +218,7 @@ func (AppSummaryDisplayer) processHasAnInstance(processSummary *v3action.Process
 	return false
 }
 
-func (AppSummaryDisplayer) processInstancesAreAllCrashed(processSummary *v3action.ProcessSummary) bool {
+func (AppSummaryDisplayer) processInstancesAreAllCrashed(processSummary *v7action.ProcessSummary) bool {
 	if len(processSummary.InstanceDetails) < 1 {
 		return false
 	}

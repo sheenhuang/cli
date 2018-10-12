@@ -4,7 +4,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
 	"code.cloudfoundry.org/cli/actor/v2v3action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -23,7 +23,7 @@ type AppSummaryActor interface {
 type AppActor interface {
 	shared.V3AppSummaryActor
 	CloudControllerAPIVersion() string
-	GetApplicationByNameAndSpace(name string, spaceGUID string) (v3action.Application, v3action.Warnings, error)
+	GetApplicationByNameAndSpace(name string, spaceGUID string) (v7action.Application, v7action.Warnings, error)
 }
 
 type AppCommand struct {
@@ -55,7 +55,7 @@ func (cmd *AppCommand) Setup(config command.Config, ui command.UI) error {
 	}
 
 	v2Actor := v2action.NewActor(ccClientV2, uaaClientV2, config)
-	v3Actor := v3action.NewActor(ccClient, config, nil, nil)
+	v3Actor := v7action.NewActor(ccClient, config, nil, nil)
 	cmd.AppSummaryActor = v2v3action.NewActor(v2Actor, v3Actor)
 	cmd.Actor = v3Actor
 

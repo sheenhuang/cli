@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/flag"
@@ -104,8 +104,8 @@ var _ = Describe("v3-create-package Command", func() {
 		When("no flags are set", func() {
 			When("the create is successful", func() {
 				BeforeEach(func() {
-					myPackage := v3action.Package{GUID: "1234"}
-					fakeActor.CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(myPackage, v3action.Warnings{"I am a warning", "I am also a warning"}, nil)
+					myPackage := v7action.Package{GUID: "1234"}
+					fakeActor.CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(myPackage, v7action.Warnings{"I am a warning", "I am also a warning"}, nil)
 				})
 
 				It("displays the header and ok", func() {
@@ -132,7 +132,7 @@ var _ = Describe("v3-create-package Command", func() {
 
 				BeforeEach(func() {
 					expectedErr = errors.New("I am an error")
-					fakeActor.CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(v3action.Package{}, v3action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
+					fakeActor.CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(v7action.Package{}, v7action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
 				})
 
 				It("displays the header and error", func() {
@@ -149,7 +149,7 @@ var _ = Describe("v3-create-package Command", func() {
 		When("the docker image is provided", func() {
 			BeforeEach(func() {
 				cmd.DockerImage.Path = "some-docker-image"
-				fakeActor.CreateDockerPackageByApplicationNameAndSpaceReturns(v3action.Package{GUID: "1234"}, v3action.Warnings{"I am a warning", "I am also a warning"}, nil)
+				fakeActor.CreateDockerPackageByApplicationNameAndSpaceReturns(v7action.Package{GUID: "1234"}, v7action.Warnings{"I am a warning", "I am also a warning"}, nil)
 			})
 
 			It("creates the docker package", func() {
@@ -174,7 +174,7 @@ var _ = Describe("v3-create-package Command", func() {
 		When("the path is provided", func() {
 			BeforeEach(func() {
 				cmd.AppPath = "some-app-path"
-				fakeActor.CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(v3action.Package{GUID: "1234"}, v3action.Warnings{"I am a warning", "I am also a warning"}, nil)
+				fakeActor.CreateAndUploadBitsPackageByApplicationNameAndSpaceReturns(v7action.Package{GUID: "1234"}, v7action.Warnings{"I am a warning", "I am also a warning"}, nil)
 			})
 
 			It("creates the package using the specified directory", func() {

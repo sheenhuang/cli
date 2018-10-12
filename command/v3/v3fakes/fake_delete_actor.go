@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,18 +18,18 @@ type FakeDeleteActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	DeleteApplicationByNameAndSpaceStub        func(name string, spaceGUID string) (v3action.Warnings, error)
+	DeleteApplicationByNameAndSpaceStub        func(name string, spaceGUID string) (v7action.Warnings, error)
 	deleteApplicationByNameAndSpaceMutex       sync.RWMutex
 	deleteApplicationByNameAndSpaceArgsForCall []struct {
 		name      string
 		spaceGUID string
 	}
 	deleteApplicationByNameAndSpaceReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	deleteApplicationByNameAndSpaceReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -76,7 +76,7 @@ func (fake *FakeDeleteActor) CloudControllerAPIVersionReturnsOnCall(i int, resul
 	}{result1}
 }
 
-func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpace(name string, spaceGUID string) (v3action.Warnings, error) {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpace(name string, spaceGUID string) (v7action.Warnings, error) {
 	fake.deleteApplicationByNameAndSpaceMutex.Lock()
 	ret, specificReturn := fake.deleteApplicationByNameAndSpaceReturnsOnCall[len(fake.deleteApplicationByNameAndSpaceArgsForCall)]
 	fake.deleteApplicationByNameAndSpaceArgsForCall = append(fake.deleteApplicationByNameAndSpaceArgsForCall, struct {
@@ -106,24 +106,24 @@ func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceArgsForCall(i int) (
 	return fake.deleteApplicationByNameAndSpaceArgsForCall[i].name, fake.deleteApplicationByNameAndSpaceArgsForCall[i].spaceGUID
 }
 
-func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceReturns(result1 v7action.Warnings, result2 error) {
 	fake.DeleteApplicationByNameAndSpaceStub = nil
 	fake.deleteApplicationByNameAndSpaceReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeDeleteActor) DeleteApplicationByNameAndSpaceReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.DeleteApplicationByNameAndSpaceStub = nil
 	if fake.deleteApplicationByNameAndSpaceReturnsOnCall == nil {
 		fake.deleteApplicationByNameAndSpaceReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.deleteApplicationByNameAndSpaceReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

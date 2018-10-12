@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -90,7 +90,7 @@ var _ = Describe("create-isolation-segment Command", func() {
 
 		When("the create is successful", func() {
 			BeforeEach(func() {
-				fakeActor.CreateIsolationSegmentByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, nil)
+				fakeActor.CreateIsolationSegmentByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, nil)
 			})
 
 			It("displays the header and ok", func() {
@@ -103,7 +103,7 @@ var _ = Describe("create-isolation-segment Command", func() {
 				Expect(testUI.Err).To(Say("I am also a warning"))
 
 				Expect(fakeActor.CreateIsolationSegmentByNameCallCount()).To(Equal(1))
-				Expect(fakeActor.CreateIsolationSegmentByNameArgsForCall(0)).To(Equal(v3action.IsolationSegment{Name: isolationSegment}))
+				Expect(fakeActor.CreateIsolationSegmentByNameArgsForCall(0)).To(Equal(v7action.IsolationSegment{Name: isolationSegment}))
 			})
 		})
 
@@ -113,7 +113,7 @@ var _ = Describe("create-isolation-segment Command", func() {
 
 				BeforeEach(func() {
 					expectedErr = errors.New("I am an error")
-					fakeActor.CreateIsolationSegmentByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
+					fakeActor.CreateIsolationSegmentByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, expectedErr)
 				})
 
 				It("displays the header and error", func() {
@@ -128,7 +128,7 @@ var _ = Describe("create-isolation-segment Command", func() {
 
 			Context("due to an IsolationSegmentAlreadyExistsError", func() {
 				BeforeEach(func() {
-					fakeActor.CreateIsolationSegmentByNameReturns(v3action.Warnings{"I am a warning", "I am also a warning"}, actionerror.IsolationSegmentAlreadyExistsError{})
+					fakeActor.CreateIsolationSegmentByNameReturns(v7action.Warnings{"I am a warning", "I am also a warning"}, actionerror.IsolationSegmentAlreadyExistsError{})
 				})
 
 				It("displays the header and ok", func() {

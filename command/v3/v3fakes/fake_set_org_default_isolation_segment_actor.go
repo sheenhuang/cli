@@ -4,7 +4,7 @@ package v3fakes
 import (
 	"sync"
 
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/command/v3"
 )
 
@@ -18,33 +18,33 @@ type FakeSetOrgDefaultIsolationSegmentActor struct {
 	cloudControllerAPIVersionReturnsOnCall map[int]struct {
 		result1 string
 	}
-	GetIsolationSegmentByNameStub        func(isoSegName string) (v3action.IsolationSegment, v3action.Warnings, error)
+	GetIsolationSegmentByNameStub        func(isoSegName string) (v7action.IsolationSegment, v7action.Warnings, error)
 	getIsolationSegmentByNameMutex       sync.RWMutex
 	getIsolationSegmentByNameArgsForCall []struct {
 		isoSegName string
 	}
 	getIsolationSegmentByNameReturns struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}
 	getIsolationSegmentByNameReturnsOnCall map[int]struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}
-	SetOrganizationDefaultIsolationSegmentStub        func(orgGUID string, isoSegGUID string) (v3action.Warnings, error)
+	SetOrganizationDefaultIsolationSegmentStub        func(orgGUID string, isoSegGUID string) (v7action.Warnings, error)
 	setOrganizationDefaultIsolationSegmentMutex       sync.RWMutex
 	setOrganizationDefaultIsolationSegmentArgsForCall []struct {
 		orgGUID    string
 		isoSegGUID string
 	}
 	setOrganizationDefaultIsolationSegmentReturns struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	setOrganizationDefaultIsolationSegmentReturnsOnCall map[int]struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -91,7 +91,7 @@ func (fake *FakeSetOrgDefaultIsolationSegmentActor) CloudControllerAPIVersionRet
 	}{result1}
 }
 
-func (fake *FakeSetOrgDefaultIsolationSegmentActor) GetIsolationSegmentByName(isoSegName string) (v3action.IsolationSegment, v3action.Warnings, error) {
+func (fake *FakeSetOrgDefaultIsolationSegmentActor) GetIsolationSegmentByName(isoSegName string) (v7action.IsolationSegment, v7action.Warnings, error) {
 	fake.getIsolationSegmentByNameMutex.Lock()
 	ret, specificReturn := fake.getIsolationSegmentByNameReturnsOnCall[len(fake.getIsolationSegmentByNameArgsForCall)]
 	fake.getIsolationSegmentByNameArgsForCall = append(fake.getIsolationSegmentByNameArgsForCall, struct {
@@ -120,32 +120,32 @@ func (fake *FakeSetOrgDefaultIsolationSegmentActor) GetIsolationSegmentByNameArg
 	return fake.getIsolationSegmentByNameArgsForCall[i].isoSegName
 }
 
-func (fake *FakeSetOrgDefaultIsolationSegmentActor) GetIsolationSegmentByNameReturns(result1 v3action.IsolationSegment, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSetOrgDefaultIsolationSegmentActor) GetIsolationSegmentByNameReturns(result1 v7action.IsolationSegment, result2 v7action.Warnings, result3 error) {
 	fake.GetIsolationSegmentByNameStub = nil
 	fake.getIsolationSegmentByNameReturns = struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeSetOrgDefaultIsolationSegmentActor) GetIsolationSegmentByNameReturnsOnCall(i int, result1 v3action.IsolationSegment, result2 v3action.Warnings, result3 error) {
+func (fake *FakeSetOrgDefaultIsolationSegmentActor) GetIsolationSegmentByNameReturnsOnCall(i int, result1 v7action.IsolationSegment, result2 v7action.Warnings, result3 error) {
 	fake.GetIsolationSegmentByNameStub = nil
 	if fake.getIsolationSegmentByNameReturnsOnCall == nil {
 		fake.getIsolationSegmentByNameReturnsOnCall = make(map[int]struct {
-			result1 v3action.IsolationSegment
-			result2 v3action.Warnings
+			result1 v7action.IsolationSegment
+			result2 v7action.Warnings
 			result3 error
 		})
 	}
 	fake.getIsolationSegmentByNameReturnsOnCall[i] = struct {
-		result1 v3action.IsolationSegment
-		result2 v3action.Warnings
+		result1 v7action.IsolationSegment
+		result2 v7action.Warnings
 		result3 error
 	}{result1, result2, result3}
 }
 
-func (fake *FakeSetOrgDefaultIsolationSegmentActor) SetOrganizationDefaultIsolationSegment(orgGUID string, isoSegGUID string) (v3action.Warnings, error) {
+func (fake *FakeSetOrgDefaultIsolationSegmentActor) SetOrganizationDefaultIsolationSegment(orgGUID string, isoSegGUID string) (v7action.Warnings, error) {
 	fake.setOrganizationDefaultIsolationSegmentMutex.Lock()
 	ret, specificReturn := fake.setOrganizationDefaultIsolationSegmentReturnsOnCall[len(fake.setOrganizationDefaultIsolationSegmentArgsForCall)]
 	fake.setOrganizationDefaultIsolationSegmentArgsForCall = append(fake.setOrganizationDefaultIsolationSegmentArgsForCall, struct {
@@ -175,24 +175,24 @@ func (fake *FakeSetOrgDefaultIsolationSegmentActor) SetOrganizationDefaultIsolat
 	return fake.setOrganizationDefaultIsolationSegmentArgsForCall[i].orgGUID, fake.setOrganizationDefaultIsolationSegmentArgsForCall[i].isoSegGUID
 }
 
-func (fake *FakeSetOrgDefaultIsolationSegmentActor) SetOrganizationDefaultIsolationSegmentReturns(result1 v3action.Warnings, result2 error) {
+func (fake *FakeSetOrgDefaultIsolationSegmentActor) SetOrganizationDefaultIsolationSegmentReturns(result1 v7action.Warnings, result2 error) {
 	fake.SetOrganizationDefaultIsolationSegmentStub = nil
 	fake.setOrganizationDefaultIsolationSegmentReturns = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeSetOrgDefaultIsolationSegmentActor) SetOrganizationDefaultIsolationSegmentReturnsOnCall(i int, result1 v3action.Warnings, result2 error) {
+func (fake *FakeSetOrgDefaultIsolationSegmentActor) SetOrganizationDefaultIsolationSegmentReturnsOnCall(i int, result1 v7action.Warnings, result2 error) {
 	fake.SetOrganizationDefaultIsolationSegmentStub = nil
 	if fake.setOrganizationDefaultIsolationSegmentReturnsOnCall == nil {
 		fake.setOrganizationDefaultIsolationSegmentReturnsOnCall = make(map[int]struct {
-			result1 v3action.Warnings
+			result1 v7action.Warnings
 			result2 error
 		})
 	}
 	fake.setOrganizationDefaultIsolationSegmentReturnsOnCall[i] = struct {
-		result1 v3action.Warnings
+		result1 v7action.Warnings
 		result2 error
 	}{result1, result2}
 }

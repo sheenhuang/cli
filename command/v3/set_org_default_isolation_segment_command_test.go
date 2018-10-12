@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/cli/actor/actionerror"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccversion"
 	"code.cloudfoundry.org/cli/command/commandfakes"
 	"code.cloudfoundry.org/cli/command/translatableerror"
@@ -128,7 +128,7 @@ var _ = Describe("set-org-default-isolation-segment Command", func() {
 
 			When("the isolation segment lookup is unsuccessful", func() {
 				BeforeEach(func() {
-					fakeActor.GetIsolationSegmentByNameReturns(v3action.IsolationSegment{}, v3action.Warnings{"iso-seg-warning-1", "iso-seg-warning-2"}, actionerror.IsolationSegmentNotFoundError{Name: isolationSegment})
+					fakeActor.GetIsolationSegmentByNameReturns(v7action.IsolationSegment{}, v7action.Warnings{"iso-seg-warning-1", "iso-seg-warning-2"}, actionerror.IsolationSegmentNotFoundError{Name: isolationSegment})
 				})
 
 				It("returns the warnings and error", func() {
@@ -142,8 +142,8 @@ var _ = Describe("set-org-default-isolation-segment Command", func() {
 
 			When("the entitlement is successful", func() {
 				BeforeEach(func() {
-					fakeActor.GetIsolationSegmentByNameReturns(v3action.IsolationSegment{GUID: "some-iso-guid"}, v3action.Warnings{"iso-seg-warning-1", "iso-seg-warning-2"}, nil)
-					fakeActor.SetOrganizationDefaultIsolationSegmentReturns(v3action.Warnings{"entitlement-warning", "banana"}, nil)
+					fakeActor.GetIsolationSegmentByNameReturns(v7action.IsolationSegment{GUID: "some-iso-guid"}, v7action.Warnings{"iso-seg-warning-1", "iso-seg-warning-2"}, nil)
+					fakeActor.SetOrganizationDefaultIsolationSegmentReturns(v7action.Warnings{"entitlement-warning", "banana"}, nil)
 				})
 
 				It("Displays the header and okay", func() {
@@ -169,7 +169,7 @@ var _ = Describe("set-org-default-isolation-segment Command", func() {
 
 				When("the entitlement errors", func() {
 					BeforeEach(func() {
-						fakeActor.SetOrganizationDefaultIsolationSegmentReturns(v3action.Warnings{"entitlement-warning", "banana"}, actionerror.IsolationSegmentNotFoundError{Name: isolationSegment})
+						fakeActor.SetOrganizationDefaultIsolationSegmentReturns(v7action.Warnings{"entitlement-warning", "banana"}, actionerror.IsolationSegmentNotFoundError{Name: isolationSegment})
 					})
 
 					It("returns the warnings and error", func() {

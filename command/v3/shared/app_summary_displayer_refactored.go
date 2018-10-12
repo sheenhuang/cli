@@ -7,7 +7,7 @@ import (
 
 	"code.cloudfoundry.org/bytefmt"
 	"code.cloudfoundry.org/cli/actor/v2v3action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv3/constant"
 	"code.cloudfoundry.org/cli/command"
 )
@@ -50,7 +50,7 @@ func (display AppSummaryDisplayer2) AppDisplay(summary v2v3action.ApplicationSum
 	display.displayProcessTable(summary.ApplicationSummary, displayStartCommand)
 }
 
-func (display AppSummaryDisplayer2) displayAppInstancesTable(processSummary v3action.ProcessSummary) {
+func (display AppSummaryDisplayer2) displayAppInstancesTable(processSummary v7action.ProcessSummary) {
 	table := [][]string{
 		{
 			"",
@@ -82,7 +82,7 @@ func (display AppSummaryDisplayer2) displayAppInstancesTable(processSummary v3ac
 	display.UI.DisplayInstancesTableForApp(table)
 }
 
-func (display AppSummaryDisplayer2) displayProcessTable(summary v3action.ApplicationSummary, displayStartCommand bool) {
+func (display AppSummaryDisplayer2) displayProcessTable(summary v7action.ApplicationSummary, displayStartCommand bool) {
 	for _, process := range summary.ProcessSummaries {
 		display.UI.DisplayNewline()
 
@@ -118,7 +118,7 @@ func (display AppSummaryDisplayer2) getCreatedTime(summary v2v3action.Applicatio
 	return ""
 }
 
-func (AppSummaryDisplayer2) usageSummary(processSummaries v3action.ProcessSummaries) string {
+func (AppSummaryDisplayer2) usageSummary(processSummaries v7action.ProcessSummaries) string {
 	var usageStrings []string
 	for _, summary := range processSummaries {
 		if summary.TotalInstanceCount() > 0 {
@@ -129,7 +129,7 @@ func (AppSummaryDisplayer2) usageSummary(processSummaries v3action.ProcessSummar
 	return strings.Join(usageStrings, ", ")
 }
 
-func (AppSummaryDisplayer2) buildpackNames(buildpacks []v3action.Buildpack) string {
+func (AppSummaryDisplayer2) buildpackNames(buildpacks []v7action.Buildpack) string {
 	var names []string
 	for _, buildpack := range buildpacks {
 		if buildpack.DetectOutput != "" {
@@ -146,7 +146,7 @@ func (AppSummaryDisplayer2) appInstanceDate(input time.Time) string {
 	return input.UTC().Format(time.RFC3339)
 }
 
-func (AppSummaryDisplayer2) processHasAnInstanceUp(processSummary *v3action.ProcessSummary) bool {
+func (AppSummaryDisplayer2) processHasAnInstanceUp(processSummary *v7action.ProcessSummary) bool {
 	for _, processInstance := range processSummary.InstanceDetails {
 		if processInstance.State != constant.ProcessInstanceDown {
 			return true
@@ -155,7 +155,7 @@ func (AppSummaryDisplayer2) processHasAnInstanceUp(processSummary *v3action.Proc
 	return false
 }
 
-func (AppSummaryDisplayer2) processInstancesAreAllCrashed(processSummary *v3action.ProcessSummary) bool {
+func (AppSummaryDisplayer2) processInstancesAreAllCrashed(processSummary *v7action.ProcessSummary) bool {
 	if len(processSummary.InstanceDetails) < 1 {
 		return false
 	}

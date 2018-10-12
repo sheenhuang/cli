@@ -11,7 +11,7 @@ import (
 	"code.cloudfoundry.org/cli/actor/pushaction/pushactionfakes"
 	"code.cloudfoundry.org/cli/actor/sharedaction"
 	"code.cloudfoundry.org/cli/actor/v2action"
-	"code.cloudfoundry.org/cli/actor/v3action"
+	"code.cloudfoundry.org/cli/actor/v7action"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv2"
 	"code.cloudfoundry.org/cli/api/cloudcontroller/ccv2/constant"
 	"code.cloudfoundry.org/cli/types"
@@ -731,7 +731,7 @@ var _ = Describe("Application Config", func() {
 							nil, nil)
 
 						fakeV3Actor.GetApplicationByNameAndSpaceReturns(
-							v3action.Application{LifecycleBuildpacks: []string{"something-I-don't-care"}},
+							v7action.Application{LifecycleBuildpacks: []string{"something-I-don't-care"}},
 							nil, nil)
 					})
 
