@@ -131,22 +131,6 @@ var _ = Describe("get-health-check command", func() {
 				})
 			})
 
-			When("the health check type is none", func() {
-				BeforeEach(func() {
-					Eventually(helpers.CF("set-health-check", appName, "none")).Should(Exit(0))
-				})
-
-				It("does not show an endpoint", func() {
-					session := helpers.CF("get-health-check", appName)
-
-					Eventually(session).Should(Say("Getting health check type for app %s in org %s / space %s as %s\\.\\.\\.", appName, orgName, spaceName, username))
-					Eventually(session).Should(Say("\n\n"))
-					Eventually(session).Should(Say("health check type:          none"))
-					Eventually(session).Should(Say("(?m)endpoint \\(for http type\\):   $"))
-					Eventually(session).Should(Exit(0))
-				})
-			})
-
 			When("the health check type is port", func() {
 				BeforeEach(func() {
 					Eventually(helpers.CF("set-health-check", appName, "port")).Should(Exit(0))

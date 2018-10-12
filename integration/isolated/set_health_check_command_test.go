@@ -246,6 +246,14 @@ var _ = Describe("set-health-check command", func() {
 					Eventually(session).Should(Exit(1))
 				})
 			})
+
+			When("None is passed in", func() {
+				It("returns an error", func() {
+					session := helpers.CF("set-health-check", appName, "none")
+					Eventually(session.Err).Should(Say(`Health check type must be "port", "process", or "http"`))
+					Eventually(session).Should(Exit(1))
+				})
+			})
 		})
 
 		When("the app does not exist", func() {
