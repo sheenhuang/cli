@@ -9,7 +9,7 @@ import (
 	"code.cloudfoundry.org/cli/command"
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/v2/shared"
-	sharedV3 "code.cloudfoundry.org/cli/command/v3/shared"
+	sharedV3 "code.cloudfoundry.org/cli/command/v7/shared"
 	"github.com/cloudfoundry/noaa/consumer"
 	log "github.com/sirupsen/logrus"
 )

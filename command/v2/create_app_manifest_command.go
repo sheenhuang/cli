@@ -15,7 +15,7 @@ import (
 	"code.cloudfoundry.org/cli/command/flag"
 	"code.cloudfoundry.org/cli/command/translatableerror"
 	sharedV2 "code.cloudfoundry.org/cli/command/v2/shared"
-	sharedV3 "code.cloudfoundry.org/cli/command/v3/shared"
+	sharedV3 "code.cloudfoundry.org/cli/command/v7/shared"
 	"code.cloudfoundry.org/cli/util/manifest"
 )
 
